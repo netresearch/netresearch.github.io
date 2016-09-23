@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Netresearch Open Source Inventory</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css">
+    <base target="_blank">
+    <link href='//cdn.jsdelivr.net/devicons/1.8.0/css/devicons.min.css' rel='stylesheet'>
+    <style type="text/css">
+        a.json-toggle.collapsed:before {
+            font-size: 10px;
+            top: -1px;
+            left:-11px;
+        }
+        body {
+            padding-top:65px;
+        }
+        .container {
+            max-width:860px;
+        }
+        .jumbotron {
+            margin: 0;
+            border-radius: 6px;
+        }
+        .github svg {
+            width:20px;
+            height:20px;
+            margin: -5px 0;
+            fill: currentColor;
+        }
+        .panel-heading > h4 {
+            position: relative;
+            padding:4px 0;
+            padding-left:30px;
+        }
+        .panel-heading > h4 > img {
+            max-width:24px;
+            max-height:24px;
+            position: absolute;
+            left:-3px;
+            top:0;
+        }
+        .panel-heading > h4 > span {
+            color: #2F99A4;
+            font-size:22px;
+            font-weight: normal;
+            position: absolute;
+            left:-3px;
+            top:0;
+            margin-right:6px;
+        }
+        .panel-heading > h4 > span.devicons {
+            font-size: 26px;
+        }
+        .panel-heading > h4 > .elm {
+            display:block;
+            width:24px;
+            height: 24px;
+            font-size:12px;
+            line-height: 20px;
+            white-space: nowrap;
+            text-align: center;
+            border: 2px solid #2F99A4;
+            font-weight: 700;
+        }
+        .panel-footer > a {
+            color: #666;
+            margin-right:10px;
+            position: relative;
+            float:left;
+            top:-1px;
+            opacity: 0.9;
+            transition: all 0.2s;
+        }
+        .panel-footer > a:hover {
+            text-decoration: none;
+            color: #2F99A4;
+            opacity: 1;
+        }
+        .panel-footer .dropdown {
+            display: inline-block;
+            position: relative;
+            float:left;
+        }
+        .panel-footer .dropdown > span {
+            display: inline-block;
+            height:20px;
+            padding:0 6px 0;
+            position: relative;
+            top:2px;
+        }
+        .panel-footer .dropdown > span:hover,
+        .panel-footer .dropdown.open > span {
+            background: #d8d8d8;
+            border-radius: 3px;
+        }
+        .badge {
+            vertical-align: baseline;
+            display: inline-block;
+            border-radius: 4px;
+            background: #666;
+            height:20px;
+            line-height: 18px;
+            position: relative;
+            top:1px;
+            padding: 0 6px 0 26px;
+            color:#fff;
+        }
+        .badge:before {
+            content: "\e672";
+            font-family: devicons;
+            background: #f58006;
+            color:#fff;
+            position: absolute;
+            left:0;
+            top:0;
+            bottom:0;
+            height: 100%;
+            line-height: 20px;
+            width:20px;
+            text-align: center;
+            border-radius: 4px 0 0 4px;
+            font-size:16px;
+        }
+        .badge.github:before {
+            content:"\e609";
+            background: #333;
+        }
+        .badge.docker:before {
+            content: " ";
+            display: block;
+            background: url("img/docker.svg") #13a3d4 no-repeat center;
+            background-size: 18px;
+        }
+        .badge.npm {
+            padding-left: 32px;
+        }
+        .badge.npm:before {
+            content:"\e61e";
+            background: #C12127;
+            font-size:18px;
+            width:26px;
+        }
+        .badge.packagist:before {
+            content: "P";
+            line-height: 18px;
+            background: #f28d1a
+        }
+
+    </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img src="img/netresearch.png" height="24" alt="Netresearch"></a>
+            <a class="navbar-brand" href="#">Open Source Inventory</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a data-target="#" href="#typo3" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        TYPO3                            <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a target="_self" href="#multi-channel-contexts">Multi-channel contexts</a></li>
+                        <li><a target="_self" href="#typo3-performance-analysis">TYPO3 performance analysis</a></li>
+                        <li><a target="_self" href="#dam-to-fal-migration">DAM to FAL migration</a></li>
+                        <li><a target="_self" href="#caching-framework">Caching Framework</a></li>
+                        <li><a target="_self" href="#distributed-lock-manager">Distributed lock manager</a></li>
+                        <li><a target="_self" href="#session">Session</a></li>
+                        <li><a target="_self" href="#cache-test-plugins">Cache test plugins</a></li>
+                        <li><a target="_self" href="#semantic-templates">Semantic Templates</a></li>
+                        <li><a target="_self" href="#content-delivery-network-tools">Content Delivery Network Tools</a></li>
+                        <li><a target="_self" href="#pagetree">Pagetree</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a data-target="#" href="#magento" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Magento                            <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a target="_self" href="#api-import-cli-script">API import CLI script</a></li>
+                        <li><a target="_self" href="#jumpstorm">Jumpstorm</a></li>
+                        <li><a target="_self" href="#live-translator">Live translator</a></li>
+                        <li><a target="_self" href="#cms-relations">CMS Relations</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a data-target="#" href="#tools" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Tools                            <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a target="_self" href="#assetpicker">AssetPicker</a></li>
+                        <li><a target="_self" href="#timetracker">Timetracker</a></li>
+                        <li><a target="_self" href="#kite">Kite</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a data-target="#" href="#docker" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Docker                            <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a target="_self" href="#akeneo">Akeneo</a></li>
+                        <li><a target="_self" href="#data-crow">Data Crow</a></li>
+                        <li><a target="_self" href="#entermediadb">EnterMediaDB</a></li>
+                        <li><a target="_self" href="#ssl-proxy">SSL Proxy</a></li>
+                        <li><a target="_self" href="#phraseant">Phraseant</a></li>
+                        <li><a target="_self" href="#razuna">Razuna</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="github" href="https://github.com/netresearch" target="_blank" title="Netresearch on GitHub">
+                        <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="jumbotron">
+        <h2><span style="color:#2F99A4">Netresearch</span><br>Open Source Inventory</h2>
+        <p>The greatest and latest of Netresearch's Open Source Initiatives</p>
+    </div>
+    <h3 id="typo3">TYPO3</h3>
+    <hr>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="multi-channel-contexts" class="panel-title">
+                <img src="img/library/contexts.png" alt="">
+                Multi-channel contexts                    </h4>
+        </div>
+        <div class="panel-body">Contexts is a set of TYPO3 extension that allows to control record (content elements and pages by default) visibility based on several conditions grouped as so called contexts. Such conditions can be IP ranges, user location, device types, GET parameters, HTTP headers, domains and logical combinations of contexts.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://typo3.org/extensions/repository/view/contexts"
+               title="contexts on TER">
+                <span class="badge ter">contexts</span>
+            </a>
+            <a href="https://typo3.org/extensions/repository/view/contexts_geolocation"
+               title="contexts_geolocation on TER">
+                <span class="badge ter">contexts_geolocation</span>
+            </a>
+            <a href="https://typo3.org/extensions/repository/view/contexts_wurfl"
+               title="contexts_wurfl on TER">
+                <span class="badge ter">contexts_wurfl</span>
+            </a>
+            <a href="https://travis-ci.org/netresearch/t3x-contexts"
+               title="contexts on travis">
+                <img src="https://api.travis-ci.org/netresearch/t3x-contexts.png">
+            </a>
+            <div class="dropdown">
+                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-option-horizontal"></span>
+                            </span>
+                <ul class="dropdown-menu">
+                    <li><a href="https://www.netresearch.de/blog/typo3-contexts/">Announcement (german)</a></li>
+                    <li><a href="http://t3n.de/magazin/erweiterung-ermoeglicht-kontextabhaengige-darstellung-234115/">Article on t3n (german)</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=ft2aQ0qQUrc&list=PL-sDBIrOKGOZ3ZrwFpyl0El1Oh51VUl38&index=3">Presentation at T3CON 2014 (eehm)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="typo3-performance-analysis" class="panel-title">
+                <span class="glyphicon glyphicon-dashboard"></span>
+                TYPO3 performance analysis                    </h4>
+        </div>
+        <div class="panel-body">This TYPO3 extension tracks frontend rendering timing and quantity information and displays a summary at the bottom right of the frontend pages. By default it tracks rendering time of the server and browser, and the number of SQL queries and the total time needed for them. Additionally extensions can track custom information into other groups.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://typo3.org/extensions/repository/view/nr_perfanalysis"
+               title="nr_perfanalysis on TER">
+                <span class="badge ter">nr_perfanalysis</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="dam-to-fal-migration" class="panel-title">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                DAM to FAL migration                    </h4>
+        </div>
+        <div class="panel-body">We provide two extensions that make the switch from the deprecated <em>Digital Asset Management (DAM)</em> extension to the new core <em>File Abstraction Layer (FAL)</em> as easy as possible.
+            With <code>nr_dam_falmigration</code> you can easily migrate the DAM records to FAL records on database level from the upgrade wizard or from command line (you don't need the files to be locally available). The extension maps the default fields and tables but you can add additional extension fields to be migrated if you need. Unlike other migration extensions it works extremely fast (~100k of records in ~2 min).
+            After that the compatibility layer extension <code>dam_compat</code> provides the old DAM API methods using FAL files enabling you to make the switch without any further code or extension changes.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://typo3.org/extensions/repository/view/nr_dam_falmigration"
+               title="nr_dam_falmigration on TER">
+                <span class="badge ter">nr_dam_falmigration</span>
+            </a>
+            <a href="https://typo3.org/extensions/repository/view/dam_compat"
+               title="dam_compat on TER">
+                <span class="badge ter">dam_compat</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="caching-framework" class="panel-title">
+                <span class="devicons devicons-redis"></span>
+                Caching Framework                    </h4>
+        </div>
+        <div class="panel-body">This extension provides functionality to store cache data in memory based caching systems like Couchbase, Redis, Memcache or Amazon ElastiCache. Including PHP code cache and function results - move your typo3temp cache folders into Redis. It contains a streamwrapper to store PHP code cache in caching framework, a Couchbase caching framework backend and a function cache as callable caching frontend.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://typo3.org/extensions/repository/view/nr_cache"
+               title="nr_cache on TER">
+                <span class="badge ter">nr_cache</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="distributed-lock-manager" class="panel-title">
+                <span class="glyphicon glyphicon-lock"></span>
+                Distributed lock manager                    </h4>
+        </div>
+        <div class="panel-body">NR_Lock is a distributed lock manager (DLM). It's designed for multiple TYPO3 frontend servers using a single typo3temp share and Database. NR_Lock currently supports single Redis or Couchbase (experimental) caching server as locking instance. It replaces/extends the TYPO3 lock facility t3lib_lock.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://typo3.org/extensions/repository/view/nr_lock"
+               title="nr_lock on TER">
+                <span class="badge ter">nr_lock</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="session" class="panel-title">
+                <span class="glyphicon glyphicon-barcode"></span>
+                Session                    </h4>
+        </div>
+        <div class="panel-body">This extension acts as alternative session handler and provides an interface for a more secure, scalable and faster session data storage as well as more secure session id handling. It uses the caching framework to store session data and allows you to configure every caching framework backend to store session data. Also it validates generated session ids against the session storage for uniqueness and checks every newly generated session id for uniqueness to ensure security and data privacy.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://typo3.org/extensions/repository/view/nr_session"
+               title="nr_session on TER">
+                <span class="badge ter">nr_session</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="cache-test-plugins" class="panel-title">
+                <span class="glyphicon glyphicon-lamp"></span>
+                Cache test plugins                    </h4>
+        </div>
+        <div class="panel-body">Provides cached and uncached TYPO3 plugins that render the current time. Each has an option to sleep for a certain amount of seconds. The plugins are helpful for testing concurrent accesses and locking/caching implementations in TYPO3.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://typo3.org/extensions/repository/view/nr_cachetest"
+               title="nr_cachetest on TER">
+                <span class="badge ter">nr_cachetest</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="semantic-templates" class="panel-title">
+                <span class="glyphicon glyphicon-link"></span>
+                Semantic Templates                    </h4>
+        </div>
+        <div class="panel-body">This extension displays HTML templates from a LESS installation in TYPO3 pages.
+            LESS is a web application to create HTML templates and fill them with data from the semantic web (linked data: RDF, RDFa; and SPARQL query results).
+            You can use it to display data from i.e. the Wikipedia on your TYPO3 page. Your page updates automatically when the data in Wikipedia change, and with LESS you have a central place to manage the layout of your template. Other people can improve your templates or add new ones, ready for you to use.
+            Apart from Wikipedia, you can make use of any data that are available as Linked Data (RDF/RDFa) or via SPARQL queries. FOAF profiles of people are a good example for RDF data.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/t3x-nr_semantic_templates"
+               title="nr_semantic_templates on GitHub">
+                <span class="badge github">nr_semantic_templates</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="content-delivery-network-tools" class="panel-title">
+                <span class="glyphicon glyphicon-cloud-download"></span>
+                Content Delivery Network Tools                    </h4>
+        </div>
+        <div class="panel-body">This extension will link static media in your page to your Content Delivery Network (CDN) or just any other static server for media delivery, so you can use your full featured CDN or just use some lightweight fast http server like Lighttpd to deliver content to your customers faster and offload traffic from your CMS servers.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/t3x-nr_cdn"
+               title="nr_cdn on GitHub">
+                <span class="badge github">nr_cdn</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="pagetree" class="panel-title">
+                <span class="glyphicon glyphicon-tree-deciduous"></span>
+                Pagetree                    </h4>
+        </div>
+        <div class="panel-body">Provides extended functionality for the pagetree, such as showing non page records (plain or hierarchical) and wiring them to custom pages. This is a big usability enhancement for hierarchical records that you usually could only manage in plain lists with the list module.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/t3x-nr_pagetree"
+               title="nr_pagetree on GitHub">
+                <span class="badge github">nr_pagetree</span>
+            </a>
+        </div>
+    </div>
+    <h3 id="magento">Magento</h3>
+    <hr>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="api-import-cli-script" class="panel-title">
+                <span class="glyphicon glyphicon-console"></span>
+                API import CLI script                    </h4>
+        </div>
+        <div class="panel-body">Provides a PHP command line script for interaction with the ApiImport module for Magento. The repository also contains real live example data.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/mage-api-import-cli"
+               title="mage-api-import-cli on GitHub">
+                <span class="badge github">mage-api-import-cli</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="jumpstorm" class="panel-title">
+                <span class="glyphicon glyphicon-ice-lolly-tasted"></span>
+                Jumpstorm                    </h4>
+        </div>
+        <div class="panel-body">Jumpstorm wants to help you concentrate on the task you have to do. No more time has to be wasted for Magento setup. It even could setup your Magento automatically, so it can even be used for demo or test systems.
+            Its flexible architecture allows you to extend its functionality as you need.
+            For extension with modman support, deployment is done with modman, so you'll get a ready-to-use installation at the end. All the other extensions, e.g. from Magento Connect will be hard-copied to your Magento.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/jumpstorm"
+               title="jumpstorm on GitHub">
+                <span class="badge github">jumpstorm</span>
+            </a>
+            <a href="https://github.com/netresearch/jumpstorm-zsh-plugin"
+               title="jumpstorm-zsh-plugin on GitHub">
+                <span class="badge github">jumpstorm-zsh-plugin</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="live-translator" class="panel-title">
+                <span class="glyphicon glyphicon-flag"></span>
+                Live translator                    </h4>
+        </div>
+        <div class="panel-body">This extension provides the ability to enable inline translation from backend just for the current user. Activates inline translation in Magento for a single user by clicking a link, which is valid for up to 2 minutes only.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/Magento-Livetranslator"
+               title="Magento-Livetranslator on GitHub">
+                <span class="badge github">Magento-Livetranslator</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="cms-relations" class="panel-title">
+                <span class="glyphicon glyphicon-transfer"></span>
+                CMS Relations                    </h4>
+        </div>
+        <div class="panel-body">Magento module to create relations between cms pages. With this it's for example possible to redirect to a translated cms page after language switching.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/CmsRelations"
+               title="CmsRelations on GitHub">
+                <span class="badge github">CmsRelations</span>
+            </a>
+        </div>
+    </div>
+    <h3 id="tools">Tools</h3>
+    <hr>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="assetpicker" class="panel-title">
+                <span class="glyphicon glyphicon-hand-up"></span>
+                AssetPicker                    </h4>
+        </div>
+        <div class="panel-body">AssetPicker is a free asset or file picker designed to be easily included into web application interfaces. It has a file abstraction layer allowing adapters to connect to any remote storage, be it cloud storages like Amazon S3, Google Drive or Dropbox or assets from a custom web application server. In opposite to other file managers or pickers, AssetPicker is suitable for hierarchical as well as associative file storages.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/assetpicker"
+               title="assetpicker on GitHub">
+                <span class="badge github">assetpicker</span>
+            </a>
+            <a href="https://www.npmjs.com/package/assetpicker"
+               title="assetpicker on npm">
+                <span class="badge npm">assetpicker</span>
+            </a>
+            <a href="https://packagist.org/packages/netresearch/assetpicker"
+               title="assetpicker on packagist">
+                <span class="badge packagist">assetpicker</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="timetracker" class="panel-title">
+                <span class="glyphicon glyphicon-time"></span>
+                Timetracker                    </h4>
+        </div>
+        <div class="panel-body">Timetracker is an extensive timetracking solution built on Symfony and ExtJS with JIRA integration (multiple JIRA-Instances possible), reporting, user management, CSV-Export on monthly basis and many more.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://github.com/netresearch/timetracker"
+               title="timetracker on GitHub">
+                <span class="badge github">timetracker</span>
+            </a>
+            <a href="https://github.com/netresearch/timalytics"
+               title="timalytics on GitHub">
+                <span class="badge github">timalytics</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="kite" class="panel-title">
+                <span class="glyphicon glyphicon-send"></span>
+                Kite                    </h4>
+        </div>
+        <div class="panel-body">Kite is a build and automation tool inspired by TYPO3.Surf, written in PHP and utilizing PHP for configuration. It's easy to use, flexible, node based and fail safe. It makes Netresearchs projects fly.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://packagist.org/packages/netresearch/kite"
+               title="kite on packagist">
+                <span class="badge packagist">kite</span>
+            </a>
+            <a href="https://github.com/netresearch/kite"
+               title="kite on GitHub">
+                <span class="badge github">kite</span>
+            </a>
+            <a href="https://travis-ci.org/netresearch/kite"
+               title="kite on travis">
+                <img src="https://api.travis-ci.org/netresearch/kite.png">
+            </a>
+        </div>
+    </div>
+    <h3 id="docker">Docker</h3>
+    <hr>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="akeneo" class="panel-title">
+                <span class="elm">Ak</span>
+                Akeneo                    </h4>
+        </div>
+        <div class="panel-body">Docker Image for Akeneo Product Information Management system.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://hub.docker.com/r/netresearch/docker-akeneo"
+               title="docker-akeneo on Docker Hub">
+                <span class="badge docker">docker-akeneo</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="data-crow" class="panel-title">
+                <span class="elm">DC</span>
+                Data Crow                    </h4>
+        </div>
+        <div class="panel-body">Docker image for Data Crow server based on OpenJDK 8.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://hub.docker.com/r/netresearch/data-crow"
+               title="data-crow on Docker Hub">
+                <span class="badge docker">data-crow</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="entermediadb" class="panel-title">
+                <span class="elm">EM</span>
+                EnterMediaDB                    </h4>
+        </div>
+        <div class="panel-body">Docker image running the EnterMediaDB Digital Asset Management System on an openjdk base image.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://hub.docker.com/r/netresearch/entermediadb"
+               title="entermediadb on Docker Hub">
+                <span class="badge docker">entermediadb</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="ssl-proxy" class="panel-title">
+                <span class="elm">SP</span>
+                SSL Proxy                    </h4>
+        </div>
+        <div class="panel-body">Docker Image for an NGinx Proxy provided by jwilder</div>
+        <div class="panel-footer clearfix">
+            <a href="https://hub.docker.com/r/netresearch/docker-ssl-proxy"
+               title="docker-ssl-proxy on Docker Hub">
+                <span class="badge docker">docker-ssl-proxy</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="phraseant" class="panel-title">
+                <span class="elm">Ph</span>
+                Phraseant                    </h4>
+        </div>
+        <div class="panel-body">Docker image for the Phraseanet PHP Digital Asset Management System.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://hub.docker.com/r/netresearch/phraseanet"
+               title="phraseanet on Docker Hub">
+                <span class="badge docker">phraseanet</span>
+            </a>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="razuna" class="panel-title">
+                <span class="elm">Rz</span>
+                Razuna                    </h4>
+        </div>
+        <div class="panel-body">Docker image for the Razuna Digital Asset Management System.</div>
+        <div class="panel-footer clearfix">
+            <a href="https://hub.docker.com/r/netresearch/razuna"
+               title="razuna on Docker Hub">
+                <span class="badge docker">razuna</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
