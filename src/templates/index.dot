@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Netresearch Open Source Inventory</title>
+    <base target="_blank">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css">
+    <link href='//cdn.jsdelivr.net/devicons/1.8.0/css/devicons.min.css' rel='stylesheet'>
+    <link href="css/main.css" rel="stylesheet">
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-411352-19', 'auto');
+        ga('send', 'pageview');
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img src="img/netresearch.png" height="24" alt="Netresearch"></a>
+            <a class="navbar-brand" href="#">Open Source Inventory</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <ul class="nav navbar-nav navbar-right">
+                {{~ it.libraries :group}}
+                <li class="dropdown">
+                    <a data-target="#" href="#{{=group.id}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        {{=group.title}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {{~ group.items :library}}
+                        <li><a target="_self" href="#{{=library.id}}">{{=library.title}}</a></li>
+                        {{~}}
+                    </ul>
+                </li>
+                {{~}}
+                <li>
+                    <a class="github" href="https://github.com/netresearch" target="_blank" title="Netresearch on GitHub">
+                        <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="jumbotron">
+        <h2><span style="color:#2F99A4">Netresearch</span><br>Open Source Inventory</h2>
+        <p>The greatest and latest of Netresearch's Open Source Initiatives</p>
+    </div>
+    {{~ it.libraries :group}}
+    <h3 id="{{=group.id}}">{{=group.title}}</h3>
+    <hr>
+    {{~ group.items :library}}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 id="{{=library.id}}" class="panel-title">
+                {{? library.glyphicon }}
+                <span class="glyphicon glyphicon-{{=library.glyphicon}}"></span>
+                {{?? library.devicon }}
+                <span class="devicons devicons-{{=library.devicon}}"></span>
+                {{?? library.img}}
+                <img src="img/library/{{=library.img}}" alt="">
+                {{?? library.elm}}
+                <span class="elm">{{=library.elm}}</span>
+                {{?}}
+                {{=library.title}}
+            </h4>
+        </div>
+        <div class="panel-body">{{=library.desc}}</div>
+        <div class="panel-footer clearfix">
+            {{~ Object.keys(library.badges) :badge}}
+            {{=(badgeTitle = (badge.substr(0, -4) === 't3x') ? badge.substr(4) : badge) && ''}}
+            {{~ (function() { return (typeof library.badges[badge] === 'string') ? [library.badges[badge]] : library.badges[badge]; })() :type}}
+            <a href="{{= (function() {
+                    return ({
+                    github: 'https://github.com/netresearch',
+                    ter: 'https://typo3.org/extensions/repository/view',
+                    travis: 'https://travis-ci.org/netresearch',
+                    docker: 'https://hub.docker.com/r/netresearch',
+                    npm: 'https://www.npmjs.com/package',
+                    packagist: 'https://packagist.org/packages/netresearch'
+                    })[type];
+                })()
+               }}/{{=badge}}"
+               title="{{=badgeTitle}} on {{=(function() {
+                    return {
+                        github: 'GitHub',
+                        ter: 'TYPO3 Extension Repository',
+                        travis: 'Travis CI',
+                        docker: 'Docker Hub',
+                        npm: 'npm',
+                        packagist: 'Packagist'
+                    }[type];
+                })()
+               }}">
+                {{? type === 'travis' }}
+                <img src="https://api.travis-ci.org/netresearch/{{=badge}}.png">
+                {{?? true}}
+                <span class="badge {{=type}}">{{=badgeTitle}}</span>
+                {{?}}
+            </a>
+            {{~}}
+            {{~}}
+            {{? library.more}}
+            <div class="dropdown">
+                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-option-horizontal"></span>
+                            </span>
+                <ul class="dropdown-menu">
+                    {{~ Object.keys(library.more) :url}}
+                    <li><a href="{{=url}}">{{=library.more[url]}}</a></li>
+                    {{~}}
+                </ul>
+            </div>
+            {{?}}
+        </div>
+    </div>
+    {{~}}
+    {{~}}
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

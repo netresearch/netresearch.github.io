@@ -1,0 +1,27 @@
+{
+  "name": "netresearch-github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netresearch/netresearch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/netresearch/netresearch/issues"
+  },
+  "homepage": "https://github.com/netresearch/netresearch#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "slugger": "^1.0.1"
+  },
+  "devDependencies": {
+    "dot": "^1.0.3",
+    "gulp-dot": "^1.5.0"
+  }
+}
