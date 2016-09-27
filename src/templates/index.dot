@@ -140,7 +140,15 @@
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','actualGa');
+
+    function ga () {
+        if (location.hostname === 'localhost') {
+            console.log('ga', arguments);
+        } else {
+            actualGa.apply(actualGa, arguments);
+        }
+    }
 
     ga('create', 'UA-411352-19', 'auto');
     ga('send', 'pageview');
@@ -149,21 +157,46 @@
 <script type="text/javascript">
     var scrolled = false;
     (function () {
-        $(window).scroll(function (e) {
-            if (!scrolled) {
-                ga('send', 'event', 'Interaction', 'scroll', 'Inventory', window.scrollY);
-                scrolled = true;
+        var clickedPages = [];
+        var watchElements = [];
+        var docOffset = parseInt($(document.body).css('paddingTop').replace(/^([0-9]+)px$/, '$1') || 0);
+
+        $('a[data-page]').each(function () {
+            var $el = $(this), page = '/' + $el.data('page').replace(/^\/+/, '');
+            if ($el.attr('href')[0] === '#') {
+                var $target = $($el.attr('href'));
+                if ($target.prop("tagName") === 'A') {
+                    watchElements.push({page: page, el: $target.next('div')});
+                }
             }
+            $el.click(function () {
+                clickedPages.push(page);
+                ga('send', 'pageview', page);
+            });
         });
-        $('a[data-event]').click(function () {
-            var event = $(this).data('event').split(';'),
-                category = event.shift(),
-                action = event.shift(),
-                label = event.join(';');
-            ga('send', 'event', category, action, label);
-        });
-        $('a[data-page]').click(function () {
-            ga('send', 'pageview', '/' + $(this).data('page'));
+
+        /* Track implicit page views (send pageview for each item that is completely in viewport longer than 3 seconds) */
+        var lastScrollY;
+        $(window).on('scroll resize', function () {
+            lastScrollY = window.scrollY;
+            window.setTimeout(
+                function () {
+                    if (this.scrollY !== lastScrollY) {
+                        return;
+                    }
+                    var wHeight = $(window).height();
+                    $.each(this.elements, function () {
+                        if (clickedPages.indexOf(this.page) < 0) {
+                            var top = this.el.offset().top;
+                            if (top > window.scrollY + docOffset && top < window.scrollY + wHeight && this.el.height() + top < window.scrollY + wHeight) {
+                                clickedPages.push(this.page);
+                                ga('send', 'pageview', this.page);
+                            }
+                        }
+                    });
+                }.bind({scrollY: lastScrollY, elements: watchElements}),
+                3000
+            );
         });
     })();
 </script>
