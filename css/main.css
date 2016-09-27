@@ -2,6 +2,12 @@
 body {
     padding-top:65px;
 }
+.anchor {
+    display: block;
+    position: relative;
+    top: -85px;
+    visibility: hidden;
+}
 .container {
     max-width:860px;
 }
@@ -132,4 +138,10 @@ body {
     content: "P";
     line-height: 18px;
     background: #f28d1a
+}
+.badge.demo:before {
+    content: "\e072";
+    font-family: 'Glyphicons Halflings';
+    background: #2F99A4;
+    font-size:11px;
 }

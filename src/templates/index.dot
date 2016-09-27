@@ -27,13 +27,13 @@
             <ul class="nav navbar-nav navbar-right">
                 {{~ it.libraries :group}}
                 <li class="dropdown">
-                    <a data-target="#" href="#{{=group.id}}" data-event="{{=group.title}};click;{{=group.title}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a data-target="#" href="#{{=group.id}}" data-page="{{=group.id}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         {{=group.title}}
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         {{~ group.items :library}}
-                        <li><a target="_self" href="#{{=library.id}}" data-event="{{=group.title}};click;{{=library.title}}">{{=library.title}}</a></li>
+                        <li><a target="_self" href="#{{=group.id}}-{{=library.id}}" data-page="{{=group.id}}/{{=library.id}}">{{=library.title}}</a></li>
                         {{~}}
                     </ul>
                 </li>
@@ -56,9 +56,10 @@
     <h3 id="{{=group.id}}">{{=group.title}}</h3>
     <hr>
     {{~ group.items :library}}
+    <a id="{{=group.id}}-{{=library.id}}" class="anchor"></a>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4 id="{{=library.id}}" class="panel-title">
+            <h4 class="panel-title">
                 {{? library.glyphicon }}
                 <span class="glyphicon glyphicon-{{=library.glyphicon}}"></span>
                 {{?? library.devicon }}
@@ -74,38 +75,45 @@
         <div class="panel-body">{{=library.desc}}</div>
         <div class="panel-footer clearfix">
             {{~ Object.keys(library.badges) :badge}}
-            {{=(badgeTitle = (badge.substr(0, -4) === 't3x') ? badge.substr(4) : badge) && ''}}
-            {{~ (function() { return (typeof library.badges[badge] === 'string') ? [library.badges[badge]] : library.badges[badge]; })() :type}}
-            <a href="{{= (function() {
-                    return ({
-                    github: 'https://github.com/netresearch',
-                    ter: 'https://typo3.org/extensions/repository/view',
-                    travis: 'https://travis-ci.org/netresearch',
-                    docker: 'https://hub.docker.com/r/netresearch',
-                    npm: 'https://www.npmjs.com/package',
-                    packagist: 'https://packagist.org/packages/netresearch'
-                    })[type];
-                })()
-               }}/{{=badge}}"
-               data-event="{{=group.title}};{{=badgeTitle}} ({{=type}});{{=library.title}}"
-               title="{{=badgeTitle}} on {{=(function() {
-                    return {
-                        github: 'GitHub',
-                        ter: 'TYPO3 Extension Repository',
-                        travis: 'Travis CI',
-                        docker: 'Docker Hub',
-                        npm: 'npm',
-                        packagist: 'Packagist'
-                    }[type];
-                })()
-               }}">
-                {{? type === 'travis' }}
-                <img src="https://api.travis-ci.org/netresearch/{{=badge}}.png">
+                {{? badge === 'demo'}}
+                    <!-- Demos are supposed to track pageviews on their own -->
+                    <a href="{{=library.badges[badge]}}">
+                        <span class="badge demo">Demo</span>
+                    </a>
                 {{?? true}}
-                <span class="badge {{=type}}">{{=badgeTitle}}</span>
+                    {{=(badgeTitle = (badge.substr(0, -4) === 't3x') ? badge.substr(4) : badge) && ''}}
+                    {{~ (function() { return (typeof library.badges[badge] === 'string') ? [library.badges[badge]] : library.badges[badge]; })() :type}}
+                        <a href="{{= (function() {
+                                return ({
+                                github: 'https://github.com/netresearch',
+                                ter: 'https://typo3.org/extensions/repository/view',
+                                travis: 'https://travis-ci.org/netresearch',
+                                docker: 'https://hub.docker.com/r/netresearch',
+                                npm: 'https://www.npmjs.com/package',
+                                packagist: 'https://packagist.org/packages/netresearch'
+                                })[type];
+                            })()
+                           }}/{{=badge}}"
+                           data-page="{{=group.id}}/{{=library.id}}/{{=badgeTitle}}/{{=type}}"
+                           title="{{=badgeTitle}} on {{=(function() {
+                                return {
+                                    github: 'GitHub',
+                                    ter: 'TYPO3 Extension Repository',
+                                    travis: 'Travis CI',
+                                    docker: 'Docker Hub',
+                                    npm: 'npm',
+                                    packagist: 'Packagist'
+                                }[type];
+                            })()
+                           }}">
+                            {{? type === 'travis' }}
+                            <img src="https://api.travis-ci.org/netresearch/{{=badge}}.png">
+                            {{?? true}}
+                            <span class="badge {{=type}}">{{=badgeTitle}}</span>
+                            {{?}}
+                        </a>
+                    {{~}}
                 {{?}}
-            </a>
-            {{~}}
             {{~}}
             {{? library.more}}
             <div class="dropdown">
@@ -114,7 +122,7 @@
                             </span>
                 <ul class="dropdown-menu">
                     {{~ Object.keys(library.more) :url}}
-                    <li><a href="{{=url}}" data-event="{{=group.title}};{{=library.more[url]}} ({{=type}});{{=library.title}}">{{=library.more[url]}}</a></li>
+                    <li><a href="{{=url}}" data-page="{{=group.id}}/{{=library.id}}/{{=it.slugger(library.more[url])}}">{{=library.more[url]}}</a></li>
                     {{~}}
                 </ul>
             </div>
@@ -153,6 +161,9 @@
                 action = event.shift(),
                 label = event.join(';');
             ga('send', 'event', category, action, label);
+        });
+        $('a[data-page]').click(function () {
+            ga('send', 'pageview', '/' + $(this).data('page'));
         });
     })();
 </script>

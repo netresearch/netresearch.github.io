@@ -6,6 +6,7 @@ module.exports = {
             glyphicon: 'hand-up',
             desc: 'AssetPicker is a free asset or file picker designed to be easily included into web application interfaces. It has a file abstraction layer allowing adapters to connect to any remote storage, be it cloud storages like Amazon S3, Google Drive or Dropbox or assets from a custom web application server. In opposite to other file managers or pickers, AssetPicker is suitable for hierarchical as well as associative file storages.',
             badges: {
+                demo: 'https://netresearch.github.io/assetpicker',
                 assetpicker: ['github', 'npm', 'packagist']
             }
         },

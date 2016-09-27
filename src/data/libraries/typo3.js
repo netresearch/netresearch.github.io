@@ -14,11 +14,11 @@ module.exports = {
             more: {
                 'https://www.netresearch.de/blog/typo3-contexts/': 'Announcement (german)',
                 'http://t3n.de/magazin/erweiterung-ermoeglicht-kontextabhaengige-darstellung-234115/': 'Article on t3n (german)',
-                'https://www.youtube.com/watch?v=ft2aQ0qQUrc&list=PL-sDBIrOKGOZ3ZrwFpyl0El1Oh51VUl38&index=3': 'Presentation at T3CON 2014 (eehm)'
+                'https://www.youtube.com/watch?v=ft2aQ0qQUrc&list=PL-sDBIrOKGOZ3ZrwFpyl0El1Oh51VUl38&index=3': 'Presentation at T3CON 2013 (eehm)'
             }
         },
         {
-            title: 'TYPO3 performance analysis',
+            title: 'Performance analysis',
             glyphicon: 'dashboard',
             desc: 'This TYPO3 extension tracks frontend rendering timing and quantity information and displays a summary at the bottom right of the frontend pages. By default it tracks rendering time of the server and browser, and the number of SQL queries and the total time needed for them. Additionally extensions can track custom information into other groups.',
             badges: {

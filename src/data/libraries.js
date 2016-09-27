@@ -6,19 +6,22 @@ var libraries = [
 ];
 
 var ids = [], slugger = require('slugger');
-function setId(item) {
-    var slug = slugger(item.title), id = slug, i = 1;
-    while (ids.indexOf(id) > -1) {
-        id = slug + '-' + i;
-        i++;
-    }
-    ids.push(id);
-    item.id = id;
+function setIds(items) {
+    var ids = [];
+    items.forEach(function (item) {
+        var slug = slugger(item.title), id = slug, i = 1;
+        while (ids.indexOf(id) > -1) {
+            id = slug + '-' + i;
+            i++;
+        }
+        ids.push(id);
+        item.id = id;
+        if (item.items) {
+            setIds(item.items);
+        }
+    });
 }
 
-libraries.forEach(function (item) {
-    setId(item);
-    item.items.forEach(setId);
-});
+setIds(libraries);
 
 module.exports = libraries;

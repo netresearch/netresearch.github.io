@@ -4,7 +4,16 @@ var gulp = require('gulp'),
 
 gulp.task('dot', function() {
     gulp.src(['src/templates/*.dot'])
-        .pipe(dot({it: {libraries: require('./src/data/libraries')}}))
+        .pipe(
+            dot(
+                {
+                    it: {
+                        libraries: require('./src/data/libraries'),
+                        slugger: require('slugger')
+                    }
+                }
+            )
+        )
         .pipe(gulp.dest('.'));
 });
 
