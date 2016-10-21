@@ -133,6 +133,16 @@
     {{~}}
 </div>
 
+<div class="container footer">
+    <p class="text-center">
+        &copy; {{=((new Date()).getFullYear())}} <a href="https://www.netresearch.de/">Netresearch</a>
+        – your
+            <a href="https://www.netresearch.de/typo-3/">TYPO3</a>,
+            <a href="https://www.netresearch.de/magento/">Magento</a> and
+            <a href="https://www.netresearch.de/blugento/">Blugento</a> Expert
+    </p>
+</div>
+
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 

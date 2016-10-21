@@ -34,7 +34,7 @@ module.exports = {
             }
         },
         {
-            title: 'Phraseant',
+            title: 'Phraseanet',
             elm: 'Ph',
             desc: 'Docker image for the Phraseanet PHP Digital Asset Management System.',
             badges: {

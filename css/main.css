@@ -1,3 +1,9 @@
+a {
+    color: #2F99A4;
+}
+code {
+    color: #666;
+}
 
 body {
     padding-top:65px;
@@ -144,4 +150,9 @@ body {
     font-family: 'Glyphicons Halflings';
     background: #2F99A4;
     font-size:11px;
+}
+.footer {
+    border-top: 1px solid #eeeeee;
+    padding-top: 1em;
+    margin-bottom: 1em;
 }
