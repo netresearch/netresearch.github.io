@@ -1,5 +1,5 @@
 a {
-    color: #2F99A4;
+    color: #4299a3;
 }
 code {
     color: #666;
@@ -40,7 +40,7 @@ body {
     top:0;
 }
 .panel-heading > h4 > span {
-    color: #2F99A4;
+    color: #4299a3;
     font-size:22px;
     font-weight: normal;
     position: absolute;
@@ -59,7 +59,7 @@ body {
     line-height: 20px;
     white-space: nowrap;
     text-align: center;
-    border: 2px solid #2F99A4;
+    border: 2px solid #4299a3;
     font-weight: 700;
 }
 .panel-footer > a {
@@ -73,7 +73,7 @@ body {
 }
 .panel-footer > a:hover {
     text-decoration: none;
-    color: #2F99A4;
+    color: #4299a3;
     opacity: 1;
 }
 .panel-footer .dropdown {
@@ -148,7 +148,7 @@ body {
 .badge.demo:before {
     content: "\e072";
     font-family: 'Glyphicons Halflings';
-    background: #2F99A4;
+    background: #4299a3;
     font-size:11px;
 }
 .footer {

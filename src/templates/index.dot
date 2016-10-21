@@ -20,7 +20,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><img src="img/netresearch.png" height="24" alt="Netresearch"></a>
+            <a class="navbar-brand" href="#"><img src="img/netresearch.svg" height="24" alt="Netresearch"></a>
             <a class="navbar-brand" href="#">Open Source Inventory</a>
         </div>
 
@@ -50,7 +50,7 @@
 </nav>
 <div class="container">
     <div class="jumbotron">
-        <h2><span style="color:#2F99A4">Netresearch</span><br>Open Source Inventory</h2>
+        <h2><span style="color:#4299a3">Netresearch</span><br>Open Source Inventory</h2>
         <p>The greatest and latest of Netresearch's Open Source Initiatives</p>
     </div>
     {{~ it.libraries :group}}
