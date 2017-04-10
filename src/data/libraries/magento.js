@@ -2,6 +2,17 @@ module.exports = {
     title: 'Magento',
     items: [
         {
+            title: 'DHL Shipping module for Magento 2',
+            glyphicon: 'equalizer',
+            desc: 'This extension integrates the Deutsche Post DHL Group Business Customer Shipping API (GKP Versenden) into the Magento 2 order processing workflow.',
+            badges: {
+                'dhl-module-shipping-m2': 'github'
+            },
+            more: {
+                'http://dhl.support.netresearch.de/support/home': 'DHL Module Support (german/ english)'
+            },
+        },
+        {
             title: 'API import CLI script',
             glyphicon: 'console',
             desc: 'Provides a PHP command line script for interaction with the ApiImport module for Magento. The repository also contains real live example data.',
