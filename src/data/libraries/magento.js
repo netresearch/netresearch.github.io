@@ -46,6 +46,22 @@ module.exports = {
             badges: {
                 CmsRelations: 'github'
             }
+        },
+        {
+            title: 'node-magento-eqp',
+            glyphicon: 'transfer',
+            desc: 'A simple API wrapper around the Magento Marketplace EQP API.',
+            badges: {
+                'node-magento-eqp': ['github', 'npm']
+            }
+        },
+        {
+            title: 'node-red-contrib-magento-eqp',
+            devicon: 'javascript',
+            desc: 'Node-RED module to parse Magento EQP callbacks',
+            badges: {
+                'node-red-contrib-magento-eqp': ['github', 'npm']
+            }
         }
     ]
 };
