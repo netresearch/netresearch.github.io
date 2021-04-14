@@ -1,22 +1,17 @@
-var gulp = require('gulp'),
-    dot = require('gulp-dot');
+const gulp = require('gulp');
+const dot = require('gulp-dot');
 
+exports.default = () =>
+	gulp
+		.src(['src/templates/*.dot'])
+		.pipe(
+			dot({
+				it: {
+					libraries: require('./src/data/libraries'),
+					slugger: require('slugger')
+				}
+			})
+		)
+		.pipe(gulp.dest('.'));
 
-gulp.task('dot', function() {
-    gulp.src(['src/templates/*.dot'])
-        .pipe(
-            dot(
-                {
-                    it: {
-                        libraries: require('./src/data/libraries'),
-                        slugger: require('slugger')
-                    }
-                }
-            )
-        )
-        .pipe(gulp.dest('.'));
-});
-
-gulp.task('watch', ['dot'], function () {
-    gulp.watch('src/**/*.*', ['dot']);
-});
+exports.watch = () => gulp.watch('src/**/*.*', exports.default);
