@@ -1,5 +1,6 @@
 module.exports = {
     title: 'TYPO3',
+    devicon: 'typo3-original colored',
     items: [
         {
             title: 'Multi-channel contexts',

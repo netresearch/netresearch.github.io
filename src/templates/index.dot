@@ -54,8 +54,13 @@
         <p>The greatest and latest of Netresearch's Open Source Initiatives</p>
     </div>
     {{~ it.libraries :group}}
-    <h3 id="{{=group.id}}">{{=group.title}}</h3>
-    <hr>
+    <h3 id="{{=group.id}}" class="group">
+        {{? group.glyphicon }}
+        <span class="glyphicon glyphicon-{{=group.glyphicon}}"></span>
+        {{?? group.devicon }}
+        <span class="devicon-{{=group.devicon}}"></span>
+        {{?}}
+        {{=group.title}}</h3>
     {{~ group.items :library}}
     <a id="{{=group.id}}-{{=library.id}}" class="anchor"></a>
     <div class="panel panel-default">

@@ -1,5 +1,6 @@
 module.exports = {
     title: 'Tools',
+    glyphicon: 'wrench',
     items: [
         {
             title: 'Semann - semantic annotator',

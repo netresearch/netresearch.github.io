@@ -8,6 +8,11 @@ code {
 body {
     padding-top:65px;
 }
+h3.group {
+    margin: 20px -50px;
+    padding: 20px 50px;
+    border-top: solid 2px #4299a3;
+}
 .anchor {
     display: block;
     position: relative;

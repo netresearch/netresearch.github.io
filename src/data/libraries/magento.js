@@ -1,5 +1,6 @@
 module.exports = {
     title: 'Magento',
+    devicon: 'magento-original colored',
     items: [
         {
             title: 'DHL Shipping module for Magento 2',

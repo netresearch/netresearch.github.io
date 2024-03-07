@@ -1,5 +1,6 @@
 module.exports = {
     title: 'Docker',
+    devicon: 'docker-plain colored',
     items: [
         {
             title: 'Akeneo',
