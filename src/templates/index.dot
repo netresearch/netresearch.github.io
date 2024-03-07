@@ -138,12 +138,12 @@
     <p class="text-center">
         &copy; {{=((new Date()).getFullYear())}} <a href="https://www.netresearch.de/">Netresearch</a>
         – your
-            <a href="https://www.netresearch.de/typo-3/">TYPO3</a>,
+            <a href="https://www.netresearch.de/typo3-cms/">TYPO3</a>,
+            <a href="https://www.netresearch.de/orocommerce-agentur/">OroCommerce</a>,
             <a href="https://www.netresearch.de/magento/">Magento</a> and
-            <a href="https://www.netresearch.de/blugento/">Blugento</a> Expert
-    </p>
-    <p>
-    <a href="https://www.netresearch.de/impressum/" title="Impressum">Impressum</a>
+            <a href="https://www.netresearch.de/blugento-commerce-cloud/">blugento</a> Expert
+            -
+            <a href="https://www.netresearch.de/impressum/" title="Impressum">Impressum</a>
     </p>
 </div>
 
