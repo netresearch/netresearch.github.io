@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/netresearch/netresearch.git"
+    "url": "git+https://github.com/netresearch/netresearch.github.io.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/netresearch/netresearch/issues"
+    "url": "https://github.com/netresearch/netresearch.github.io/issues"
   },
-  "homepage": "https://github.com/netresearch/netresearch#readme",
+  "homepage": "https://github.com/netresearch/netresearch.github.io#readme",
   "dependencies": {
     "gulp": "^4.0.2",
     "slugger": "^1.0.1"
