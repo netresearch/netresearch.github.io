@@ -35,7 +35,7 @@ module.exports = {
             glyphicon: 'send',
             desc: 'Kite is a build and automation tool inspired by TYPO3.Surf, written in PHP and utilizing PHP for configuration. It\'s easy to use, flexible, node based and fail safe. It makes Netresearchs projects fly.',
             badges: {
-                kite: ['packagist', 'github', 'travis']
+                kite: ['packagist', 'github']
             }
         }
     ]

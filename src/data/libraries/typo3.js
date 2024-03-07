@@ -8,8 +8,7 @@ module.exports = {
             badges: {
                 contexts: 'ter',
                 contexts_geolocation: 'ter',
-                contexts_wurfl: 'ter',
-                't3x-contexts': 'travis'
+                contexts_wurfl: 'ter'
             },
             more: {
                 'https://www.netresearch.de/blog/typo3-contexts/': 'Announcement (german)',
