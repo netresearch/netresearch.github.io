@@ -61,6 +61,7 @@
         <span class="devicon-{{=group.devicon}}"></span>
         {{?}}
         {{=group.title}}</h3>
+        <p><a href="{{=group.link}}">{{=group.linktext}}</a></p>
     {{~ group.items :library}}
     <a id="{{=group.id}}-{{=library.id}}" class="anchor"></a>
     <div class="panel panel-default">

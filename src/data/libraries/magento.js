@@ -1,6 +1,8 @@
 module.exports = {
     title: 'Magento',
     devicon: 'magento-original colored',
+    link: 'https://www.netresearch.de/magento/',
+    linktext: 'Netresearch also offers Magento special services for B2C and B2B including DevOps, operations, support, upgrades and migrations.',
     items: [
         {
             title: 'DHL Shipping module for Magento 2',

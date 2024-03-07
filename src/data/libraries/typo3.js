@@ -1,6 +1,8 @@
 module.exports = {
     title: 'TYPO3',
     devicon: 'typo3-original colored',
+    link: 'https://www.netresearch.de/typo3-agentur/',
+    linktext: 'Netresearch also offers TYPO3 special services for B2C and B2B including DevOps, operations, support, upgrades and migrations.',
     items: [
         {
             title: 'Multi-channel contexts',

@@ -1,6 +1,8 @@
 module.exports = {
     title: 'Docker',
     devicon: 'docker-plain colored',
+    link: 'https://www.netresearch.de/support-und-wartung/',
+    linktext: 'Netresearch also offers special services for B2C and B2B including DevOps, operations, support, upgrades and migrations.',
     items: [
         {
             title: 'Akeneo',

@@ -1,6 +1,8 @@
 module.exports = {
     title: 'Tools',
     glyphicon: 'wrench',
+    link: 'https://www.netresearch.de/individuelle-software-entwicklung/',
+    linktext: 'Netresearch also offers software development for B2C and B2B including DevOps, operations, support, upgrades and migrations.',
     items: [
         {
             title: 'Semann - semantic annotator',
