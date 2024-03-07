@@ -57,7 +57,7 @@ module.exports = {
         },
         {
             title: 'node-red-contrib-magento-eqp',
-            devicon: 'javascript',
+            devicon: 'javascript-plain',
             desc: 'Node-RED module to parse Magento EQP callbacks',
             badges: {
                 'node-red-contrib-magento-eqp': ['github', 'npm']

@@ -38,7 +38,7 @@ module.exports = {
         },
         {
             title: 'Caching Framework',
-            devicon: 'redis',
+            devicon: 'redis-plain',
             desc: 'This extension provides functionality to store cache data in memory based caching systems like Couchbase, Redis, Memcache or Amazon ElastiCache. Including PHP code cache and function results - move your typo3temp cache folders into Redis. It contains a streamwrapper to store PHP code cache in caching framework, a Couchbase caching framework backend and a function cache as callable caching frontend.',
             badges: {
                 nr_cache: 'ter'
