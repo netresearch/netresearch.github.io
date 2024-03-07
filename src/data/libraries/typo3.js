@@ -9,7 +9,10 @@ module.exports = {
             badges: {
                 contexts: 'ter',
                 contexts_geolocation: 'ter',
-                contexts_wurfl: 'ter'
+                contexts_wurfl: 'ter',
+                't3x-contexts': 'github',
+                't3x-contexts_geolocation': 'github',
+                't3x-contexts_wurfl': 'github'
             },
             more: {
                 'https://www.netresearch.de/blog/typo3-contexts/': 'Announcement (german)',
@@ -22,7 +25,8 @@ module.exports = {
             glyphicon: 'dashboard',
             desc: 'This TYPO3 extension tracks frontend rendering timing and quantity information and displays a summary at the bottom right of the frontend pages. By default it tracks rendering time of the server and browser, and the number of SQL queries and the total time needed for them. Additionally extensions can track custom information into other groups.',
             badges: {
-                nr_perfanalysis: 'ter'
+                nr_perfanalysis: 'ter',
+                't3x-nr_perfanalysis': 'github'
             }
         },
         {
@@ -33,7 +37,9 @@ module.exports = {
             + 'After that the compatibility layer extension <code>dam_compat</code> provides the old DAM API methods using FAL files enabling you to make the switch without any further code or extension changes.',
             badges: {
                 nr_dam_falmigration: 'ter',
-                dam_compat: 'ter'
+                dam_compat: 'ter',
+                't3x-nr_dam_falmigration': 'github',
+                't3x-dam_compat': 'github'
             }
         },
         {
@@ -41,7 +47,8 @@ module.exports = {
             devicon: 'redis-plain',
             desc: 'This extension provides functionality to store cache data in memory based caching systems like Couchbase, Redis, Memcache or Amazon ElastiCache. Including PHP code cache and function results - move your typo3temp cache folders into Redis. It contains a streamwrapper to store PHP code cache in caching framework, a Couchbase caching framework backend and a function cache as callable caching frontend.',
             badges: {
-                nr_cache: 'ter'
+                nr_cache: 'ter',
+                't3x-nr_cache': 'github'
             }
         },
         {
@@ -49,7 +56,8 @@ module.exports = {
             glyphicon: 'lock',
             desc: 'NR_Lock is a distributed lock manager (DLM). It\'s designed for multiple TYPO3 frontend servers using a single typo3temp share and Database. NR_Lock currently supports single Redis or Couchbase (experimental) caching server as locking instance. It replaces/extends the TYPO3 lock facility t3lib_lock.',
             badges: {
-                nr_lock: 'ter'
+                'nr_lock': 'ter',
+                't3x-nr_lock': 'github'
             }
         },
         {
@@ -57,7 +65,8 @@ module.exports = {
             glyphicon: 'barcode',
             desc: 'This extension acts as alternative session handler and provides an interface for a more secure, scalable and faster session data storage as well as more secure session id handling. It uses the caching framework to store session data and allows you to configure every caching framework backend to store session data. Also it validates generated session ids against the session storage for uniqueness and checks every newly generated session id for uniqueness to ensure security and data privacy.',
             badges: {
-                nr_session: 'ter'
+                'nr_session': 'ter',
+                't3x-nr_session': 'github'
             }
         },
         {
@@ -65,7 +74,8 @@ module.exports = {
             glyphicon: 'lamp',
             desc: 'Provides cached and uncached TYPO3 plugins that render the current time. Each has an option to sleep for a certain amount of seconds. The plugins are helpful for testing concurrent accesses and locking/caching implementations in TYPO3.',
             badges: {
-                nr_cachetest: 'ter'
+                'nr_cachetest': 'ter',
+                't3x-nr_cachetest': 'github'
             }
         },
         {
@@ -76,6 +86,7 @@ module.exports = {
             + 'You can use it to display data from i.e. the Wikipedia on your TYPO3 page. Your page updates automatically when the data in Wikipedia change, and with LESS you have a central place to manage the layout of your template. Other people can improve your templates or add new ones, ready for you to use.'
             + 'Apart from Wikipedia, you can make use of any data that are available as Linked Data (RDF/RDFa) or via SPARQL queries. FOAF profiles of people are a good example for RDF data.',
             badges: {
+                'nr_semantic_templates': 'ter',
                 't3x-nr_semantic_templates': 'github'
             }
         },
@@ -84,7 +95,9 @@ module.exports = {
             glyphicon: 'cloud-download',
             desc: 'This extension will link static media in your page to your Content Delivery Network (CDN) or just any other static server for media delivery, so you can use your full featured CDN or just use some lightweight fast http server like Lighttpd to deliver content to your customers faster and offload traffic from your CMS servers.',
             badges: {
+                'nr_cdn': 'ter',
                 't3x-nr_cdn': 'github'
+
             }
         },
         {
@@ -92,6 +105,7 @@ module.exports = {
             glyphicon: 'tree-deciduous',
             desc: 'Provides extended functionality for the pagetree, such as showing non page records (plain or hierarchical) and wiring them to custom pages. This is a big usability enhancement for hierarchical records that you usually could only manage in plain lists with the list module.',
             badges: {
+                'nr_pagetree': 'ter',
                 't3x-nr_pagetree': 'github'
             }
         }
