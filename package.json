@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/netresearch/netresearch.github.io#readme",
   "dependencies": {
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "slugger": "^1.0.1"
   },
   "devDependencies": {
