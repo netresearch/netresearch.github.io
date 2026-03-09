@@ -50,10 +50,6 @@
   description: >
     Extensive time tracking solution with Jira integration, reporting,
     user management, and CSV export. Built on Symfony.
-  links:
-    - type: packagist
-      url: https://packagist.org/packages/netresearch/timetracker
-      label: Packagist
 
 - name: t3x-contexts
   repo: netresearch/t3x-contexts
@@ -84,8 +80,8 @@
     refines content using LLMs directly within the rich text editor.
   links:
     - type: ter
-      url: https://extensions.typo3.org/extension/cowriter
-      label: cowriter
+      url: https://extensions.typo3.org/extension/t3_cowriter
+      label: t3_cowriter
     - type: packagist
       url: https://packagist.org/packages/netresearch/t3-cowriter
       label: Packagist
@@ -97,6 +93,9 @@
     LLM integration framework for TYPO3 — provides a unified API for
     connecting TYPO3 extensions to various AI language model providers.
   links:
+    - type: ter
+      url: https://extensions.typo3.org/extension/nr_llm
+      label: nr_llm
     - type: packagist
       url: https://packagist.org/packages/netresearch/nr-llm
       label: Packagist
@@ -108,6 +107,9 @@
     HashiCorp Vault integration for TYPO3 — securely fetch and inject
     secrets from Vault into TYPO3 configuration at runtime.
   links:
+    - type: ter
+      url: https://extensions.typo3.org/extension/nr_vault
+      label: nr_vault
     - type: packagist
       url: https://packagist.org/packages/netresearch/nr-vault
       label: Packagist
@@ -119,6 +121,9 @@
     WebAuthn/Passkey authentication for TYPO3 backend users. Enables
     passwordless login with biometrics, security keys, and platform authenticators.
   links:
+    - type: ter
+      url: https://extensions.typo3.org/extension/nr_passkeys_be
+      label: nr_passkeys_be
     - type: packagist
       url: https://packagist.org/packages/netresearch/nr-passkeys-be
       label: Packagist
@@ -130,6 +135,9 @@
     Automatic image optimization for TYPO3. Compresses and converts images
     on upload or processing to reduce page weight and improve Core Web Vitals.
   links:
+    - type: ter
+      url: https://extensions.typo3.org/extension/nr_image_optimize
+      label: nr_image_optimize
     - type: packagist
       url: https://packagist.org/packages/netresearch/nr-image-optimize
       label: Packagist
