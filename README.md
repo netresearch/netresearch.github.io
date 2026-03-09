@@ -1,26 +1,30 @@
-# Deployment
+# netresearch.github.io
 
-## Build Environment
+Netresearch Open Source portfolio and showcase site.
 
-You need to have a Node.js environment with gulp and yarn.
+## Tech Stack
 
-You can use the offical Node.js Docker container image:
+- [Astro](https://astro.build/) — static site generator
+- [Tailwind CSS](https://tailwindcss.com/) v4 — utility-first styling
+- GitHub Actions — daily builds with auto-deployed GitHub Pages
 
-```bash
-docker run -ti --rm -v `pwd`:/work node bash
-npm install --global gulp-cli
-cd /work
-```
-
-## Build
+## Development
 
 ```bash
-yarn
-yarn install
-gulp
+npm install
+npm run fetch-repos   # Fetch GitHub org metadata
+npm run dev           # Start dev server
+npm run build         # Production build
+npm run preview       # Preview production build
 ```
 
+## Adding Featured Projects
 
-## Deploy
+Edit `src/data/featured.yaml` to add or update curated project entries. All other repos are auto-populated from the GitHub API at build time.
 
-Deployment is done by pushing the updated index.html to github.com:netresearch/netresearch.github.io.git
+## Deployment
+
+The site is automatically built and deployed to GitHub Pages:
+- On every push to `master`
+- Daily at 06:00 UTC (to refresh repo metadata)
+- Manually via workflow dispatch
