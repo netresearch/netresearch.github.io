@@ -55,7 +55,20 @@ const updatedAgo = timeAgo(project.pushed_at);
       </div>
     </div>
 
-    <p class="text-white/50 leading-relaxed mb-6 max-w-2xl">{project.description}</p>
+    <p class="text-white/60 leading-relaxed mb-6 max-w-2xl">{project.description}</p>
+
+    {project.qualityBadges && project.qualityBadges.length > 0 && (
+      <div class="flex flex-wrap gap-2 mb-4">
+        {project.qualityBadges.map((badge) => (
+          <img
+            src={badge.url}
+            alt={badge.alt}
+            class="h-5"
+            loading="lazy"
+          />
+        ))}
+      </div>
+    )}
 
     <div class="flex flex-wrap items-center gap-3">
       {project.latestRelease && (
@@ -64,7 +77,7 @@ const updatedAgo = timeAgo(project.pushed_at);
         </span>
       )}
       {updatedAgo && (
-        <span class="text-xs text-white/50">Updated {updatedAgo}</span>
+        <span class="text-xs text-white/60">Updated {updatedAgo}</span>
       )}
       <div class="flex-1"></div>
       <div class="flex flex-wrap gap-2">

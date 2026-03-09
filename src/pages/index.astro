@@ -13,15 +13,17 @@ const data = loadProjects();
 
 <Layout title="Netresearch Open Source">
   <Nav />
-  <Hero totalRepos={data.stats.totalRepos} />
-  <StatsBar
-    totalRepos={data.stats.totalRepos}
-    totalStars={data.stats.totalStars}
-    languages={data.stats.languages}
-  />
-  <FeaturedSection projects={data.featured} />
-  {data.categories.map((cat) => (
-    <CategorySection category={cat} repos={data.byCategory[cat.id] || []} />
-  ))}
+  <main id="main-content">
+    <Hero totalRepos={data.stats.totalRepos} />
+    <StatsBar
+      totalRepos={data.stats.totalRepos}
+      totalStars={data.stats.totalStars}
+      languages={data.stats.languages}
+    />
+    <FeaturedSection projects={data.featured} />
+    {data.categories.map((cat) => (
+      <CategorySection category={cat} repos={data.byCategory[cat.id] || []} />
+    ))}
+  </main>
   <Footer />
 </Layout>
