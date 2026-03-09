@@ -1,5 +1,6 @@
 ---
 import Badge from './Badge.astro';
+import CategoryIcon from './CategoryIcon.astro';
 import { getLanguageColor } from '../data/language-colors';
 import type { FeaturedProject } from '../data/load-projects';
 
@@ -36,7 +37,8 @@ const updatedAgo = timeAgo(project.pushed_at);
 
   <div class="relative z-10">
     <div class="flex items-start justify-between mb-4">
-      <h3 class="text-2xl font-heading font-bold text-white group-hover:text-nr-teal transition-colors">
+      <h3 class="flex items-center gap-2 text-2xl font-heading font-bold text-white group-hover:text-nr-teal transition-colors">
+        <CategoryIcon category={project.category} />
         {project.name}
       </h3>
       <div class="flex items-center gap-3 text-sm text-white/60">
