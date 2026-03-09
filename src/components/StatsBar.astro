@@ -8,23 +8,23 @@ const { totalRepos, totalStars, languages } = Astro.props;
 const yearsActive = new Date().getFullYear() - 2012;
 ---
 
-<section class="relative py-16 border-y border-white/5" data-animate="fade-up">
+<section class="relative py-16 border-y border-border" data-animate="fade-up">
   <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
     <div>
-      <div class="text-4xl md:text-5xl font-heading font-black text-nr-teal" data-count-to={totalRepos}>0</div>
-      <div class="text-sm text-white/60 mt-2 font-heading uppercase tracking-wider">Repositories</div>
+      <div class="text-4xl md:text-5xl font-heading font-black text-nr-teal" data-count-to={totalRepos} aria-label={`${totalRepos} Repositories`}>0</div>
+      <div class="text-sm text-text-secondary mt-2 font-heading uppercase tracking-wider">Repositories</div>
     </div>
     <div>
-      <div class="text-4xl md:text-5xl font-heading font-black text-nr-orange" data-count-to={totalStars}>0</div>
-      <div class="text-sm text-white/60 mt-2 font-heading uppercase tracking-wider">Stars</div>
+      <div class="text-4xl md:text-5xl font-heading font-black text-nr-orange" data-count-to={totalStars} aria-label={`${totalStars} Stars`}>0</div>
+      <div class="text-sm text-text-secondary mt-2 font-heading uppercase tracking-wider">Stars</div>
     </div>
     <div>
-      <div class="text-4xl md:text-5xl font-heading font-black text-white" data-count-to={languages}>0</div>
-      <div class="text-sm text-white/60 mt-2 font-heading uppercase tracking-wider">Languages</div>
+      <div class="text-4xl md:text-5xl font-heading font-black text-text-primary" data-count-to={languages} aria-label={`${languages} Languages`}>0</div>
+      <div class="text-sm text-text-secondary mt-2 font-heading uppercase tracking-wider">Languages</div>
     </div>
     <div>
-      <div class="text-4xl md:text-5xl font-heading font-black text-white/80" data-count-to={yearsActive}>0</div>
-      <div class="text-sm text-white/60 mt-2 font-heading uppercase tracking-wider">Years Active</div>
+      <div class="text-4xl md:text-5xl font-heading font-black text-text-muted" data-count-to={yearsActive} aria-label={`${yearsActive} Years Active`}>0</div>
+      <div class="text-sm text-text-secondary mt-2 font-heading uppercase tracking-wider">Years Active</div>
     </div>
   </div>
 </section>

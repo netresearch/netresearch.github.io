@@ -13,7 +13,7 @@ const { category, repos } = Astro.props;
 
 {repos.length > 0 && (
   <section id={category.id} class="py-20 relative">
-    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
     <div class="max-w-7xl mx-auto px-6">
       <div class="mb-12" data-animate="fade-up">
         <h2 class="text-sm font-heading uppercase tracking-[0.2em] text-nr-teal mb-3">{category.title}</h2>

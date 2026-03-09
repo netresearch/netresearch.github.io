@@ -17,6 +17,8 @@
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.9"
+    "@astrojs/check": "^0.9.6",
+    "@types/js-yaml": "^4.0.9",
+    "typescript": "^5.9.3"
   }
 }
