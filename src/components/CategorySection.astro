@@ -6,13 +6,14 @@ import type { RepoProject } from '../data/load-projects';
 interface Props {
   category: Category;
   repos: RepoProject[];
+  alternateBackground?: boolean;
 }
 
-const { category, repos } = Astro.props;
+const { category, repos, alternateBackground = false } = Astro.props;
 ---
 
 {repos.length > 0 && (
-  <section id={category.id} class="py-20 relative">
+  <section id={category.id} class:list={["py-20 relative", alternateBackground && "bg-surface-alt"]}>
     <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
     <div class="max-w-7xl mx-auto px-6">
       <div class="mb-12" data-animate="fade-up">
@@ -31,6 +32,12 @@ const { category, repos } = Astro.props;
           />
         ))}
       </div>
+      {category.servicePromo && (
+        <p class="mt-10 text-sm text-text-muted text-center">
+          {category.servicePromo}{' '}
+          <a href="https://www.netresearch.de/" class="text-nr-teal hover:underline" target="_blank" rel="noopener">Learn more &rarr;</a>
+        </p>
+      )}
     </div>
   </section>
 )}

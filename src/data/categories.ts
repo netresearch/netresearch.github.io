@@ -3,6 +3,7 @@ export interface Category {
   title: string;
   topicMatchers: string[];
   languageMatchers: string[];
+  servicePromo?: string;
 }
 
 export const categories: Category[] = [
@@ -11,30 +12,35 @@ export const categories: Category[] = [
     title: 'AI/Agent Skills',
     topicMatchers: ['agent-skill', 'claude-code-skill', 'claude-code-marketplace'],
     languageMatchers: [],
+    servicePromo: 'Netresearch builds AI-powered workflows and agent integrations for enterprise teams.',
   },
   {
     id: 'cms-extensions',
     title: 'CMS Extensions',
     topicMatchers: ['typo3-extension'],
     languageMatchers: [],
+    servicePromo: 'Netresearch offers TYPO3 services for B2C and B2B including DevOps, operations, support, upgrades, and migrations.',
   },
   {
     id: 'ecommerce',
     title: 'eCommerce & Shipping',
     topicMatchers: ['magento', 'magento1', 'magento2', 'dhl', 'deutsche-post', 'shipping', 'shopware'],
     languageMatchers: [],
+    servicePromo: 'Netresearch offers Magento and eCommerce services for B2C and B2B including DevOps, operations, support, upgrades, and migrations.',
   },
   {
     id: 'applications',
     title: 'Applications',
     topicMatchers: ['application', 'webapp', 'self-service'],
     languageMatchers: [],
+    servicePromo: 'Netresearch offers custom software development for B2C and B2B including DevOps, operations, support, and consulting.',
   },
   {
     id: 'infrastructure',
     title: 'Infrastructure & DevOps',
     topicMatchers: ['docker', 'ansible', 'terraform', 'ci-cd', 'devops'],
     languageMatchers: ['Dockerfile', 'Jinja'],
+    servicePromo: 'Netresearch offers DevOps and infrastructure services including CI/CD, container orchestration, and cloud operations.',
   },
   {
     id: 'developer-tools',
