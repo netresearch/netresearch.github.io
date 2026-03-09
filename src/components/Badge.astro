@@ -1,0 +1,33 @@
+---
+interface Props {
+  type: string;
+  url: string;
+  label: string;
+}
+
+const { type, url, label } = Astro.props;
+
+const colors: Record<string, string> = {
+  github: 'bg-white/10 hover:bg-white/20 text-white/70',
+  ter: 'bg-orange-500/10 hover:bg-orange-500/20 text-orange-400',
+  npm: 'bg-red-500/10 hover:bg-red-500/20 text-red-400',
+  packagist: 'bg-amber-600/10 hover:bg-amber-600/20 text-amber-500',
+  docker: 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400',
+  pypi: 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400',
+  demo: 'bg-nr-teal/10 hover:bg-nr-teal/20 text-nr-teal',
+};
+
+const colorClass = colors[type] || colors.github;
+---
+
+<a
+  href={url}
+  target="_blank"
+  rel="noopener"
+  class:list={[
+    'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors',
+    colorClass,
+  ]}
+>
+  {label}
+</a>

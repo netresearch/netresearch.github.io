@@ -1,0 +1,78 @@
+---
+import Badge from './Badge.astro';
+import { getLanguageColor } from '../data/language-colors';
+import type { FeaturedProject } from '../data/load-projects';
+
+interface Props {
+  project: FeaturedProject;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const isEven = index % 2 === 0;
+const langColor = getLanguageColor(project.language);
+
+function timeAgo(dateStr: string | undefined): string {
+  if (!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days < 1) return 'today';
+  if (days < 30) return `${days}d ago`;
+  if (days < 365) return `${Math.floor(days / 30)}mo ago`;
+  return `${Math.floor(days / 365)}y ago`;
+}
+
+const updatedAgo = timeAgo(project.pushed_at);
+---
+
+<div
+  class:list={[
+    'group relative rounded-2xl border border-white/5 bg-nr-dark-card/50 backdrop-blur-sm p-8 transition-all duration-500 hover:border-nr-teal/30 hover:shadow-[0_0_40px_-12px_rgba(47,153,164,0.15)]',
+    isEven ? 'md:translate-x-4' : 'md:-translate-x-4',
+  ]}
+  data-animate={isEven ? 'slide-right' : 'slide-left'}
+>
+  <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-nr-teal/0 via-nr-teal/5 to-nr-orange/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+  <div class="relative z-10">
+    <div class="flex items-start justify-between mb-4">
+      <h3 class="text-2xl font-heading font-bold text-white group-hover:text-nr-teal transition-colors">
+        {project.name}
+      </h3>
+      <div class="flex items-center gap-3 text-sm text-white/40">
+        {project.language && (
+          <span class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-full" style={`background-color: ${langColor}`}></span>
+            {project.language}
+          </span>
+        )}
+        {project.stars !== undefined && (
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            {project.stars}
+          </span>
+        )}
+      </div>
+    </div>
+
+    <p class="text-white/50 leading-relaxed mb-6 max-w-2xl">{project.description}</p>
+
+    <div class="flex flex-wrap items-center gap-3">
+      {project.latestRelease && (
+        <span class="text-xs font-mono text-nr-teal/70 bg-nr-teal/5 px-2 py-1 rounded">
+          {project.latestRelease}
+        </span>
+      )}
+      {updatedAgo && (
+        <span class="text-xs text-white/30">Updated {updatedAgo}</span>
+      )}
+      <div class="flex-1"></div>
+      <div class="flex flex-wrap gap-2">
+        <Badge type="github" url={project.url || `https://github.com/${project.repo}`} label="GitHub" />
+        {project.links?.map((link) => (
+          <Badge type={link.type} url={link.url} label={link.label} />
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

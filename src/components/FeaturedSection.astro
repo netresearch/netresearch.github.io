@@ -1,0 +1,25 @@
+---
+import FeaturedCard from './FeaturedCard.astro';
+import type { FeaturedProject } from '../data/load-projects';
+
+interface Props {
+  projects: FeaturedProject[];
+}
+
+const { projects } = Astro.props;
+---
+
+<section class="py-24 relative">
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-nr-teal/20 to-transparent"></div>
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="mb-16" data-animate="fade-up">
+      <h2 class="text-sm font-heading uppercase tracking-[0.2em] text-nr-orange mb-3">Featured</h2>
+      <p class="text-3xl md:text-4xl font-heading font-bold text-white">Projects we're proud of</p>
+    </div>
+    <div class="space-y-8">
+      {projects.map((project, i) => (
+        <FeaturedCard project={project} index={i} />
+      ))}
+    </div>
+  </div>
+</section>
