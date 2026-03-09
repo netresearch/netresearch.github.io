@@ -1,0 +1,36 @@
+---
+import RepoCard from './RepoCard.astro';
+import type { Category } from '../data/categories';
+import type { RepoProject } from '../data/load-projects';
+
+interface Props {
+  category: Category;
+  repos: RepoProject[];
+}
+
+const { category, repos } = Astro.props;
+---
+
+{repos.length > 0 && (
+  <section id={category.id} class="py-20 relative">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-12" data-animate="fade-up">
+        <h2 class="text-sm font-heading uppercase tracking-[0.2em] text-nr-teal/60 mb-3">{category.title}</h2>
+        <div class="w-12 h-0.5 bg-nr-teal/30"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {repos.map((repo) => (
+          <RepoCard
+            name={repo.name}
+            description={repo.description}
+            url={repo.url}
+            language={repo.language}
+            stars={repo.stars}
+            pushed_at={repo.pushed_at}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
