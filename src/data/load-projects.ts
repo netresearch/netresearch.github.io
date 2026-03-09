@@ -23,7 +23,8 @@ export interface FeaturedProject {
   qualityBadges?: QualityBadge[];
 }
 
-export interface RepoProject {
+/** Raw repo shape from github-repos.json (before categorization) */
+interface RawRepo {
   name: string;
   description: string;
   url: string;
@@ -32,6 +33,10 @@ export interface RepoProject {
   stars: number;
   pushed_at: string;
   latestRelease?: string;
+  qualityBadges?: QualityBadge[];
+}
+
+export interface RepoProject extends RawRepo {
   category: string;
 }
 
@@ -49,13 +54,13 @@ export function loadProjects(): ProjectData {
   );
   const featured = yaml.load(featuredRaw) as FeaturedProject[];
 
-  let repos: RepoProject[] = [];
+  let rawRepos: RawRepo[] = [];
   try {
     const reposRaw = readFileSync(
       join(process.cwd(), 'src/data/github-repos.json'),
       'utf-8',
     );
-    repos = JSON.parse(reposRaw);
+    rawRepos = JSON.parse(reposRaw);
   } catch {
     console.warn('github-repos.json not found — run: npm run fetch-repos');
   }
@@ -63,20 +68,20 @@ export function loadProjects(): ProjectData {
   const featuredNames = new Set(featured.map((f) => f.repo.split('/')[1]));
   for (const feat of featured) {
     const repoName = feat.repo.split('/')[1];
-    const ghData = repos.find((r) => r.name === repoName);
+    const ghData = rawRepos.find((r) => r.name === repoName);
     if (ghData) {
       feat.url = ghData.url;
       feat.stars = ghData.stars;
       feat.language = ghData.language;
       feat.pushed_at = ghData.pushed_at;
       feat.latestRelease = ghData.latestRelease;
-      if ((ghData as any).qualityBadges) {
-        feat.qualityBadges = (ghData as any).qualityBadges;
+      if (ghData.qualityBadges) {
+        feat.qualityBadges = ghData.qualityBadges;
       }
     }
   }
 
-  const nonFeatured = repos
+  const nonFeatured: RepoProject[] = rawRepos
     .filter((r) => !featuredNames.has(r.name))
     .map((r) => ({
       ...r,
@@ -89,15 +94,15 @@ export function loadProjects(): ProjectData {
     byCategory[cat.id] = nonFeatured.filter((r) => r.category === cat.id);
   }
 
-  const allLanguages = new Set(repos.map((r) => r.language).filter(Boolean));
-  const totalStars = repos.reduce((sum, r) => sum + (r.stars || 0), 0);
+  const allLanguages = new Set(rawRepos.map((r) => r.language).filter(Boolean));
+  const totalStars = rawRepos.reduce((sum, r) => sum + (r.stars || 0), 0);
 
   return {
     featured,
     byCategory,
     categories,
     stats: {
-      totalRepos: repos.length,
+      totalRepos: rawRepos.length,
       totalStars,
       languages: allLanguages.size,
     },

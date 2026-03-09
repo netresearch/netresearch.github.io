@@ -36,6 +36,11 @@ if (!prefersReducedMotion) {
 document.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {
   const target = parseInt(el.dataset.countTo || '0', 10);
 
+  if (prefersReducedMotion) {
+    el.textContent = target.toLocaleString();
+    return;
+  }
+
   const countObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
