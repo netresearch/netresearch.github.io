@@ -21,8 +21,20 @@ export const categories: Category[] = [
   {
     id: 'ecommerce',
     title: 'eCommerce & Shipping',
-    topicMatchers: ['magento', 'magento1', 'magento2', 'dhl', 'shipping'],
+    topicMatchers: ['magento', 'magento1', 'magento2', 'dhl', 'deutsche-post', 'shipping', 'shopware'],
     languageMatchers: [],
+  },
+  {
+    id: 'applications',
+    title: 'Applications',
+    topicMatchers: ['application', 'webapp', 'self-service'],
+    languageMatchers: [],
+  },
+  {
+    id: 'infrastructure',
+    title: 'Infrastructure & DevOps',
+    topicMatchers: ['docker', 'ansible', 'terraform', 'ci-cd', 'devops'],
+    languageMatchers: ['Dockerfile', 'Jinja'],
   },
   {
     id: 'developer-tools',
@@ -36,20 +48,11 @@ export const categories: Category[] = [
     topicMatchers: ['sdk', 'library', 'php-library'],
     languageMatchers: [],
   },
-  {
-    id: 'infrastructure',
-    title: 'Infrastructure & DevOps',
-    topicMatchers: ['docker', 'ansible', 'terraform', 'ci-cd', 'devops'],
-    languageMatchers: ['Dockerfile', 'Shell', 'Jinja'],
-  },
 ];
 
 // Repos that are general-purpose despite having topic overlap with specific categories
 const overrides: Record<string, string> = {
-  'composer-audit-responsibility': 'developer-tools',
-  'sdk-api-central-station': 'libraries-sdks',
-  'sdk-api-universal-messenger': 'libraries-sdks',
-  'sdk-eu-vat': 'libraries-sdks',
+  'composer-audit-responsibility': 'libraries-sdks',
 };
 
 export function categorizeRepo(
@@ -69,13 +72,13 @@ export function categorizeRepo(
 
   // Name-prefix based fallbacks
   if (name.endsWith('-skill')) return 'ai-agent-skills';
-  if (name.startsWith('t3x-')) return 'cms-extensions';
+  if (name.startsWith('t3x-') || name.startsWith('nr-landingpage')) return 'cms-extensions';
   if (name.startsWith('dhl-') || name.startsWith('deutschepost-')) return 'ecommerce';
   if (name.startsWith('sdk-')) return 'libraries-sdks';
   if (name.startsWith('docker-') || name.startsWith('ansible-') || name.startsWith('terraform-'))
     return 'infrastructure';
 
-  // Language-based fallback (only for Shell/Dockerfile → infrastructure)
+  // Language-based fallback
   for (const cat of categories) {
     if (language && cat.languageMatchers.includes(language)) {
       return cat.id;
