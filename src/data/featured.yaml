@@ -1,0 +1,99 @@
+- name: ofelia
+  repo: netresearch/ofelia
+  category: Developer Tools
+  description: >
+    Docker job scheduler — crontab for containers. Features DAG-based execution
+    ordering, pause/resume, timezone support, and label-based configuration.
+  links:
+    - type: docker
+      url: https://hub.docker.com/r/netresearch/ofelia
+      label: Docker Hub
+
+- name: go-cron
+  repo: netresearch/go-cron
+  category: Libraries & SDKs
+  description: >
+    Go cron job scheduler — drop-in replacement for robfig/cron with DAG engine,
+    pause/resume, @triggered jobs, and quoted timezone support in cron expressions.
+
+- name: jira-skill
+  repo: netresearch/jira-skill
+  category: AI/Agent Skills
+  description: >
+    Agent Skill for intelligent Jira integration. MCP-configurable with search,
+    issue creation, sprint management, and Netresearch-specific conventions.
+
+- name: t3x-rte_ckeditor_image
+  repo: netresearch/t3x-rte_ckeditor_image
+  category: CMS Extensions
+  description: >
+    Image support in CKEditor for the TYPO3 ecosystem. Adds image handling
+    capabilities to the TYPO3 rich text editor with FAL integration.
+  links:
+    - type: ter
+      url: https://extensions.typo3.org/extension/rte_ckeditor_image
+      label: rte_ckeditor_image
+
+- name: timetracker
+  repo: netresearch/timetracker
+  category: Developer Tools
+  description: >
+    Extensive time tracking solution with Jira integration, reporting,
+    user management, and CSV export. Built on Symfony.
+
+- name: t3x-contexts
+  repo: netresearch/t3x-contexts
+  category: CMS Extensions
+  description: >
+    Multi-channel contexts for TYPO3 — control record visibility based on
+    IP ranges, geolocation, device types, HTTP headers, domains, and
+    logical combinations. Includes geolocation and WURFL sub-extensions.
+  links:
+    - type: ter
+      url: https://extensions.typo3.org/extension/contexts
+      label: contexts
+    - type: github
+      url: https://github.com/netresearch/t3x-contexts_geolocation
+      label: t3x-contexts_geolocation
+    - type: github
+      url: https://github.com/netresearch/t3x-contexts_wurfl
+      label: t3x-contexts_wurfl
+
+- name: t3x-cowriter
+  repo: netresearch/t3x-cowriter
+  category: CMS Extensions
+  description: >
+    AI-powered content generation for TYPO3's CKEditor 5. Generates and
+    refines content using LLMs directly within the rich text editor.
+  links:
+    - type: ter
+      url: https://extensions.typo3.org/extension/cowriter
+      label: cowriter
+
+- name: t3x-nr-llm
+  repo: netresearch/t3x-nr-llm
+  category: CMS Extensions
+  description: >
+    LLM integration framework for TYPO3 — provides a unified API for
+    connecting TYPO3 extensions to various AI language model providers.
+
+- name: t3x-nr-vault
+  repo: netresearch/t3x-nr-vault
+  category: CMS Extensions
+  description: >
+    HashiCorp Vault integration for TYPO3 — securely fetch and inject
+    secrets from Vault into TYPO3 configuration at runtime.
+
+- name: t3x-nr-passkeys-be
+  repo: netresearch/t3x-nr-passkeys-be
+  category: CMS Extensions
+  description: >
+    WebAuthn/Passkey authentication for TYPO3 backend users. Enables
+    passwordless login with biometrics, security keys, and platform authenticators.
+
+- name: t3x-nr-image-optimize
+  repo: netresearch/t3x-nr-image-optimize
+  category: CMS Extensions
+  description: >
+    Automatic image optimization for TYPO3. Compresses and converts images
+    on upload or processing to reduce page weight and improve Core Web Vitals.
