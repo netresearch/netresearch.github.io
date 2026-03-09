@@ -1,0 +1,28 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Netresearch Open Source — curated portfolio of TYPO3 extensions, developer tools, AI agent skills, and infrastructure projects." />
+    <meta property="og:title" content="Netresearch Open Source" />
+    <meta property="og:description" content="Curated portfolio of TYPO3 extensions, developer tools, AI agent skills, and infrastructure projects." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://netresearch.github.io/" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
+  </head>
+  <body class="bg-nr-dark text-white font-body antialiased overflow-x-hidden">
+    <slot />
+    <script src="../scripts/animations.ts"></script>
+  </body>
+</html>

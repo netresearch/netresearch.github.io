@@ -1,16 +1,21 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import StatsBar from '../components/StatsBar.astro';
+import Footer from '../components/Footer.astro';
+import { loadProjects } from '../data/load-projects';
+
+const data = loadProjects();
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Netresearch Open Source</title>
-    <link rel="icon" href="/favicon.ico" />
-  </head>
-  <body class="bg-nr-dark text-white font-body">
-    <h1 class="text-4xl font-heading font-bold text-nr-teal p-8">Netresearch</h1>
-    <p class="px-8 text-nr-grey">Site under construction</p>
-  </body>
-</html>
+<Layout title="Netresearch Open Source">
+  <Nav />
+  <Hero totalRepos={data.stats.totalRepos} />
+  <StatsBar
+    totalRepos={data.stats.totalRepos}
+    totalStars={data.stats.totalStars}
+    languages={data.stats.languages}
+  />
+  <Footer />
+</Layout>
