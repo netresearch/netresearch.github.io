@@ -7,15 +7,21 @@ export interface Category {
 
 export const categories: Category[] = [
   {
-    id: 'cms-extensions',
-    title: 'CMS Extensions',
-    topicMatchers: ['typo3-extension', 'typo3'],
+    id: 'ai-agent-skills',
+    title: 'AI/Agent Skills',
+    topicMatchers: ['agent-skill', 'claude-code-skill', 'claude-code-marketplace'],
     languageMatchers: [],
   },
   {
-    id: 'ai-agent-skills',
-    title: 'AI/Agent Skills',
-    topicMatchers: ['agent-skill', 'claude-code', 'mcp'],
+    id: 'cms-extensions',
+    title: 'CMS Extensions',
+    topicMatchers: ['typo3-extension'],
+    languageMatchers: [],
+  },
+  {
+    id: 'ecommerce',
+    title: 'eCommerce & Shipping',
+    topicMatchers: ['magento', 'magento1', 'magento2', 'dhl', 'shipping'],
     languageMatchers: [],
   },
   {
@@ -27,8 +33,8 @@ export const categories: Category[] = [
   {
     id: 'libraries-sdks',
     title: 'Libraries & SDKs',
-    topicMatchers: ['sdk', 'library'],
-    languageMatchers: ['Go'],
+    topicMatchers: ['sdk', 'library', 'php-library'],
+    languageMatchers: [],
   },
   {
     id: 'infrastructure',
@@ -38,27 +44,44 @@ export const categories: Category[] = [
   },
 ];
 
+// Repos that are general-purpose despite having topic overlap with specific categories
+const overrides: Record<string, string> = {
+  'composer-audit-responsibility': 'developer-tools',
+  'sdk-api-central-station': 'libraries-sdks',
+  'sdk-api-universal-messenger': 'libraries-sdks',
+  'sdk-eu-vat': 'libraries-sdks',
+};
+
 export function categorizeRepo(
   topics: string[],
   language: string | null,
   name: string,
 ): string {
+  // Explicit overrides for repos with misleading topics
+  if (overrides[name]) return overrides[name];
+
+  // Topic-based matching (order matters — more specific categories first)
   for (const cat of categories) {
     if (topics.some((t) => cat.topicMatchers.some((m) => t.includes(m)))) {
       return cat.id;
     }
   }
 
-  if (name.startsWith('t3x-')) return 'cms-extensions';
+  // Name-prefix based fallbacks
   if (name.endsWith('-skill')) return 'ai-agent-skills';
+  if (name.startsWith('t3x-')) return 'cms-extensions';
+  if (name.startsWith('dhl-') || name.startsWith('deutschepost-')) return 'ecommerce';
+  if (name.startsWith('sdk-')) return 'libraries-sdks';
   if (name.startsWith('docker-') || name.startsWith('ansible-') || name.startsWith('terraform-'))
     return 'infrastructure';
 
+  // Language-based fallback (only for Shell/Dockerfile → infrastructure)
   for (const cat of categories) {
     if (language && cat.languageMatchers.includes(language)) {
       return cat.id;
     }
   }
 
+  // Default
   return 'developer-tools';
 }
