@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@import "@fontsource/raleway/400.css";
+@import "@fontsource/raleway/700.css";
+@import "@fontsource/raleway/900.css";
+@import "@fontsource/open-sans/400.css";
+@import "@fontsource/open-sans/600.css";
+
+@theme {
+  --color-nr-teal: #2F99A4;
+  --color-nr-orange: #FF4D00;
+  --color-nr-grey: #585961;
+  --color-nr-dark: #0F1117;
+  --color-nr-dark-lighter: #161922;
+  --color-nr-dark-card: #1a1d2e;
+  --font-family-heading: 'Raleway', sans-serif;
+  --font-family-body: 'Open Sans', sans-serif;
+}
