@@ -21,8 +21,8 @@ const data = loadProjects();
       languages={data.stats.languages}
     />
     <FeaturedSection projects={data.featured} />
-    {data.categories.map((cat) => (
-      <CategorySection category={cat} repos={data.byCategory[cat.id] || []} />
+    {data.categories.map((cat, i) => (
+      <CategorySection category={cat} repos={data.byCategory[cat.id] || []} alternateBackground={i % 2 === 1} />
     ))}
   </main>
   <Footer />

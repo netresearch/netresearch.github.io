@@ -21,12 +21,12 @@ const activityLabel = daysSincePush < 30 ? 'Active' : daysSincePush < 180 ? 'Mod
   href={url}
   target="_blank"
   rel="noopener"
-  class="group block rounded-xl border border-border bg-glass p-5 transition-all duration-300 hover:border-border-hover hover:bg-surface-hover hover:-translate-y-0.5 card-shadow"
+  class="group block rounded-xl border border-border bg-surface-card p-5 transition-all duration-300 hover:border-border-hover hover:bg-surface-hover hover:-translate-y-0.5 card-shadow"
   data-animate="fade-up"
   aria-label={`${name} — ${description}`}
 >
   <div class="flex items-start justify-between mb-2">
-    <h3 class="font-heading font-bold text-text-primary/80 group-hover:text-nr-teal transition-colors text-sm truncate pr-2">
+    <h3 class="font-heading font-bold text-text-primary group-hover:text-nr-teal transition-colors text-sm truncate pr-2">
       {name}
     </h3>
     {stars > 0 && (

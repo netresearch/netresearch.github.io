@@ -1,6 +1,6 @@
 - name: ofelia
   repo: netresearch/ofelia
-  category: Developer Tools
+  category: Infrastructure & DevOps
   description: >
     Docker job scheduler — crontab for containers. Features DAG-based execution
     ordering, pause/resume, timezone support, and label-based configuration.
@@ -46,7 +46,7 @@
 
 - name: timetracker
   repo: netresearch/timetracker
-  category: Developer Tools
+  category: Applications
   description: >
     Extensive time tracking solution with Jira integration, reporting,
     user management, and CSV export. Built on Symfony.
