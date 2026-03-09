@@ -8,6 +8,9 @@
     - type: docker
       url: https://hub.docker.com/r/netresearch/ofelia
       label: Docker Hub
+    - type: gopkg
+      url: https://pkg.go.dev/github.com/netresearch/ofelia
+      label: pkg.go.dev
 
 - name: go-cron
   repo: netresearch/go-cron
@@ -15,6 +18,10 @@
   description: >
     Go cron job scheduler — drop-in replacement for robfig/cron with DAG engine,
     pause/resume, @triggered jobs, and quoted timezone support in cron expressions.
+  links:
+    - type: gopkg
+      url: https://pkg.go.dev/github.com/netresearch/go-cron
+      label: pkg.go.dev
 
 - name: jira-skill
   repo: netresearch/jira-skill
@@ -33,6 +40,9 @@
     - type: ter
       url: https://extensions.typo3.org/extension/rte_ckeditor_image
       label: rte_ckeditor_image
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/rte-ckeditor-image
+      label: Packagist
 
 - name: timetracker
   repo: netresearch/timetracker
@@ -40,6 +50,10 @@
   description: >
     Extensive time tracking solution with Jira integration, reporting,
     user management, and CSV export. Built on Symfony.
+  links:
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/timetracker
+      label: Packagist
 
 - name: t3x-contexts
   repo: netresearch/t3x-contexts
@@ -52,6 +66,9 @@
     - type: ter
       url: https://extensions.typo3.org/extension/contexts
       label: contexts
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/contexts
+      label: Packagist
     - type: github
       url: https://github.com/netresearch/t3x-contexts_geolocation
       label: t3x-contexts_geolocation
@@ -69,6 +86,9 @@
     - type: ter
       url: https://extensions.typo3.org/extension/cowriter
       label: cowriter
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/t3-cowriter
+      label: Packagist
 
 - name: t3x-nr-llm
   repo: netresearch/t3x-nr-llm
@@ -76,6 +96,10 @@
   description: >
     LLM integration framework for TYPO3 — provides a unified API for
     connecting TYPO3 extensions to various AI language model providers.
+  links:
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/nr-llm
+      label: Packagist
 
 - name: t3x-nr-vault
   repo: netresearch/t3x-nr-vault
@@ -83,6 +107,10 @@
   description: >
     HashiCorp Vault integration for TYPO3 — securely fetch and inject
     secrets from Vault into TYPO3 configuration at runtime.
+  links:
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/nr-vault
+      label: Packagist
 
 - name: t3x-nr-passkeys-be
   repo: netresearch/t3x-nr-passkeys-be
@@ -90,6 +118,10 @@
   description: >
     WebAuthn/Passkey authentication for TYPO3 backend users. Enables
     passwordless login with biometrics, security keys, and platform authenticators.
+  links:
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/nr-passkeys-be
+      label: Packagist
 
 - name: t3x-nr-image-optimize
   repo: netresearch/t3x-nr-image-optimize
@@ -97,3 +129,7 @@
   description: >
     Automatic image optimization for TYPO3. Compresses and converts images
     on upload or processing to reduce page weight and improve Core Web Vitals.
+  links:
+    - type: packagist
+      url: https://packagist.org/packages/netresearch/nr-image-optimize
+      label: Packagist

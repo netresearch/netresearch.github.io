@@ -3,6 +3,12 @@ import { join } from 'node:path';
 import yaml from 'js-yaml';
 import { categorizeRepo, type Category, categories } from './categories';
 
+export interface QualityBadge {
+  type: string;
+  alt: string;
+  url: string;
+}
+
 export interface FeaturedProject {
   name: string;
   repo: string;
@@ -14,6 +20,7 @@ export interface FeaturedProject {
   language?: string;
   pushed_at?: string;
   latestRelease?: string;
+  qualityBadges?: QualityBadge[];
 }
 
 export interface RepoProject {
@@ -63,6 +70,9 @@ export function loadProjects(): ProjectData {
       feat.language = ghData.language;
       feat.pushed_at = ghData.pushed_at;
       feat.latestRelease = ghData.latestRelease;
+      if ((ghData as any).qualityBadges) {
+        feat.qualityBadges = (ghData as any).qualityBadges;
+      }
     }
   }
 
