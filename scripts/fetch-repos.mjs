@@ -44,8 +44,8 @@ function fetchRepos() {
   for (const repo of repos) {
     try {
       const tag = execSync(
-        `gh api repos/netresearch/${repo.name}/releases/latest --jq '.tag_name' 2>/dev/null`,
-        { encoding: 'utf-8', timeout: 5000 }
+        `gh api repos/netresearch/${repo.name}/releases/latest --jq '.tag_name'`,
+        { encoding: 'utf-8', stdio: 'pipe', timeout: 5000 }
       ).trim();
       if (tag) repo.latestRelease = tag;
     } catch {
@@ -67,8 +67,8 @@ function fetchRepos() {
     if (repoNames.has(name)) continue;
     try {
       const raw = execSync(
-        `gh api repos/netresearch/${name} --jq '{name, description, html_url, language, topics, stargazers_count, pushed_at, homepage}' 2>/dev/null`,
-        { encoding: 'utf-8', timeout: 10000 },
+        `gh api repos/netresearch/${name} --jq '{name, description, html_url, language, topics, stargazers_count, pushed_at, homepage}'`,
+        { encoding: 'utf-8', stdio: 'pipe', timeout: 10000 },
       ).trim();
       const r = JSON.parse(raw);
       const repo = {
@@ -84,8 +84,8 @@ function fetchRepos() {
       // Fetch latest release
       try {
         const tag = execSync(
-          `gh api repos/netresearch/${name}/releases/latest --jq '.tag_name' 2>/dev/null`,
-          { encoding: 'utf-8', timeout: 5000 },
+          `gh api repos/netresearch/${name}/releases/latest --jq '.tag_name'`,
+          { encoding: 'utf-8', stdio: 'pipe', timeout: 5000 },
         ).trim();
         if (tag) repo.latestRelease = tag;
       } catch {
@@ -125,8 +125,8 @@ function fetchRepos() {
 function fetchReadme(repoName) {
   try {
     const readme = execSync(
-      `gh api repos/netresearch/${repoName}/readme --jq '.content' 2>/dev/null`,
-      { encoding: 'utf-8', timeout: 10000 },
+      `gh api repos/netresearch/${repoName}/readme --jq '.content'`,
+      { encoding: 'utf-8', stdio: 'pipe', timeout: 10000 },
     ).trim();
     return Buffer.from(readme, 'base64').toString('utf-8');
   } catch {
@@ -160,6 +160,21 @@ function extractBadges(decoded) {
 }
 
 /**
+ * Check if a URL is a GitHub Actions CI badge by parsing the URL properly.
+ */
+function isCiBadgeUrl(url) {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname;
+    const path = parsed.pathname;
+    return (host === 'github.com' && path.includes('/actions/')) ||
+           (host === 'img.shields.io' && path.includes('actions/workflow'));
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Classify a badge URL into a known quality/CI category.
  * Returns null for badges we don't care about (license, version, etc.).
  */
@@ -180,10 +195,7 @@ function classifyBadge(alt, url) {
     badgeType = 'openssf';
   } else if (lUrl.includes('slsa') || lAlt.includes('slsa')) {
     badgeType = 'slsa';
-  } else if (
-    (lUrl.includes('github') && lUrl.includes('actions') && lUrl.includes('workflow')) ||
-    (lUrl.includes('github.com') && lUrl.includes('/actions/'))
-  ) {
+  } else if (isCiBadgeUrl(url)) {
     badgeType = 'ci';
   } else if (lUrl.includes('go-report') || lUrl.includes('goreportcard')) {
     badgeType = 'goreport';
