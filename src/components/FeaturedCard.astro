@@ -39,7 +39,7 @@ const updatedAgo = timeAgo(project.pushed_at);
       <h3 class="text-2xl font-heading font-bold text-white group-hover:text-nr-teal transition-colors">
         {project.name}
       </h3>
-      <div class="flex items-center gap-3 text-sm text-white/40">
+      <div class="flex items-center gap-3 text-sm text-white/60">
         {project.language && (
           <span class="flex items-center gap-1.5">
             <span class="w-3 h-3 rounded-full" style={`background-color: ${langColor}`}></span>
@@ -59,12 +59,12 @@ const updatedAgo = timeAgo(project.pushed_at);
 
     <div class="flex flex-wrap items-center gap-3">
       {project.latestRelease && (
-        <span class="text-xs font-mono text-nr-teal/70 bg-nr-teal/5 px-2 py-1 rounded">
+        <span class="text-xs font-mono text-nr-teal bg-nr-teal/5 px-2 py-1 rounded">
           {project.latestRelease}
         </span>
       )}
       {updatedAgo && (
-        <span class="text-xs text-white/30">Updated {updatedAgo}</span>
+        <span class="text-xs text-white/50">Updated {updatedAgo}</span>
       )}
       <div class="flex-1"></div>
       <div class="flex flex-wrap gap-2">
