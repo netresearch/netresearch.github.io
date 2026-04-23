@@ -26,7 +26,7 @@ export const categories: Category[] = [
     title: 'eCommerce & Shipping',
     topicMatchers: ['deutsche-post', 'dhl', 'magento', 'magento1', 'magento2', 'orocommerce', 'shipping', 'shopware'],
     languageMatchers: [],
-    servicePromo: 'Netresearch offers eCommerce services for B2C and B2B including DevOps, operations, support, upgrades, customizations and migrations.',
+    servicePromo: 'Netresearch offers eCommerce services for B2C and B2B including DevOps, operations, support, upgrades, customizations, and migrations.',
   },
   {
     id: 'applications',
