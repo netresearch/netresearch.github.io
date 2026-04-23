@@ -51,6 +51,23 @@
     Extensive time tracking solution with Jira integration, reporting,
     user management, and CSV export. Built on Symfony.
 
+- name: dhl/shipping-m2
+  repo: netresearch/dhl-shipping-m2
+  category: eCommerce & Shipping
+  description: >
+    DHL & Deutsche Post Shipping integration for Magento 2 featuring 
+    pickup location selection, tracking integration and customer services in checkout
+  links:
+   - type: packagist
+     url: https://packagist.org/packages/dhl/shipping-m2
+     label: Packagist
+   - type: marketplace
+     url: https://commercemarketplace.adobe.com/dhl-shipping-m2.html
+     label: Adobe Marketplace
+   - type: github
+     url: https://github.com/netresearch/dhl-shipping-m2
+     label: dhl/shipping-m2
+
 - name: t3x-contexts
   repo: netresearch/t3x-contexts
   category: CMS Extensions
