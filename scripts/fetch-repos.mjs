@@ -6,6 +6,7 @@ import yaml from 'js-yaml';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUTPUT = join(__dirname, '..', 'src', 'data', 'github-repos.json');
+const PAGES_OUTPUT = join(__dirname, '..', 'src', 'data', 'github-pages.json');
 
 const TWO_YEARS_AGO = new Date();
 TWO_YEARS_AGO.setFullYear(TWO_YEARS_AGO.getFullYear() - 2);
@@ -205,4 +206,59 @@ function classifyBadge(alt, url) {
   return { type: badgeType, alt: alt || badgeType, url };
 }
 
+/**
+ * Fetch every org repo that publishes a GitHub Pages site, independent of the
+ * repo-card filters (archived / no-description / stale), so long-lived live
+ * sites still appear. Resolves the canonical URL (custom domain or
+ * netresearch.github.io path) via the per-repo Pages API.
+ */
+function fetchLivePages() {
+  const raw = execSync(
+    'gh api orgs/netresearch/repos --paginate ' +
+      "--jq '.[] | select(.has_pages == true and .archived == false) " +
+      "| {name, description, html_url, homepage, pushed_at}'",
+    { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
+  );
+
+  const pages = raw
+    .trim()
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => JSON.parse(line))
+    // Skip the org root repo — that's this very site.
+    .filter((r) => r.name !== 'netresearch.github.io')
+    .map((r) => {
+      const page = {
+        name: r.name,
+        description: r.description || '',
+        repoUrl: r.html_url,
+        pushed_at: r.pushed_at,
+        url: `https://netresearch.github.io/${r.name}/`,
+      };
+
+      // Resolve the authoritative Pages URL (honours custom CNAMEs and the
+      // org root page at netresearch.github.io/).
+      try {
+        const info = JSON.parse(
+          execSync(`gh api repos/netresearch/${r.name}/pages`, {
+            encoding: 'utf-8',
+            stdio: 'pipe',
+            timeout: 10000,
+          }).trim(),
+        );
+        if (info.html_url) page.url = info.html_url;
+        if (info.cname) page.cname = info.cname;
+      } catch {
+        // Pages API unavailable (e.g. building) — keep the derived URL.
+      }
+      return page;
+    })
+    .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at));
+
+  mkdirSync(dirname(PAGES_OUTPUT), { recursive: true });
+  writeFileSync(PAGES_OUTPUT, JSON.stringify(pages, null, 2));
+  console.log(`Wrote ${pages.length} live pages to ${PAGES_OUTPUT}`);
+}
+
 fetchRepos();
+fetchLivePages();

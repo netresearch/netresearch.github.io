@@ -5,10 +5,13 @@ import Hero from '../components/Hero.astro';
 import StatsBar from '../components/StatsBar.astro';
 import FeaturedSection from '../components/FeaturedSection.astro';
 import CategorySection from '../components/CategorySection.astro';
+import LivePagesSection from '../components/LivePagesSection.astro';
 import Footer from '../components/Footer.astro';
 import { loadProjects } from '../data/load-projects';
+import { loadPages } from '../data/load-pages';
 
 const data = loadProjects();
+const livePages = loadPages();
 ---
 
 <Layout title="Netresearch Open Source">
@@ -21,8 +24,9 @@ const data = loadProjects();
       languages={data.stats.languages}
     />
     <FeaturedSection projects={data.featured} />
+    <LivePagesSection pages={livePages} />
     {data.categories.map((cat, i) => (
-      <CategorySection category={cat} repos={data.byCategory[cat.id] || []} alternateBackground={i % 2 === 1} />
+      <CategorySection category={cat} repos={data.byCategory[cat.id] || []} alternateBackground={i % 2 === 0} />
     ))}
   </main>
   <Footer />
