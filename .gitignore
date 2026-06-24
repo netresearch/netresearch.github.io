@@ -3,3 +3,4 @@ dist/
 .astro/
 .DS_Store
 src/data/github-repos.json
+src/data/github-pages.json

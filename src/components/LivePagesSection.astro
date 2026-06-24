@@ -1,0 +1,31 @@
+---
+import PageCard from './PageCard.astro';
+import type { LivePage } from '../data/load-pages';
+
+interface Props {
+  pages: LivePage[];
+  alternateBackground?: boolean;
+}
+
+const { pages, alternateBackground = false } = Astro.props;
+---
+
+{pages.length > 0 && (
+  <section id="live-pages" class:list={["py-20 relative", alternateBackground && "bg-surface-alt"]}>
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-12" data-animate="fade-up">
+        <h2 class="text-sm font-heading uppercase tracking-[0.2em] text-nr-teal mb-3">Live Sites &amp; Pages</h2>
+        <div class="w-12 h-0.5 bg-nr-teal/30"></div>
+        <p class="mt-4 text-sm text-text-secondary max-w-2xl">
+          Every site we publish via GitHub Pages. Updated automatically.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {pages.map((page) => (
+          <PageCard page={page} />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
