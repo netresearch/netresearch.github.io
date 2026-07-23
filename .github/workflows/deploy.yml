@@ -30,7 +30,13 @@ jobs:
       pre-build-command: npm ci
       # scripts/fetch-repos.mjs shells out to `gh api`, so GH_TOKEN must exist
       # in THIS phase — that is what `expose-github-token: build` provides.
-      build-command: node scripts/fetch-repos.mjs && npx astro build
+      # The reusable scopes the token per PHASE; the previous workflow scoped it
+      # to a single STEP. Drop it again before the site build so the astro build
+      # stays token-free, exactly as before this migration.
+      build-command: |
+        node scripts/fetch-repos.mjs
+        unset GITHUB_TOKEN GH_TOKEN
+        npx astro build
       expose-github-token: build
       # astro.config.mjs hardcodes `site:` and never reads PAGES_BASE_PATH /
       # PAGES_ORIGIN, and the previous build job never ran configure-pages.
