@@ -7,45 +7,48 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
+  # Both jobs are shared-reusable calls: this workflow has zero step-level
+  # `uses:`. Every action (checkout, setup-node, upload-artifact,
+  # upload-pages-artifact, deploy-pages, harden-runner) now lives in
+  # netresearch/.github.
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      - name: Fetch GitHub repo metadata
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/fetch-repos.mjs
-
-      - run: npx astro build
-
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: dist/
+    uses: netresearch/.github/.github/workflows/pages-build.yml@main
+    permissions:
+      contents: read
+    with:
+      setup-node: true
+      node-version: '22'
+      # Dependency install stays in the token-free phase on purpose: this is
+      # where third-party npm lifecycle scripts run.
+      pre-build-command: npm ci
+      # scripts/fetch-repos.mjs shells out to `gh api`, so GH_TOKEN must exist
+      # in THIS phase — that is what `expose-github-token: build` provides.
+      # The reusable scopes the token per PHASE; the previous workflow scoped it
+      # to a single STEP. Drop it again before the site build so the astro build
+      # stays token-free, exactly as before this migration.
+      build-command: |
+        node scripts/fetch-repos.mjs
+        unset GITHUB_TOKEN GH_TOKEN
+        npx astro build
+      expose-github-token: build
+      # astro.config.mjs hardcodes `site:` and never reads PAGES_BASE_PATH /
+      # PAGES_ORIGIN, and the previous build job never ran configure-pages.
+      configure-pages: false
+      artifact-path: dist
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
+    uses: netresearch/.github/.github/workflows/pages-deploy.yml@main
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    with:
+      artifact-path: ./dist
