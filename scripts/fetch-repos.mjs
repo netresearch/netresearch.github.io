@@ -198,8 +198,6 @@ function classifyBadge(alt, url) {
     badgeType = 'slsa';
   } else if (isCiBadgeUrl(url)) {
     badgeType = 'ci';
-  } else if (lUrl.includes('go-report') || lUrl.includes('goreportcard')) {
-    badgeType = 'goreport';
   }
 
   if (!badgeType) return null;
