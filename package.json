@@ -12,7 +12,7 @@
     "@fontsource/open-sans": "^5.3.0",
     "@fontsource/raleway": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.1.0",
+    "astro": "^7.1.6",
     "js-yaml": "^5.2.2",
     "tailwindcss": "^4.2.1"
   },
