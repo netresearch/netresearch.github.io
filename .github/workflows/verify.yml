@@ -22,7 +22,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --ignore-scripts
 
       # The data files are build artefacts, not repository content, so a PR
       # build fetches them exactly as the deploy build does. Verifying against
@@ -32,10 +32,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run fetch-data
 
-      - run: npx astro build
+      - run: npm run build
 
       - name: Verify built site
         run: npm run verify
 
       - name: Type-check
-        run: npx astro check --minimumSeverity error
+        run: npm run check

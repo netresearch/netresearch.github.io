@@ -232,7 +232,7 @@ for (const file of pages) {
 // ── Internal links resolve ───────────────────────────────────────────────────
 
 const built = new Set(
-  htmlFiles().map((f) => `/${relative(DIST, f).replace(/index\.html$/, '').replace(/\\/g, '/')}`),
+  htmlFiles().map((f) => `/${relative(DIST, f).replaceAll(/index\.html$/g, '').replaceAll('\\', '/')}`),
 );
 const assets = new Set(
   (function walk(dir) {
@@ -240,7 +240,7 @@ const assets = new Set(
       const full = join(dir, entry);
       return statSync(full).isDirectory()
         ? walk(full)
-        : [`/${relative(DIST, full).replace(/\\/g, '/')}`];
+        : [`/${relative(DIST, full).replaceAll('\\', '/')}`];
     });
   })(DIST),
 );
@@ -249,8 +249,7 @@ for (const file of pages) {
   const name = relative(DIST, file);
   const html = readFileSync(file, 'utf-8');
   for (const [, href] of html.matchAll(/href="(\/[^"#?]*)/g)) {
-    const target = href.endsWith('/') ? href : href;
-    if (built.has(target) || assets.has(target) || assets.has(`${target}index.html`)) continue;
+    if (built.has(href) || assets.has(href) || assets.has(`${href}index.html`)) continue;
     fail(name, `internal link does not resolve: ${href}`);
   }
 }

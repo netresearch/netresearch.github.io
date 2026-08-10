@@ -44,10 +44,10 @@ async function main() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     snapshot = await res.json();
   } catch (err) {
-    console.error(
-      `impact: ${SOURCE} unreachable (${err.message}). ` +
-        'Refusing to build without current figures.',
-    );
+    // The failure reason is not echoed: it is network-influenced text, and the
+    // exception itself already carries it for anyone reading the build log.
+    console.error(`impact: ${SOURCE} unreachable. Refusing to build without current figures.`);
+    console.error(err);
     process.exit(1);
   }
 
@@ -56,7 +56,7 @@ async function main() {
   // cannot say when it ran is a dashboard whose figures have no age.
   const generatedAt = String(snapshot.generated_at ?? '');
   if (Number.isNaN(Date.parse(generatedAt))) {
-    console.error(`impact: ${SOURCE} reported an unparseable generated_at: ${generatedAt}`);
+    console.error(`impact: ${SOURCE} reported an unparseable generated_at`);
     process.exit(1);
   }
 
@@ -86,7 +86,7 @@ async function main() {
   mkdirSync(dirname(OUT), { recursive: true });
   writeFileSync(OUT, `${JSON.stringify(output, null, 2)}\n`);
   console.log(
-    `Wrote impact snapshot generated ${snapshot.generated_at}` +
+    `Wrote impact snapshot generated ${generatedAt}` +
       (missing.length ? ` (${missing.length} figures unavailable)` : ''),
   );
 }
