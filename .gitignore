@@ -2,5 +2,11 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+
+# Build artefacts: fetched from the source of truth on every build, never
+# committed. A missing file fails the build instead of rendering placeholders.
 src/data/github-repos.json
 src/data/github-pages.json
+src/data/projects.json
+src/data/impact.json
+public/projects.json

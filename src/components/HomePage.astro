@@ -1,0 +1,64 @@
+---
+import type { Lang } from '../i18n';
+import { absolute } from '../i18n';
+import { useContent } from '../i18n/content';
+import Layout from '../layouts/Layout.astro';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import EntryPaths from './EntryPaths.astro';
+import AiStackSection from './AiStackSection.astro';
+import ImpactSection from './ImpactSection.astro';
+import CuratedPortfolio from './CuratedPortfolio.astro';
+import WhySection from './WhySection.astro';
+import ConsultingCta from './ConsultingCta.astro';
+import Footer from './Footer.astro';
+import { loadProducts, orderedProducts } from '../data/load-manifest';
+import { loadImpact } from '../data/load-impact';
+import { loadCurated } from '../data/load-curated';
+import {
+  breadcrumbs,
+  impactDataset,
+  organization,
+  productList,
+  website,
+} from '../data/jsonld';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+
+const products = orderedProducts(loadProducts().products);
+const impact = loadImpact();
+const curated = loadCurated();
+
+const jsonLd = [
+  organization(),
+  website(lang),
+  breadcrumbs([{ name: t.breadcrumbHome, url: absolute('home', lang) }]),
+  productList(products, lang),
+  impactDataset(impact, lang),
+];
+---
+
+<Layout
+  lang={lang}
+  route="home"
+  title={t.meta.title}
+  description={t.meta.description}
+  jsonLd={jsonLd}
+>
+  <Nav lang={lang} route="home" />
+  <main id="main-content">
+    <Hero lang={lang} />
+    <EntryPaths lang={lang} />
+    <AiStackSection lang={lang} products={products} />
+    <ImpactSection lang={lang} impact={impact} />
+    <CuratedPortfolio lang={lang} projects={curated} />
+    <WhySection lang={lang} impact={impact} />
+    <ConsultingCta lang={lang} />
+  </main>
+  <Footer lang={lang} />
+</Layout>

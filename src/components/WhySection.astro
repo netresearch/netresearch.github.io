@@ -1,0 +1,49 @@
+---
+import type { Lang } from '../i18n';
+import { useContent } from '../i18n/content';
+import { formatNumber, type ImpactSnapshot } from '../data/load-impact';
+
+interface Props {
+  lang: Lang;
+  impact: ImpactSnapshot;
+}
+
+const { lang, impact } = Astro.props;
+const t = useContent(lang);
+
+/**
+ * A card whose backing figure is missing from this run is dropped, not shown
+ * with a zero or a dash. Cards without a KPI are qualitative statements and
+ * carry no number at all, so they are never mistaken for a measurement.
+ */
+const cards = t.why.cards.filter(
+  (card) => card.kpi === null || typeof impact.kpis[card.kpi] === 'number',
+);
+---
+
+<section id="why" class="py-20 border-t border-border" aria-labelledby="why-heading">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 id="why-heading" class="font-heading font-black text-3xl md:text-4xl text-text-primary">
+      {t.why.heading}
+    </h2>
+    <p class="mt-3 text-text-secondary max-w-2xl">{t.why.intro}</p>
+
+    <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {
+        cards.map((card) => (
+          <li id={`why-${card.id}`} class="rounded-xl border border-border bg-surface-card p-6 card-shadow">
+            <p class="font-heading font-bold text-text-primary">
+              {card.kpi && (
+                <span class="text-2xl text-nr-teal tabular-nums" data-figure={card.kpi}>
+                  {formatNumber(impact.kpis[card.kpi], lang)}{' '}
+                </span>
+              )}
+              {card.label}
+            </p>
+            <p class="mt-2 text-sm text-text-secondary">{card.detail}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

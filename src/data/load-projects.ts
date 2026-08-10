@@ -43,7 +43,10 @@ export interface RepoProject extends RawRepo {
 
 export interface ProjectData {
   featured: FeaturedProject[];
+  /** Non-featured repositories, grouped. */
   byCategory: Record<string, RepoProject[]>;
+  /** Every repository, grouped — what the full catalogue page renders. */
+  allByCategory: Record<string, RepoProject[]>;
   categories: Category[];
   stats: { totalRepos: number; totalStars: number; languages: number };
 }
@@ -90,9 +93,18 @@ export function loadProjects(): ProjectData {
     }))
     .sort((a, b) => b.stars - a.stars);
 
+  const all: RepoProject[] = rawRepos
+    .map((r) => ({
+      ...r,
+      category: categorizeRepo(r.topics || [], r.language, r.name),
+    }))
+    .sort((a, b) => b.stars - a.stars);
+
   const byCategory: Record<string, RepoProject[]> = {};
+  const allByCategory: Record<string, RepoProject[]> = {};
   for (const cat of categories) {
     byCategory[cat.id] = nonFeatured.filter((r) => r.category === cat.id);
+    allByCategory[cat.id] = all.filter((r) => r.category === cat.id);
   }
 
   const allLanguages = new Set(rawRepos.map((r) => r.language).filter(Boolean));
@@ -101,6 +113,7 @@ export function loadProjects(): ProjectData {
   return {
     featured,
     byCategory,
+    allByCategory,
     categories,
     stats: {
       totalRepos: rawRepos.length,

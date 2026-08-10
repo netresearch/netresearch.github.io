@@ -1,0 +1,40 @@
+---
+import type { Lang } from '../i18n';
+import { useContent } from '../i18n/content';
+import type { Stage } from '../data/load-manifest';
+
+interface Props {
+  stage: Stage;
+  lang: Lang;
+  /** Renders the badge at body-text size for use inside prose. */
+  compact?: boolean;
+}
+
+const { stage, lang, compact = false } = Astro.props;
+const t = useContent(lang);
+
+/**
+ * Orange is the brand accent and stays reserved for the stages that carry a
+ * warning: those are the ones a reader must not skim past.
+ */
+const tone: Record<Stage, string> = {
+  concept: 'border-nr-orange/40 text-nr-orange',
+  poc: 'border-nr-orange/40 text-nr-orange',
+  alpha: 'border-nr-orange/40 text-nr-orange',
+  beta: 'border-nr-teal/40 text-nr-teal',
+  stable: 'border-nr-teal/40 text-nr-teal',
+  maintenance: 'border-border text-text-secondary',
+};
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-full border font-heading font-semibold uppercase tracking-wider',
+    compact ? 'text-[0.6875rem] px-2 py-0.5' : 'text-xs px-3 py-1',
+    tone[stage],
+  ]}
+  data-stage={stage}
+>
+  <span class="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true"></span>
+  {t.stages[stage] ?? stage}
+</span>

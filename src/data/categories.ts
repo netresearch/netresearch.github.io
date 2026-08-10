@@ -1,6 +1,8 @@
 export interface Category {
   id: string;
   title: string;
+  /** German heading for the catalogue page. Falls back to `title` when absent. */
+  titleDe?: string;
   topicMatchers: string[];
   languageMatchers: string[];
   servicePromo?: string;
@@ -10,6 +12,7 @@ export const categories: Category[] = [
   {
     id: 'ai-agent-skills',
     title: 'AI/Agent Skills',
+    titleDe: 'KI- und Agent-Skills',
     topicMatchers: ['agent-skill', 'claude-code-skill', 'claude-code-marketplace'],
     languageMatchers: [],
     servicePromo: 'Netresearch builds AI-powered workflows and agent integrations for enterprise teams.',
@@ -17,6 +20,7 @@ export const categories: Category[] = [
   {
     id: 'cms-extensions',
     title: 'CMS Extensions',
+    titleDe: 'CMS-Extensions',
     topicMatchers: ['typo3-extension'],
     languageMatchers: [],
     servicePromo: 'Netresearch offers TYPO3 services for B2C and B2B including DevOps, operations, support, upgrades, and migrations.',
@@ -24,6 +28,7 @@ export const categories: Category[] = [
   {
     id: 'ecommerce',
     title: 'eCommerce & Shipping',
+    titleDe: 'E-Commerce und Versand',
     topicMatchers: ['deutsche-post', 'dhl', 'magento', 'magento1', 'magento2', 'orocommerce', 'shipping', 'shopware'],
     languageMatchers: [],
     servicePromo: 'Netresearch offers eCommerce services for B2C and B2B including DevOps, operations, support, upgrades, customizations, and migrations.',
@@ -31,6 +36,7 @@ export const categories: Category[] = [
   {
     id: 'applications',
     title: 'Applications',
+    titleDe: 'Anwendungen',
     topicMatchers: ['application', 'webapp', 'self-service'],
     languageMatchers: [],
     servicePromo: 'Netresearch offers custom software development for B2C and B2B including DevOps, operations, support, and consulting.',
@@ -38,6 +44,7 @@ export const categories: Category[] = [
   {
     id: 'infrastructure',
     title: 'Infrastructure & DevOps',
+    titleDe: 'Infrastruktur und DevOps',
     topicMatchers: ['docker', 'ansible', 'terraform', 'ci-cd', 'devops'],
     languageMatchers: ['Dockerfile', 'Jinja'],
     servicePromo: 'Netresearch offers DevOps and infrastructure services including CI/CD, container orchestration, and cloud operations.',
@@ -45,12 +52,14 @@ export const categories: Category[] = [
   {
     id: 'developer-tools',
     title: 'Developer Tools',
+    titleDe: 'Entwicklerwerkzeuge',
     topicMatchers: ['developer-tools', 'cli', 'devtool'],
     languageMatchers: [],
   },
   {
     id: 'libraries-sdks',
     title: 'Libraries & SDKs',
+    titleDe: 'Bibliotheken und SDKs',
     topicMatchers: ['sdk', 'library', 'php-library'],
     languageMatchers: [],
   },

@@ -1,14 +1,62 @@
-<footer class="py-16 border-t border-border bg-surface-alt">
-  <div class="max-w-7xl mx-auto px-6 text-center">
-    <img src="/img/netresearch.svg" alt="Netresearch" class="h-8 mx-auto mb-6 opacity-60" loading="lazy" />
-    <p class="text-text-secondary text-sm mb-4">
-      &copy; {new Date().getFullYear()}
-      <a href="https://www.netresearch.de/" class="hover:text-nr-teal transition-colors" target="_blank" rel="noopener">Netresearch DTT GmbH</a>
-    </p>
-    <div class="flex items-center justify-center gap-6 text-sm text-text-secondary">
-      <a href="https://www.netresearch.de/impressum/" class="hover:text-nr-teal transition-colors" target="_blank" rel="noopener" lang="de">Impressum</a>
-      <span>&middot;</span>
-      <a href="https://github.com/netresearch" class="hover:text-nr-teal transition-colors" target="_blank" rel="noopener">GitHub</a>
+---
+import type { Lang } from '../i18n';
+import { contactUrl } from '../i18n';
+import { useContent } from '../i18n/content';
+import { formatDate } from '../data/load-impact';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+
+/**
+ * No logo here — the brand rule places it exactly once, in the header.
+ * The footer carries the legally required links plus the review date, so the
+ * page's age is visible without reading the source.
+ */
+const links = [
+  { href: contactUrl(site.utmCampaign, 'footer'), label: t.footer.contact, cta: true },
+  { href: site.imprint, label: t.footer.imprint, lang: 'de' },
+  { href: site.privacy, label: t.footer.privacy, lang: 'de' },
+  { href: site.github, label: t.footer.github },
+];
+---
+
+<footer class="py-12 border-t border-border bg-surface-alt">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+    <div class="text-sm text-text-secondary">
+      <p>
+        &copy; {new Date().getFullYear()}
+        <a href={site.company} class="hover:text-nr-teal transition-colors" rel="noopener">
+          {t.footer.company}
+        </a>
+      </p>
+      <p class="mt-1 text-text-muted">
+        {t.footer.reviewed}: <time datetime={site.lastVerified}>{formatDate(site.lastVerified, lang)}</time>
+      </p>
     </div>
+
+    <nav class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" aria-label={t.footer.company}>
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            lang={link.lang}
+            rel="noopener"
+            class:list={[
+              'min-h-[44px] flex items-center transition-colors',
+              link.cta ? 'text-nr-teal hover:text-nr-teal/80 font-semibold' : 'text-text-secondary hover:text-nr-teal',
+            ]}
+            data-cta={link.cta ? 'business' : undefined}
+            data-cta-position={link.cta ? 'footer' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
   </div>
 </footer>

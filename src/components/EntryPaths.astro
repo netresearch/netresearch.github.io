@@ -1,0 +1,46 @@
+---
+import type { Lang } from '../i18n';
+import { useContent } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+---
+
+<section id="start-here" class="py-20 border-t border-border" aria-labelledby="start-here-heading">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 id="start-here-heading" class="font-heading font-black text-3xl md:text-4xl text-text-primary">
+      {t.entryPaths.heading}
+    </h2>
+    <p class="mt-3 text-text-secondary max-w-2xl">{t.entryPaths.intro}</p>
+
+    <ul class="mt-10 grid gap-5 md:grid-cols-2">
+      {
+        t.entryPaths.items.map((item) => (
+          <li
+            id={`path-${item.id}`}
+            class="rounded-xl border border-border bg-surface-card p-6 card-shadow flex flex-col"
+          >
+            <p class="text-xs font-heading font-semibold uppercase tracking-wider text-nr-teal">
+              {item.audience}
+            </p>
+            <h3 class="mt-2 font-heading font-bold text-xl text-text-primary text-balance">
+              {item.question}
+            </h3>
+            <p class="mt-3 text-text-secondary flex-1">{item.answer}</p>
+            <a
+              href={item.href}
+              class="mt-5 inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+            >
+              {item.linkLabel}
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

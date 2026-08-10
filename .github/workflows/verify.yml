@@ -1,0 +1,41 @@
+name: Verify
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The data files are build artefacts, not repository content, so a PR
+      # build fetches them exactly as the deploy build does. Verifying against
+      # anything else would verify a page nobody will ever be served.
+      - name: Refresh repository, manifest and impact data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run fetch-data
+
+      - run: npx astro build
+
+      - name: Verify built site
+        run: npm run verify
+
+      - name: Type-check
+        run: npx astro check --minimumSeverity error

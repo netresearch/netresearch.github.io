@@ -32,12 +32,20 @@ if (!prefersReducedMotion) {
   document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
 }
 
-// Count-up animation for stats
+// Count-up animation for stats.
+//
+// Progressive enhancement only: the element already contains the real,
+// server-formatted figure. This never writes a value the initial HTML did not
+// already state, and it uses the page's own locale so the animated digits match
+// the rendered ones.
+const pageLocale = document.documentElement.lang || 'en';
+
 document.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {
   const target = parseInt(el.dataset.countTo || '0', 10);
+  const format = (value: number) => new Intl.NumberFormat(pageLocale).format(value);
 
   if (prefersReducedMotion) {
-    el.textContent = target.toLocaleString();
+    // Leave the server-rendered text untouched.
     return;
   }
 
@@ -54,7 +62,7 @@ document.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {
           const elapsed = now - start;
           const progress = Math.min(elapsed / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.floor(eased * target).toLocaleString();
+          el.textContent = format(Math.floor(eased * target));
           if (progress < 1) requestAnimationFrame(update);
         }
 

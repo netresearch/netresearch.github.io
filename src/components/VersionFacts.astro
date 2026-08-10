@@ -1,0 +1,63 @@
+---
+import type { Lang } from '../i18n';
+import { useContent } from '../i18n/content';
+import { formatDate } from '../data/load-impact';
+import type { Product } from '../data/load-manifest';
+
+interface Props {
+  product: Product;
+  lang: Lang;
+}
+
+const { product, lang } = Astro.props;
+const t = useContent(lang);
+
+/**
+ * Latest release, main branch and page review date are three different values
+ * measuring three different things. Showing them under one "version" label is
+ * what made the pages look contradictory in the first place, so each one is
+ * labelled and each one may legitimately differ from the others.
+ */
+const facts = [
+  {
+    label: t.aiStack.releaseLabel,
+    value: product.latest_release,
+    detail: product.release_date ? formatDate(product.release_date, lang) : null,
+    href: product.latest_release
+      ? `${product.repository}/releases/tag/${product.latest_release}`
+      : null,
+  },
+  {
+    label: t.aiStack.mainLabel,
+    value: product.main_version,
+    detail: null,
+    href: product.repository,
+  },
+  {
+    label: t.aiStack.reviewedLabel,
+    value: product.last_verified ? formatDate(product.last_verified, lang) : null,
+    detail: null,
+    href: null,
+  },
+].filter((f) => f.value);
+---
+
+<dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+  {
+    facts.map((fact) => (
+      <div>
+        <dt class="text-xs uppercase tracking-wider text-text-muted font-heading">{fact.label}</dt>
+        <dd class="font-heading font-semibold text-text-primary">
+          {fact.href ? (
+            <a href={fact.href} class="hover:text-nr-teal transition-colors" rel="noopener">
+              {fact.value}
+            </a>
+          ) : (
+            fact.value
+          )}
+          {fact.detail && <span class="block text-xs font-normal text-text-secondary">{fact.detail}</span>}
+        </dd>
+      </div>
+    ))
+  }
+</dl>

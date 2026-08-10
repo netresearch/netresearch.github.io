@@ -1,0 +1,48 @@
+---
+import { contactUrl } from '../i18n';
+
+interface Props {
+  /** Business action: always the contact form, always UTM-tagged. */
+  businessLabel: string;
+  /** Where on the page this pair sits — becomes utm_content. */
+  position: string;
+  campaign: string;
+  /** Technical action: demo, install, docs or source. Exactly one alternative. */
+  technicalLabel: string;
+  technicalHref: string;
+  align?: 'start' | 'center';
+}
+
+const {
+  businessLabel,
+  position,
+  campaign,
+  technicalLabel,
+  technicalHref,
+  align = 'start',
+} = Astro.props;
+---
+
+<div
+  class:list={[
+    'flex flex-col sm:flex-row gap-3',
+    align === 'center' ? 'items-stretch sm:items-center sm:justify-center' : 'items-stretch sm:items-center',
+  ]}
+>
+  <a
+    href={contactUrl(campaign, position)}
+    class="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg bg-nr-teal text-white font-heading font-semibold hover:bg-nr-teal/90 transition-colors"
+    data-cta="business"
+    data-cta-position={position}
+  >
+    {businessLabel}
+  </a>
+  <a
+    href={technicalHref}
+    class="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg border border-border text-text-primary font-heading font-semibold hover:border-nr-teal hover:text-nr-teal transition-colors"
+    data-cta="technical"
+    data-cta-position={position}
+  >
+    {technicalLabel}
+  </a>
+</div>

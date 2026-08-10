@@ -1,0 +1,127 @@
+# Curated portfolio for the front page.
+#
+# Sorted by the problem a visitor has, not by the language the code is written
+# in. Stars, language and latest release are joined in from github-repos.json at
+# build time — never written here, so this file cannot go stale on those fields.
+#
+# The full, unfiltered repository list lives on /projects/ and /de/projekte/.
+
+- repo: t3x-nr-llm
+  facet: ai-governance
+  problem:
+    en: Connect an LLM provider once and steer access, budgets and models centrally for every extension.
+    de: Einen LLM-Provider einmal anbinden und Zugriffe, Budgets und Modelle zentral für jede Extension steuern.
+
+- repo: t3x-nr-vault
+  facet: ai-governance
+  problem:
+    en: Keep API keys out of the database and out of git, with envelope encryption and an audit trail.
+    de: API-Schlüssel aus Datenbank und Git heraushalten – mit Envelope-Verschlüsselung und Audit-Verlauf.
+
+- repo: t3x-nr-mcp-agent
+  facet: ai-governance
+  problem:
+    en: Let editors work with a backend assistant that reads freely and needs approval before it writes.
+    de: Redaktionen mit einem Backend-Assistenten arbeiten lassen, der frei liest und vor dem Schreiben eine Freigabe braucht.
+
+- repo: t3x-nr-browser-ai
+  facet: ai-governance
+  problem:
+    en: Answer questions about the current page on the visitor's own device, without a chat API of your own.
+    de: Fragen zur aufgerufenen Seite auf dem Gerät der Besucherin beantworten – ohne eigene Chat-API.
+
+- repo: t3x-cowriter
+  facet: content-editing
+  problem:
+    en: Draft and refine copy inside CKEditor instead of switching to a separate AI tool.
+    de: Texte direkt in CKEditor entwerfen und überarbeiten, statt in ein separates KI-Werkzeug zu wechseln.
+
+- repo: t3x-rte_ckeditor_image
+  facet: content-editing
+  problem:
+    en: Give editors real image handling in the rich text editor, wired into TYPO3's file abstraction.
+    de: Redaktionen echte Bildbearbeitung im Rich-Text-Editor geben, angebunden an die Dateiabstraktion von TYPO3.
+
+- repo: t3x-contexts
+  facet: content-editing
+  problem:
+    en: Show or hide records by IP range, geolocation, device, header or domain without duplicating pages.
+    de: Datensätze nach IP-Bereich, Standort, Gerät, Header oder Domain ein- und ausblenden, ohne Seiten zu duplizieren.
+
+- repo: assetpicker
+  facet: content-editing
+  problem:
+    en: Pull assets from an external DAM into the editing workflow instead of re-uploading them by hand.
+    de: Assets aus einem externen DAM in den Redaktionsablauf holen, statt sie von Hand erneut hochzuladen.
+
+- repo: dhl-shipping-m2
+  facet: commerce
+  problem:
+    en: Offer DHL and Deutsche Post services, pickup locations and tracking directly in the Magento 2 checkout.
+    de: DHL- und Deutsche-Post-Services, Abholorte und Sendungsverfolgung direkt im Magento-2-Checkout anbieten.
+
+- repo: deutschepost-module-autocomplete-sw6
+  facet: commerce
+  problem:
+    en: Cut delivery failures by validating German addresses while the customer is still typing.
+    de: Zustellfehler senken, indem deutsche Adressen schon während der Eingabe geprüft werden.
+
+- repo: t3x-universal-messenger
+  facet: commerce
+  problem:
+    en: Send TYPO3 content as a newsletter without maintaining a second content source.
+    de: TYPO3-Inhalte als Newsletter versenden, ohne eine zweite Inhaltsquelle zu pflegen.
+
+- repo: ofelia
+  facet: operations
+  problem:
+    en: Schedule jobs across containers with execution ordering, pause and resume — crontab for Docker.
+    de: Jobs über Container hinweg planen, mit Ausführungsreihenfolge, Pause und Fortsetzen – Crontab für Docker.
+
+- repo: go-cron
+  facet: operations
+  problem:
+    en: Replace an unmaintained Go cron library without rewriting the scheduling code around it.
+    de: Eine nicht mehr gepflegte Go-Cron-Bibliothek ersetzen, ohne den umgebenden Planungscode neu zu schreiben.
+
+- repo: ldap-manager
+  facet: operations
+  problem:
+    en: Give operations a web interface for directory accounts and groups instead of raw LDAP tooling.
+    de: Dem Betrieb eine Weboberfläche für Verzeichniskonten und -gruppen geben, statt roher LDAP-Werkzeuge.
+
+- repo: ldap-selfservice-password-changer
+  facet: operations
+  problem:
+    en: Let users reset their own directory password and take the ticket off the service desk.
+    de: Nutzern erlauben, ihr Verzeichnispasswort selbst zurückzusetzen, und das Ticket vom Service-Desk nehmen.
+
+- repo: jira-skill
+  facet: developer-experience
+  problem:
+    en: Work Jira issues, sprints and worklogs from the terminal instead of the browser.
+    de: Jira-Vorgänge, Sprints und Arbeitszeiten aus dem Terminal bearbeiten statt im Browser.
+
+- repo: agent-rules-skill
+  facet: developer-experience
+  problem:
+    en: Give coding agents a consistent, reviewable description of how a repository works.
+    de: Coding-Agenten eine einheitliche, prüfbare Beschreibung geben, wie ein Repository funktioniert.
+
+- repo: claude-code-marketplace
+  facet: developer-experience
+  problem:
+    en: Distribute and version agent skills across teams instead of copying folders around.
+    de: Agent-Skills teamübergreifend verteilen und versionieren, statt Ordner hin und her zu kopieren.
+
+- repo: composer-patches-plugin
+  facet: developer-experience
+  problem:
+    en: Keep local patches against upstream packages applied and reviewable across Composer updates.
+    de: Lokale Patches gegen Upstream-Pakete über Composer-Updates hinweg angewendet und prüfbar halten.
+
+- repo: timetracker
+  facet: developer-experience
+  problem:
+    en: Book project time against Jira issues and get the reporting the invoice run needs.
+    de: Projektzeiten auf Jira-Vorgänge buchen und die Auswertung bekommen, die der Rechnungslauf braucht.
