@@ -51,6 +51,15 @@ async function main() {
     process.exit(1);
   }
 
+  // generated_at is rendered into the page and into a datetime attribute, so it
+  // is validated as an ISO timestamp rather than trusted. A dashboard that
+  // cannot say when it ran is a dashboard whose figures have no age.
+  const generatedAt = String(snapshot.generated_at ?? '');
+  if (Number.isNaN(Date.parse(generatedAt))) {
+    console.error(`impact: ${SOURCE} reported an unparseable generated_at: ${generatedAt}`);
+    process.exit(1);
+  }
+
   const kpis = {};
   const missing = [];
   for (const { key, from } of KPIS) {
@@ -65,7 +74,7 @@ async function main() {
   const output = {
     source: SOURCE,
     dashboard: 'https://netresearch.github.io/maint/',
-    generated_at: snapshot.generated_at,
+    generated_at: generatedAt,
     fetched_at: new Date().toISOString(),
     traffic_available: snapshot.traffic_available === true,
     // Figures the dashboard did not publish this run. Named rather than
