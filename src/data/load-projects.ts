@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import yaml from 'js-yaml';
+// js-yaml 5 dropped the default export; only named exports remain.
+import { load as loadYaml } from 'js-yaml';
 import { categorizeRepo, type Category, categories } from './categories';
 
 export interface QualityBadge {
@@ -52,7 +53,7 @@ export function loadProjects(): ProjectData {
     join(process.cwd(), 'src/data/featured.yaml'),
     'utf-8',
   );
-  const featured = yaml.load(featuredRaw) as FeaturedProject[];
+  const featured = loadYaml(featuredRaw) as FeaturedProject[];
 
   let rawRepos: RawRepo[] = [];
   try {
