@@ -2,7 +2,8 @@ import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import yaml from 'js-yaml';
+// js-yaml 5 dropped the default export; only named exports remain.
+import { load as loadYaml } from 'js-yaml';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUTPUT = join(__dirname, '..', 'src', 'data', 'github-repos.json');
@@ -59,7 +60,7 @@ function fetchRepos() {
     join(__dirname, '..', 'src', 'data', 'featured.yaml'),
     'utf-8',
   );
-  const featuredProjects = yaml.load(featuredYaml);
+  const featuredProjects = loadYaml(featuredYaml);
   const featuredNames = new Set(featuredProjects.map((p) => p.repo.split('/')[1]));
 
   // Ensure featured repos that were filtered out (forks, etc.) are included

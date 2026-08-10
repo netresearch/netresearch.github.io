@@ -17,3 +17,14 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
+    ignore:
+      # @astrojs/check 0.9.10 — the newest release — declares
+      # `peer typescript: ^5.0.0 || ^6.0.0`. A bump to 7.x makes `npm ci` fail
+      # with ERESOLVE and the scheduled Build & Deploy run goes red, which is
+      # how this was found (run 31362712193). Grouped bumps hide it: the group
+      # PR is green because its own install predates the conflict.
+      #
+      # Drop this entry once @astrojs/check accepts typescript 7 — check
+      # `npm view @astrojs/check peerDependencies` before doing so.
+      - dependency-name: typescript
+        versions: ['>=7']
