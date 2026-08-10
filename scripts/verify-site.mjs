@@ -42,19 +42,30 @@ function htmlFiles(dir = DIST) {
  */
 function visibleText(html) {
   return html
-    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script\b[\s\S]*?<\/script\s*>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style\s*>/gi, ' ')
     .replace(/<(\w+)[^>]*\sdata-figure=[^>]*>[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ');
 }
 
-function attr(html, tag, match, name) {
-  const re = new RegExp(`<${tag}[^>]*${match}[^>]*>`, 'i');
-  const el = html.match(re);
-  if (!el) return null;
-  const value = el[0].match(new RegExp(`${name}=["']([^"']*)["']`, 'i'));
-  return value ? value[1] : null;
+/**
+ * The head values this gate reads, as literal patterns.
+ *
+ * These were built with `new RegExp` from arguments. Every call site passed a
+ * literal, but a helper that compiles a pattern out of its parameters is one
+ * refactor away from compiling one out of page content — so the patterns live
+ * here instead.
+ */
+const HEAD_VALUE = {
+  description: /<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i,
+  canonical: /<link[^>]*rel=["']canonical["'][^>]*href=["']([^"']*)["']/i,
+  ogImage: /<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']*)["']/i,
+  twitterCard: /<meta[^>]*name=["']twitter:card["'][^>]*content=["']([^"']*)["']/i,
+};
+
+function headValue(html, key) {
+  return html.match(HEAD_VALUE[key])?.[1] ?? null;
 }
 
 // ── Preconditions ────────────────────────────────────────────────────────────
@@ -159,11 +170,11 @@ for (const file of pages) {
 
   // Metadata.
   if (!/<title>[^<]+<\/title>/.test(html)) fail(name, 'no title');
-  if (!attr(html, 'meta', 'name=["\']description["\']', 'content')) fail(name, 'no meta description');
-  const canonical = attr(html, 'link', 'rel=["\']canonical["\']', 'href');
+  if (!headValue(html, 'description')) fail(name, 'no meta description');
+  const canonical = headValue(html, 'canonical');
   if (!canonical) fail(name, 'no canonical URL');
   if (!/hreflang=["']x-default["']/.test(html)) fail(name, 'no x-default hreflang');
-  const ogImage = attr(html, 'meta', 'property=["\']og:image["\']', 'content');
+  const ogImage = headValue(html, 'ogImage');
   if (!ogImage) {
     fail(name, 'no og:image');
   } else if (ogImage.startsWith('https://netresearch.github.io/')) {
@@ -171,7 +182,7 @@ for (const file of pages) {
     const local = ogImage.replace('https://netresearch.github.io/', '');
     if (!existsSync(join(DIST, local))) fail(name, `og:image does not exist: ${ogImage}`);
   }
-  if (!attr(html, 'meta', 'name=["\']twitter:card["\']', 'content')) fail(name, 'no twitter:card');
+  if (!headValue(html, 'twitterCard')) fail(name, 'no twitter:card');
 
   // Structured data must parse, and must not be empty boilerplate.
   const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];

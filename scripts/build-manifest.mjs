@@ -32,7 +32,10 @@ const SCHEMA = join(ROOT, 'public', 'schema', 'project-manifest.schema.json');
 const OUT_DATA = join(ROOT, 'src', 'data', 'projects.json');
 const OUT_PUBLIC = join(ROOT, 'public', 'projects.json');
 
-const ajv = new Ajv({ allErrors: true, strict: false });
+// allErrors stays off: the build only needs to know a manifest failed, and
+// collecting every error is a denial-of-service vector on input fetched
+// from the network.
+const ajv = new Ajv({ allErrors: false, strict: false });
 addFormats(ajv);
 const validate = ajv.compile(JSON.parse(readFileSync(SCHEMA, 'utf-8')));
 
@@ -78,6 +81,18 @@ function deriveManifest(product) {
   );
   const release = releaseRaw ? JSON.parse(releaseRaw) : {};
 
+  // The tag ends up in the published manifest, on the page and in a URL, so it
+  // is validated rather than trusted: anything that is not a plain semantic
+  // version tag counts as no release at all.
+  const tag = String(release.tag_name ?? '');
+  const latestRelease = /^v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(tag) ? tag : null;
+  const published = String(release.published_at ?? '').slice(0, 10);
+  const releaseDate =
+    latestRelease && /^\d{4}-\d{2}-\d{2}$/.test(published) ? published : null;
+  if (tag && !latestRelease) {
+    console.warn(`${product.id}: ignoring release tag that is not a version: ${tag}`);
+  }
+
   let mainVersion = product.main_version_fallback ?? null;
   const emconf = gh(`repos/${product.repo}/contents/ext_emconf.php`, '.content');
   if (emconf) {
@@ -91,9 +106,9 @@ function deriveManifest(product) {
     name: repoName.replace(/^t3x-/, ''),
     slug: new URL(product.pages_url).pathname,
     stage: product.stage_fallback,
-    latest_release: release.tag_name ?? null,
-    release_date: release.published_at ? release.published_at.slice(0, 10) : null,
-    main_version: mainVersion ?? (release.tag_name ?? '').replace(/^v/, '') ?? null,
+    latest_release: latestRelease,
+    release_date: releaseDate,
+    main_version: mainVersion ?? (latestRelease ?? '').replace(/^v/, '') ?? null,
     docs_version: null,
     // Derived data was never reviewed by a person, so it carries no review date.
     last_verified: null,
@@ -107,12 +122,12 @@ function deriveManifest(product) {
     security_controls: [],
     cost_controls: [],
     providers: [],
-    evidence: release.tag_name
+    evidence: latestRelease
       ? [
           {
             type: 'release',
-            label: release.tag_name,
-            url: `https://github.com/${product.repo}/releases/tag/${release.tag_name}`,
+            label: latestRelease,
+            url: `https://github.com/${product.repo}/releases/tag/${latestRelease}`,
           },
         ]
       : [],
