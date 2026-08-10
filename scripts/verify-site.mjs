@@ -163,7 +163,14 @@ for (const file of pages) {
   const canonical = attr(html, 'link', 'rel=["\']canonical["\']', 'href');
   if (!canonical) fail(name, 'no canonical URL');
   if (!/hreflang=["']x-default["']/.test(html)) fail(name, 'no x-default hreflang');
-  if (!attr(html, 'meta', 'property=["\']og:image["\']', 'content')) fail(name, 'no og:image');
+  const ogImage = attr(html, 'meta', 'property=["\']og:image["\']', 'content');
+  if (!ogImage) {
+    fail(name, 'no og:image');
+  } else if (ogImage.startsWith('https://netresearch.github.io/')) {
+    // A social card that 404s is worse than none: the preview renders blank.
+    const local = ogImage.replace('https://netresearch.github.io/', '');
+    if (!existsSync(join(DIST, local))) fail(name, `og:image does not exist: ${ogImage}`);
+  }
   if (!attr(html, 'meta', 'name=["\']twitter:card["\']', 'content')) fail(name, 'no twitter:card');
 
   // Structured data must parse, and must not be empty boilerplate.

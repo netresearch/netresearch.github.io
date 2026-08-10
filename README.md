@@ -17,6 +17,7 @@ npm run fetch-data   # repository metadata + product manifests + impact snapshot
 npm run dev
 npm run build
 npm run verify       # gate the built site in dist/
+npm run build-og-image  # regenerate the social cards after a headline change
 ```
 
 `npm run fetch-data` is a prerequisite for `dev` and `build`: every fact the site
@@ -30,6 +31,7 @@ renders comes from those artefacts, and none of them are committed.
 | Impact figures | `https://netresearch.github.io/maint/data/latest.json` | `scripts/fetch-impact.mjs` |
 | Repository metadata, releases | GitHub API | `scripts/fetch-repos.mjs` |
 | Portfolio framing, review date | `src/data/products.yaml`, `src/data/curated.yaml`, `src/data/site.ts` | edited by hand |
+| Social card headline | `src/i18n/content.ts` | `scripts/build-og-image.mjs` |
 
 Nothing else may state a version, a release date or a measured figure.
 
@@ -74,6 +76,7 @@ repository emit a manifest that validates against the schema.
 - a contact link missing any UTM parameter, or a page with no business CTA
 - the logo appearing other than exactly once, or below 32px
 - an internal link that does not resolve
+- an `og:image` that does not exist in the build
 - a missing `sitemap.xml`, `robots.txt`, `llms.txt`, `projects.json` or schema
 
 ## Content

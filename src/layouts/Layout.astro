@@ -3,7 +3,7 @@ import '../styles/global.css';
 import type { Lang, RouteKey } from '../i18n';
 import { absolute, alternates, languages } from '../i18n';
 import { useContent } from '../i18n/content';
-import { site } from '../data/site';
+import { ogImage, site } from '../data/site';
 
 interface Props {
   lang: Lang;
@@ -17,7 +17,7 @@ interface Props {
 const { lang, route, title, description, jsonLd = [] } = Astro.props;
 const t = useContent(lang);
 const canonical = absolute(route, lang);
-const ogImage = new URL(site.ogImage, 'https://netresearch.github.io').toString();
+const ogImageUrl = new URL(ogImage[lang], 'https://netresearch.github.io').toString();
 
 const graph = jsonLd.length
   ? { '@context': 'https://schema.org', '@graph': jsonLd }
@@ -45,13 +45,13 @@ const graph = jsonLd.length
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:alt" content={t.meta.ogImageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
