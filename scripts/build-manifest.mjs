@@ -17,7 +17,6 @@
  * run, the build fails — that is the point. A page that renders yesterday's
  * truth without saying so is the defect this whole layer exists to remove.
  */
-import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -39,16 +38,23 @@ const ajv = new Ajv({ allErrors: false, strict: false });
 addFormats(ajv);
 const validate = ajv.compile(JSON.parse(readFileSync(SCHEMA, 'utf-8')));
 
-/** `gh api <path> --jq <expr>`; returns null instead of throwing. */
-function gh(path, jq) {
+/**
+ * One GitHub REST call. Returns the parsed body, or null on any failure.
+ *
+ * This used to shell out to the `gh` binary, which meant the build depended on
+ * PATH resolution and on a tool being installed. fetch needs neither.
+ */
+async function gh(path) {
+  const headers = { Accept: 'application/vnd.github+json' };
+  const token = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
+  if (token) headers.Authorization = `Bearer ${token}`;
   try {
-    const args = ['api', path];
-    if (jq) args.push('--jq', jq);
-    return execFileSync('gh', args, {
-      encoding: 'utf-8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-      timeout: 15000,
-    }).trim();
+    const res = await fetch(`https://api.github.com/${path}`, {
+      headers,
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!res.ok) return null;
+    return await res.json();
   } catch {
     return null;
   }
@@ -70,16 +76,10 @@ async function fetchPublishedManifest(pagesUrl) {
  * Only fields GitHub can actually answer are derived; everything editorial
  * comes from the product's stage_fallback in products.yaml.
  */
-function deriveManifest(product) {
+async function deriveManifest(product) {
   const [, repoName] = product.repo.split('/');
-  const repo = gh(`repos/${product.repo}`, '{default_branch, license: .license.spdx_id, html_url}');
-  const meta = repo ? JSON.parse(repo) : {};
-
-  const releaseRaw = gh(
-    `repos/${product.repo}/releases/latest`,
-    '{tag_name, published_at}',
-  );
-  const release = releaseRaw ? JSON.parse(releaseRaw) : {};
+  const meta = (await gh(`repos/${product.repo}`)) ?? {};
+  const release = (await gh(`repos/${product.repo}/releases/latest`)) ?? {};
 
   // The tag ends up in the published manifest, on the page and in a URL, so it
   // is validated rather than trusted: anything that is not a plain semantic
@@ -94,9 +94,9 @@ function deriveManifest(product) {
   }
 
   let mainVersion = product.main_version_fallback ?? null;
-  const emconf = gh(`repos/${product.repo}/contents/ext_emconf.php`, '.content');
-  if (emconf) {
-    const decoded = Buffer.from(emconf, 'base64').toString('utf-8');
+  const contents = await gh(`repos/${product.repo}/contents/ext_emconf.php`);
+  if (contents?.content) {
+    const decoded = Buffer.from(contents.content, 'base64').toString('utf-8');
     const match = decoded.match(/'version'\s*=>\s*'([^']+)'/);
     if (match) mainVersion = match[1];
   }
@@ -113,7 +113,7 @@ function deriveManifest(product) {
     // Derived data was never reviewed by a person, so it carries no review date.
     last_verified: null,
     owner: null,
-    license: meta.license ?? null,
+    license: meta.license?.spdx_id ?? null,
     repository: meta.html_url ?? `https://github.com/${product.repo}`,
     documentation: null,
     demo: null,
@@ -156,7 +156,7 @@ async function main() {
       } else {
         console.warn(`${product.id}: no published manifest (${reason}) — deriving`);
       }
-      resolved = deriveManifest(product);
+      resolved = await deriveManifest(product);
       source = 'derived';
       derivedCount += 1;
     }

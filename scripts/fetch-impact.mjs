@@ -86,7 +86,7 @@ async function main() {
   mkdirSync(dirname(OUT), { recursive: true });
   writeFileSync(OUT, `${JSON.stringify(output, null, 2)}\n`);
   console.log(
-    `Wrote impact snapshot generated ${generatedAt}` +
+    `Wrote impact snapshot generated ${new Date(generatedAt).toISOString()}` +
       (missing.length ? ` (${missing.length} figures unavailable)` : ''),
   );
 }
