@@ -17,14 +17,17 @@
   --color-text-primary: #1a1d2e;
   --color-text-secondary: #4a4b52;
   --color-text-muted: #585961;
-  /* Brand teal is 3.38:1 on white — below AA for text under 24px. These two
-     tokens carry the same hue at a passing luminance; --color-nr-teal itself
-     stays the brand value and is used for borders, icons and large display
-     type, where 3:1 is the threshold. */
-  --color-nr-teal-ink: #237780;
-  --color-nr-teal-solid: #237780;
-  /* Same reasoning for the accent: #FF4D00 is 3.32:1 on white. */
-  --color-nr-orange-ink: #C43C00;
+  /* Brand teal is 3.38:1 on white and the accent 3.33:1 — both below AA for
+     text under 24px. These tokens carry the same hues at a passing luminance;
+     --color-nr-teal and --color-nr-orange stay the brand values for borders,
+     icons and large display type, where 3:1 is the threshold.
+
+     The values are the brand system's own: #15585E is the sanctioned dark teal
+     (8.1:1), #257880 the fill that carries white text (5.2:1), #9A2E00 the dark
+     accent (7.1:1). The other Netresearch sites use the same three. */
+  --color-nr-teal-ink: #15585E;
+  --color-nr-teal-solid: #257880;
+  --color-nr-orange-ink: #9A2E00;
   --color-border: rgba(0, 0, 0, 0.08);
   --color-border-hover: rgba(47, 153, 164, 0.3);
   --color-glass: rgba(255, 255, 255, 0.5);
