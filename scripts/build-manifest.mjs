@@ -168,6 +168,8 @@ async function deriveManifest(product) {
     if (match) mainVersion = match[1];
   }
 
+  const repository = meta.html_url ?? `https://github.com/${product.repo}`;
+
   return {
     manifest_version: 1,
     name: repoName.replace(/^t3x-/, ''),
@@ -182,8 +184,8 @@ async function deriveManifest(product) {
     last_verified: null,
     owner: null,
     license: meta.license?.spdx_id ?? null,
-    repository: meta.html_url ?? `https://github.com/${product.repo}`,
-    documentation: `${meta.html_url ?? `https://github.com/${product.repo}`}#readme`,
+    repository,
+    documentation: `${repository}#readme`,
     demo: null,
     support: 'https://www.netresearch.de/kontakt/',
     capabilities: [],

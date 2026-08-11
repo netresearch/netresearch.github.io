@@ -36,9 +36,11 @@ jobs:
 
       # `npm ci --ignore-scripts` deliberately skips puppeteer's postinstall, so
       # the browser axe needs is fetched here instead — explicitly, and at the
-      # version puppeteer pins.
+      # version puppeteer pins. The locally installed binary is called directly
+      # rather than through npx, which would install a package on demand and run
+      # its lifecycle scripts.
       - name: Install the browser for the accessibility audit
-        run: npx puppeteer browsers install chrome
+        run: ./node_modules/.bin/puppeteer browsers install chrome
 
       - name: Verify built site and run axe
         run: npm run verify

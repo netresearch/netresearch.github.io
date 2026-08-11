@@ -269,7 +269,7 @@ for (const file of pages) {
 
 {
   const curatedFacets = new Set(
-    [...readFileSync('src/data/curated.yaml', 'utf-8').matchAll(/^\s*facet:\s*(\S+)/gm)].map(
+    [...readFileSync('src/data/curated.yaml', 'utf-8').matchAll(/^[ \t]*facet:[ \t]*(\S{1,64})/gm)].map(
       (m) => m[1],
     ),
   );
@@ -301,7 +301,7 @@ if (existsSync(join(DIST, 'llms.txt'))) {
   const llms = readFileSync(join(DIST, 'llms.txt'), 'utf-8');
   if (!/^# \S/m.test(llms)) fail('llms.txt', 'no H1 heading');
   if (!/^> /m.test(llms)) fail('llms.txt', 'no blockquote summary after the H1');
-  const links = llms.match(/\[[^\]]+\]\(https?:\/\/[^)]+\)/g) ?? [];
+  const links = llms.match(/\[[^\]\n]{1,200}\]\(https?:\/\/[^)\s]{1,500}\)/g) ?? [];
   if (links.length < 5) {
     fail('llms.txt', `only ${links.length} Markdown link(s) — bare URLs do not count`);
   }

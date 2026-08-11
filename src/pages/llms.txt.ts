@@ -27,7 +27,8 @@ export const GET: APIRoute = () => {
       ]
         .filter(Boolean)
         .join(', ');
-      return `- [${product.name}](${product.page}): ${product.stage}${versions ? `, ${versions}` : ''} — ${product.role.en}. ${product.summary.en.trim()}`;
+      const suffix = versions ? `, ${versions}` : '';
+      return `- [${product.name}](${product.page}): ${product.stage}${suffix} — ${product.role.en}. ${product.summary.en.trim()}`;
     })
     .join('\n');
 
