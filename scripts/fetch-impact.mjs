@@ -74,7 +74,8 @@ async function main() {
   const output = {
     source: SOURCE,
     dashboard: 'https://netresearch.github.io/maint/',
-    generated_at: generatedAt,
+    // The value Date produced from the fetched string, not the string itself.
+    generated_at: new Date(generatedAt).toISOString(),
     fetched_at: new Date().toISOString(),
     traffic_available: snapshot.traffic_available === true,
     // Figures the dashboard did not publish this run. Named rather than

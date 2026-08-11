@@ -61,6 +61,62 @@ async function gh(path) {
   }
 }
 
+/**
+ * Every URL a manifest may contribute to the rendered page.
+ *
+ * The schema declares these as `format: uri`, which ajv accepts loosely enough
+ * to let a `javascript:` URI through — and these values are rendered as href
+ * attributes. A product repository is trusted to publish its own status, not to
+ * publish a link scheme. Anything that is not http(s) is dropped.
+ */
+const URL_FIELDS = ['repository', 'documentation', 'demo', 'support'];
+
+function safeUrl(value) {
+  if (typeof value !== 'string' || value === '') return null;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:' ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Drop every link a manifest published that is not an http(s) URL. */
+function sanitiseLinks(manifest, id) {
+  const rejected = [];
+  const clean = { ...manifest };
+
+  for (const field of URL_FIELDS) {
+    if (clean[field] == null) continue;
+    const safe = safeUrl(clean[field]);
+    if (!safe) rejected.push(field);
+    clean[field] = safe;
+  }
+
+  for (const key of ['capabilities', 'security_controls', 'cost_controls']) {
+    if (!Array.isArray(clean[key])) continue;
+    clean[key] = clean[key].map((claim) => {
+      if (claim?.evidence == null) return claim;
+      const safe = safeUrl(claim.evidence);
+      if (!safe) rejected.push(`${key}[${claim.id}].evidence`);
+      return { ...claim, evidence: safe ?? undefined };
+    });
+  }
+
+  if (Array.isArray(clean.evidence)) {
+    clean.evidence = clean.evidence.filter((item) => {
+      if (safeUrl(item?.url)) return true;
+      rejected.push(`evidence:${item?.type ?? '?'}`);
+      return false;
+    });
+  }
+
+  if (rejected.length) {
+    console.warn(`${id}: dropped ${rejected.length} link(s) that were not http(s): ${rejected.join(', ')}`);
+  }
+  return clean;
+}
+
 async function fetchPublishedManifest(pagesUrl) {
   const url = new URL('project-manifest.json', pagesUrl).toString();
   try {
@@ -163,7 +219,7 @@ async function main() {
     }
 
     entries.push({
-      ...resolved,
+      ...sanitiseLinks(resolved, product.id),
       id: product.id,
       repo: product.repo,
       page: product.page,
