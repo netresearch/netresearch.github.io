@@ -12,6 +12,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { checkAccessibility } from './check-accessibility.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -216,6 +217,9 @@ for (const file of pages) {
     const height = tag.match(/height=["'](\d+)["']/);
     if (height && Number(height[1]) < 32) fail(name, `logo rendered at ${height[1]}px, below the 32px minimum`);
   }
+
+  // Accessibility and semantics decidable from the markup alone.
+  for (const problem of checkAccessibility(html)) fail(name, problem);
 
   // Version drift: any version-looking string on the page must be one the
   // manifest knows. Catches a number hand-typed into copy.
