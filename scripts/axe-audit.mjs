@@ -27,6 +27,22 @@ const axePath = require.resolve('axe-core/axe.min.js');
 
 const DIST = process.argv[2] ?? 'dist';
 
+/**
+ * The path the site is served from, with exactly one slash at each end.
+ *
+ * This site sits at the domain root, so the default is '/'. It is still read
+ * from the environment because serving pages built for a sub-path at the root
+ * makes every absolute asset URL 404 — and an unstyled page has no contrast
+ * failures at all, so the audit would report a clean run on a broken page.
+ * That happened once, on a sibling site, and it is not detectable by reading
+ * the output.
+ */
+const baseSegments = (process.argv[3] ?? process.env.PAGES_BASE_PATH ?? '/')
+  .split('/')
+  .filter(Boolean)
+  .join('/');
+const BASE = baseSegments ? `/${baseSegments}/` : '/';
+
 // WCAG 2.1 AA, which is what the pages claim. 'best-practice' is deliberately
 // not included: it flags stylistic preferences, and a gate that fails on those
 // gets disabled instead of fixed.
@@ -113,7 +129,8 @@ function sampleRoutes(routes) {
 
 function serve(files) {
   const server = createServer(async (req, res) => {
-    const file = files.get(new URL(req.url, 'http://localhost').pathname);
+    const path = new URL(req.url, 'http://localhost').pathname;
+    const file = path.startsWith(BASE) ? files.get(`/${path.slice(BASE.length)}`) : undefined;
     if (!file) {
       res.writeHead(404).end('not found');
       return;
@@ -162,7 +179,7 @@ async function auditPage(browser, port, route, scheme) {
 
   await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: scheme }]);
   await page.setViewport({ width: 1280, height: 900 });
-  await page.goto(`http://127.0.0.1:${port}${route}`, { waitUntil: 'networkidle0' });
+  await page.goto(`http://127.0.0.1:${port}${BASE}${route.slice(1)}`, { waitUntil: 'networkidle0' });
   await page.addScriptTag({ path: axePath });
 
   const results = await page.evaluate(
@@ -229,7 +246,7 @@ async function main() {
   }
 
   console.log(
-    `axe: no WCAG 2.1 AA violations in ${checked} page renders (${sampled.length} route shapes × ${SCHEMES.length} colour schemes, sampled from ${routes.length} pages)`,
+    `axe: no WCAG 2.1 AA violations in ${checked} page renders (${sampled.length} route shapes × ${SCHEMES.length} colour schemes, sampled from ${routes.length} pages) served from ${BASE}`,
   );
 }
 
