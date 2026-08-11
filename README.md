@@ -89,6 +89,10 @@ repository emit a manifest that validates against the schema.
 - the logo appearing other than exactly once, or below 32px
 - an internal link that does not resolve
 - an `og:image` that does not exist in the build
+- a page with no `lang`, no `<main>`, more or fewer than one `<h1>`, a skipped
+  heading level, an `<img>` without `alt`, a link or button with no accessible
+  name, a form control with no label, a table without a caption or `th` scope, a
+  positive `tabindex`, or a duplicate `id`
 - a missing `sitemap.xml`, `robots.txt`, `llms.txt`, `projects.json` or schema
 
 ## Content
