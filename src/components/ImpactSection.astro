@@ -8,7 +8,7 @@ interface Props {
   impact: ImpactSnapshot;
 }
 
-const { lang, impact } = Astro.props;
+const { lang, impact } = Astro.props as Props;
 const t = useContent(lang);
 
 /** Headline figures. Each one is rendered from the snapshot, never counted here. */

@@ -20,7 +20,8 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import yaml from 'js-yaml';
+// js-yaml 5 dropped the default export; only named exports remain.
+import { load as loadYaml } from 'js-yaml';
 import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
@@ -135,7 +136,7 @@ async function deriveManifest(product) {
 }
 
 async function main() {
-  const products = yaml.load(readFileSync(PRODUCTS, 'utf-8'));
+  const products = loadYaml(readFileSync(PRODUCTS, 'utf-8'));
   const entries = [];
   let derivedCount = 0;
 

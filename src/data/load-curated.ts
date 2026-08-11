@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import yaml from 'js-yaml';
+// js-yaml 5 dropped the default export; only named exports remain.
+import { load as loadYaml } from 'js-yaml';
 import type { Lang } from '../i18n';
 
 interface CuratedEntry {
@@ -47,7 +48,7 @@ function readRepos(): RawRepo[] {
  * placeholder, and placeholders are what this rebuild removes.
  */
 export function loadCurated(): CuratedProject[] {
-  const entries = yaml.load(
+  const entries = loadYaml(
     readFileSync(join(process.cwd(), 'src/data/curated.yaml'), 'utf-8'),
   ) as CuratedEntry[];
   const repos = readRepos();

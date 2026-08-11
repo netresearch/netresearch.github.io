@@ -10,7 +10,7 @@ interface Props {
   products: Product[];
 }
 
-const { lang, products } = Astro.props;
+const { lang, products } = Astro.props as Props;
 const t = useContent(lang);
 const ordered = orderedProducts(products);
 ---

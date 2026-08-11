@@ -8,7 +8,7 @@ interface Props {
   lang: Lang;
 }
 
-const { lang } = Astro.props;
+const { lang } = Astro.props as Props;
 const t = useContent(lang);
 ---
 

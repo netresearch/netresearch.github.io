@@ -10,7 +10,7 @@ interface Props {
   route: RouteKey;
 }
 
-const { lang, route } = Astro.props;
+const { lang, route } = Astro.props as Props;
 const t = useContent(lang);
 const other: Lang = lang === 'en' ? 'de' : 'en';
 

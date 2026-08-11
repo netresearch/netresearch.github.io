@@ -14,7 +14,7 @@ interface Props {
   jsonLd?: Record<string, unknown>[];
 }
 
-const { lang, route, title, description, jsonLd = [] } = Astro.props;
+const { lang, route, title, description, jsonLd = [] } = Astro.props as Props;
 const t = useContent(lang);
 const canonical = absolute(route, lang);
 const ogImageUrl = new URL(ogImage[lang], 'https://netresearch.github.io').toString();
