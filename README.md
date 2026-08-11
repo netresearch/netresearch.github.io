@@ -23,6 +23,18 @@ npm run build-og-image  # regenerate the social cards after a headline change
 `npm run fetch-data` is a prerequisite for `dev` and `build`: every fact the site
 renders comes from those artefacts, and none of them are committed.
 
+It needs a GitHub token. Unauthenticated requests are capped at 60 an hour, and
+a rate-limited run would otherwise produce a manifest with empty version fields
+— a page that states nothing while looking like it states something. The script
+aborts instead:
+
+```bash
+GITHUB_TOKEN="$(gh auth token)" npm run fetch-data
+```
+
+The deploy workflow exposes the token for that phase only and drops it again
+before the site build.
+
 ## Where the facts come from
 
 | Fact on the page | Source | Produced by |

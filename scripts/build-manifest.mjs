@@ -135,7 +135,17 @@ async function fetchPublishedManifest(pagesUrl) {
  */
 async function deriveManifest(product) {
   const [, repoName] = product.repo.split('/');
-  const meta = (await gh(`repos/${product.repo}`)) ?? {};
+
+  // A failure here used to produce a manifest with empty fields, which is the
+  // exact failure this whole layer exists to prevent: a page that states
+  // nothing while looking like it states something. Unauthenticated GitHub
+  // requests are rate-limited to 60 an hour, so set GITHUB_TOKEN locally.
+  const meta = await gh(`repos/${product.repo}`);
+  if (!meta) {
+    throw new Error(
+      `cannot read repos/${product.repo} from the GitHub API — rate-limited, or GITHUB_TOKEN is unset`,
+    );
+  }
   const release = (await gh(`repos/${product.repo}/releases/latest`)) ?? {};
 
   // The tag ends up in the published manifest, on the page and in a URL, so it
