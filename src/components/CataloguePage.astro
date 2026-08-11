@@ -1,0 +1,155 @@
+---
+import type { Lang } from '../i18n';
+import { absolute, path } from '../i18n';
+import { useContent } from '../i18n/content';
+import Layout from '../layouts/Layout.astro';
+import Nav from './Nav.astro';
+import Footer from './Footer.astro';
+import { loadProjects } from '../data/load-projects';
+import { loadPages } from '../data/load-pages';
+import { breadcrumbs, collectionPage, organization, website } from '../data/jsonld';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props as Props;
+const t = useContent(lang);
+const data = loadProjects();
+
+/** Every repository, including the ones promoted to the curated front page. */
+const sections = data.categories
+  .map((category) => ({
+    id: category.id,
+    title: (lang === 'de' && category.titleDe) || category.title,
+    repos: data.allByCategory[category.id] ?? [],
+  }))
+  .filter((section) => section.repos.length > 0);
+
+const total = sections.reduce((sum, section) => sum + section.repos.length, 0);
+const livePages = loadPages();
+
+const jsonLd = [
+  organization(),
+  website(lang),
+  breadcrumbs([
+    { name: t.breadcrumbHome, url: absolute('home', lang) },
+    { name: t.catalogue.heading, url: absolute('projects', lang) },
+  ]),
+  collectionPage(lang, absolute('projects', lang), t.catalogue.heading, t.catalogue.description),
+];
+---
+
+<Layout
+  lang={lang}
+  route="projects"
+  title={t.catalogue.title}
+  description={t.catalogue.description}
+  jsonLd={jsonLd}
+>
+  <Nav lang={lang} route="projects" />
+  <main id="main-content" class="pt-32 pb-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <nav aria-label="Breadcrumb" class="text-sm text-text-secondary">
+        <ol class="flex flex-wrap items-center gap-2">
+          <li>
+            <a href={path('home', lang)} class="hover:text-nr-teal transition-colors">
+              {t.breadcrumbHome}
+            </a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-text-primary">{t.catalogue.heading}</li>
+        </ol>
+      </nav>
+
+      <h1 class="mt-6 font-heading font-black text-4xl md:text-5xl text-text-primary">
+        {t.catalogue.heading}
+      </h1>
+      <p class="mt-4 text-text-secondary max-w-3xl">{t.catalogue.intro}</p>
+      <p class="mt-2 text-sm text-text-muted">{total} {t.catalogue.countLabel}</p>
+
+      {
+        sections.map((section) => (
+          <section id={section.id} class="mt-14" aria-labelledby={`${section.id}-heading`}>
+            <h2
+              id={`${section.id}-heading`}
+              class="font-heading font-bold text-2xl text-text-primary border-b border-border pb-3"
+            >
+              {section.title}
+            </h2>
+            <ul class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {section.repos.map((repo) => (
+                <li class="rounded-xl border border-border bg-surface-card p-5 card-shadow flex flex-col">
+                  <h3 class="font-heading font-bold text-text-primary">
+                    <a href={repo.url} class="hover:text-nr-teal transition-colors" rel="noopener">
+                      {repo.name}
+                    </a>
+                  </h3>
+                  <p class="mt-2 text-sm text-text-secondary flex-1">{repo.description}</p>
+                  <dl class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
+                    {repo.latestRelease && (
+                      <div class="flex gap-1">
+                        <dt>{t.portfolio.releaseLabel}:</dt>
+                        <dd class="font-semibold text-text-secondary">{repo.latestRelease}</dd>
+                      </div>
+                    )}
+                    {repo.language && (
+                      <div class="flex gap-1">
+                        <dt class="sr-only">Language</dt>
+                        <dd>{repo.language}</dd>
+                      </div>
+                    )}
+                    <div class="flex gap-1">
+                      <dt class="sr-only">{t.portfolio.starsLabel}</dt>
+                      <dd>{repo.stars} &#9733;</dd>
+                    </div>
+                  </dl>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+
+      {
+        livePages.length > 0 && (
+          <section id="published-sites" class="mt-14" aria-labelledby="published-sites-heading">
+            <h2
+              id="published-sites-heading"
+              class="font-heading font-bold text-2xl text-text-primary border-b border-border pb-3"
+            >
+              {t.catalogue.sitesHeading}
+            </h2>
+            <p class="mt-3 text-text-secondary">{t.catalogue.sitesIntro}</p>
+            <ul class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {livePages.map((page) => (
+                <li class="rounded-xl border border-border bg-surface-card p-5 card-shadow">
+                  <h3 class="font-heading font-bold text-text-primary">
+                    <a href={page.url} class="hover:text-nr-teal transition-colors" rel="noopener">
+                      {page.name}
+                    </a>
+                  </h3>
+                  {page.description && (
+                    <p class="mt-2 text-sm text-text-secondary">{page.description}</p>
+                  )}
+                  <p class="mt-3 text-xs text-text-muted break-all">{page.cname ?? page.url}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      <p class="mt-14">
+        <a
+          href={path('home', lang)}
+          class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+        >
+          <span aria-hidden="true">&larr;</span>
+          {t.catalogue.backLink}
+        </a>
+      </p>
+    </div>
+  </main>
+  <Footer lang={lang} />
+</Layout>

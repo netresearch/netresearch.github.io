@@ -1,0 +1,89 @@
+---
+import type { Lang } from '../i18n';
+import { useContent } from '../i18n/content';
+import { orderedProducts, type Product } from '../data/load-manifest';
+import StatusBadge from './StatusBadge.astro';
+import VersionFacts from './VersionFacts.astro';
+
+interface Props {
+  lang: Lang;
+  products: Product[];
+}
+
+const { lang, products } = Astro.props as Props;
+const t = useContent(lang);
+const ordered = orderedProducts(products);
+---
+
+<section id="ai-stack" class="py-20 border-t border-border bg-surface-alt" aria-labelledby="ai-stack-heading">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 id="ai-stack-heading" class="font-heading font-black text-3xl md:text-4xl text-text-primary">
+      {t.aiStack.heading}
+    </h2>
+    <p class="mt-3 text-text-secondary max-w-3xl">{t.aiStack.intro}</p>
+
+    <ul class="mt-10 grid gap-5 lg:grid-cols-2">
+      {
+        ordered.map((product) => (
+          <li
+            id={`product-${product.id}`}
+            class="rounded-xl border border-border bg-surface-card p-6 card-shadow flex flex-col"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-xs font-heading font-semibold uppercase tracking-wider text-nr-teal">
+                  {product.role[lang]}
+                </p>
+                <h3 class="mt-1 font-heading font-bold text-2xl text-text-primary">
+                  <a href={product.page} class="hover:text-nr-teal transition-colors">
+                    {product.name}
+                  </a>
+                </h3>
+              </div>
+              <StatusBadge stage={product.stage} lang={lang} />
+            </div>
+
+            <p class="mt-4 text-text-secondary flex-1">{product.summary[lang]}</p>
+
+            <div class="mt-5 pt-5 border-t border-border">
+              <VersionFacts product={product} lang={lang} />
+            </div>
+
+            <dl class="mt-5 space-y-3 text-sm">
+              <div>
+                <dt class="text-xs uppercase tracking-wider text-text-muted font-heading">
+                  {t.aiStack.suitedForLabel}
+                </dt>
+                <dd class="text-text-secondary">{product.suited_for[lang]}</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-wider text-text-muted font-heading">
+                  {t.aiStack.boundaryLabel}
+                </dt>
+                <dd class="text-text-secondary">{product.boundary[lang]}</dd>
+              </div>
+            </dl>
+
+            {
+              product.manifest_source === 'derived' && (
+                <p class="mt-4 text-xs text-text-muted border-l-2 border-nr-orange/40 pl-3">
+                  {t.aiStack.derivedNote}
+                </p>
+              )
+            }
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-8">
+      <a
+        href={t.aiStack.stackLinkHref}
+        class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+      >
+        {t.aiStack.stackLink}
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </p>
+  </div>
+</section>

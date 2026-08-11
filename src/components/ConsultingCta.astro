@@ -1,0 +1,32 @@
+---
+import type { Lang } from '../i18n';
+import { useContent } from '../i18n/content';
+import { site } from '../data/site';
+import CtaPair from './CtaPair.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props as Props;
+const t = useContent(lang);
+---
+
+<section id="consulting" class="py-20 border-t border-border bg-surface-alt" aria-labelledby="consulting-heading">
+  <div class="max-w-3xl mx-auto px-6 text-center">
+    <h2 id="consulting-heading" class="font-heading font-black text-3xl md:text-4xl text-text-primary">
+      {t.consulting.heading}
+    </h2>
+    <p class="mt-4 text-lg text-text-secondary">{t.consulting.body}</p>
+    <div class="mt-8">
+      <CtaPair
+        campaign={site.utmCampaign}
+        position="consulting"
+        align="center"
+        businessLabel={t.consulting.primaryCta}
+        technicalLabel={t.consulting.secondaryCta}
+        technicalHref="#ai-stack"
+      />
+    </div>
+  </div>
+</section>

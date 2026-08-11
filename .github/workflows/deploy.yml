@@ -26,17 +26,19 @@ jobs:
       setup-node: true
       node-version: '22'
       # Dependency install stays in the token-free phase on purpose: this is
-      # where third-party npm lifecycle scripts run.
-      pre-build-command: npm ci
-      # scripts/fetch-repos.mjs shells out to `gh api`, so GH_TOKEN must exist
-      # in THIS phase — that is what `expose-github-token: build` provides.
-      # The reusable scopes the token per PHASE; the previous workflow scoped it
-      # to a single STEP. Drop it again before the site build so the astro build
-      # stays token-free, exactly as before this migration.
+      # where third-party npm lifecycle scripts would run — so they do not run
+      # at all.
+      pre-build-command: npm ci --ignore-scripts
+      # `npm run fetch-data` calls the GitHub API for repository metadata and
+      # for each product's latest release, so GH_TOKEN must exist in THIS phase
+      # — that is what `expose-github-token: build` provides. The reusable
+      # scopes the token per PHASE. It is dropped again before the site build,
+      # so the astro build and the gate stay token-free.
       build-command: |
-        node scripts/fetch-repos.mjs
+        npm run fetch-data
         unset GITHUB_TOKEN GH_TOKEN
-        npx astro build
+        npm run build
+        npm run verify
       expose-github-token: build
       # astro.config.mjs hardcodes `site:` and never reads PAGES_BASE_PATH /
       # PAGES_ORIGIN, and the previous build job never ran configure-pages.

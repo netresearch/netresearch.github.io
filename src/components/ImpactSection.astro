@@ -1,0 +1,83 @@
+---
+import type { Lang } from '../i18n';
+import { useContent } from '../i18n/content';
+import { formatDate, formatNumber, type ImpactSnapshot } from '../data/load-impact';
+
+interface Props {
+  lang: Lang;
+  impact: ImpactSnapshot;
+}
+
+const { lang, impact } = Astro.props as Props;
+const t = useContent(lang);
+
+/** Headline figures. Each one is rendered from the snapshot, never counted here. */
+const HEADLINE = [
+  'repos',
+  'releases',
+  'packagist_downloads',
+  'external_contributors',
+  'dependents_repos',
+  'commits_30d',
+] as const;
+---
+
+<section id="impact" class="py-20 border-t border-border" aria-labelledby="impact-heading">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 id="impact-heading" class="font-heading font-black text-3xl md:text-4xl text-text-primary">
+      {t.impact.heading}
+    </h2>
+    <p class="mt-3 text-text-secondary max-w-3xl">{t.impact.intro}</p>
+
+    <p class="mt-4 text-sm text-text-muted">
+      {t.impact.asOf}:
+      <time datetime={impact.generated_at}>{formatDate(impact.generated_at, lang)}</time>
+    </p>
+
+    <dl class="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
+      {
+        HEADLINE.map((key) => {
+          const value = impact.kpis[key];
+          return (
+            <div>
+              {typeof value === 'number' ? (
+                <dd
+                  class="text-3xl md:text-4xl font-heading font-black text-nr-teal tabular-nums"
+                  data-count-to={value}
+                  data-figure={key}
+                >
+                  {formatNumber(value, lang)}
+                </dd>
+              ) : (
+                <dd class="text-lg font-heading font-semibold text-text-muted">
+                  {t.impact.unavailable}
+                </dd>
+              )}
+              <dt class="mt-2 text-sm text-text-secondary font-heading uppercase tracking-wider">
+                {t.impact.kpis[key]}
+              </dt>
+            </div>
+          );
+        })
+      }
+    </dl>
+
+    <div class="mt-12 rounded-xl border border-border bg-surface-card p-6 card-shadow">
+      <h3 id="impact-method" class="font-heading font-bold text-lg text-text-primary">
+        {t.impact.methodHeading}
+      </h3>
+      <ul class="mt-3 space-y-2 text-sm text-text-secondary list-disc pl-5">
+        {t.impact.method.map((line) => <li>{line}</li>)}
+      </ul>
+      <p class="mt-4">
+        <a
+          href={impact.dashboard}
+          class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+        >
+          {t.impact.sourceLabel}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </p>
+    </div>
+  </div>
+</section>

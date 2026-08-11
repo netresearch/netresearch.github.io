@@ -1,28 +1,67 @@
 ---
 import '../styles/global.css';
+import type { Lang, RouteKey } from '../i18n';
+import { absolute, alternates, languages } from '../i18n';
+import { useContent } from '../i18n/content';
+import { ogImage, site } from '../data/site';
 
 interface Props {
+  lang: Lang;
+  route: RouteKey;
   title: string;
+  description: string;
+  /** JSON-LD graph nodes. Only describe what is visible on the page. */
+  jsonLd?: Record<string, unknown>[];
 }
 
-const { title } = Astro.props;
+const { lang, route, title, description, jsonLd = [] } = Astro.props as Props;
+const t = useContent(lang);
+const canonical = absolute(route, lang);
+const ogImageUrl = new URL(ogImage[lang], 'https://netresearch.github.io').toString();
+
+const graph = jsonLd.length
+  ? { '@context': 'https://schema.org', '@graph': jsonLd }
+  : null;
 ---
 
-<html lang="en">
+<!doctype html>
+<html lang={languages[lang].htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Netresearch Open Source — curated portfolio of TYPO3 extensions, developer tools, AI agent skills, and infrastructure projects." />
-    <meta property="og:title" content="Netresearch Open Source" />
-    <meta property="og:description" content="Curated portfolio of TYPO3 extensions, developer tools, AI agent skills, and infrastructure projects." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://netresearch.github.io/" />
+
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {
+      alternates(route).map((alt) => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Netresearch Open Source" />
+    <meta property="og:locale" content={languages[lang].ogLocale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={t.meta.ogImageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
-    <!-- Blocking theme script — prevents flash of wrong theme -->
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    {graph && <script type="application/ld+json" set:html={JSON.stringify(graph)} />}
+
+    <!-- Blocking theme script — prevents a flash of the wrong theme. -->
     <script is:inline>
-      (function() {
+      (function () {
         var stored = localStorage.getItem('theme');
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (stored === 'dark' || (!stored && prefersDark)) {
@@ -32,8 +71,11 @@ const { title } = Astro.props;
     </script>
   </head>
   <body class="bg-surface text-text-primary font-body antialiased overflow-x-hidden">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-nr-teal focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium">
-      Skip to content
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-nr-teal focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium"
+    >
+      {t.skipToContent}
     </a>
     <slot />
     <script src="../scripts/animations.ts"></script>

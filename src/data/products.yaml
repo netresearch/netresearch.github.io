@@ -1,0 +1,113 @@
+# Products the hub renders with status, version and stack role.
+#
+# Ownership split — this file must not duplicate what the product owns:
+#   product repo  → stage, versions, release date, capabilities, evidence, AI card
+#                   (published at <pages_url>project-manifest.json)
+#   this file     → the product's role in the portfolio, who it is for, how it is
+#                   linked. Editorial framing the product repo has no opinion on.
+#
+# `stage_fallback` and `main_version_fallback` are used only until the product
+# repo publishes its manifest. scripts/verify-site.mjs reports every product
+# still running on fallback data, so the gap stays visible instead of silent.
+
+- id: nr-vault
+  repo: netresearch/t3x-nr-vault
+  page: https://netresearch.github.io/t3x-nr-vault/
+  pages_url: https://netresearch.github.io/t3x-nr-vault/
+  stack_layer: security-identity
+  stage_fallback: beta
+  role:
+    en: Secret foundation
+    de: Secret-Fundament
+  summary:
+    en: >
+      Envelope-encrypted secret storage for TYPO3. Every API key the AI stack
+      uses is stored here as a vault identifier, never as plaintext in the
+      database or in a configuration file.
+    de: >
+      Envelope-verschlüsselte Secret-Ablage für TYPO3. Jeder API-Schlüssel des
+      KI-Stacks liegt hier als Vault-Kennung, nie im Klartext in der Datenbank
+      oder in einer Konfigurationsdatei.
+  suited_for:
+    en: Teams that must keep provider credentials out of the database and out of git.
+    de: Teams, die Provider-Zugangsdaten aus Datenbank und Git heraushalten müssen.
+  boundary:
+    en: Stores and releases secrets. Makes no AI decision and sees no prompt.
+    de: Speichert und gibt Secrets frei. Trifft keine KI-Entscheidung und sieht keinen Prompt.
+
+- id: nr-llm
+  repo: netresearch/t3x-nr-llm
+  page: https://netresearch.github.io/t3x-nr-llm/
+  pages_url: https://netresearch.github.io/t3x-nr-llm/
+  stack_layer: control-plane
+  stage_fallback: beta
+  primary: true
+  role:
+    en: AI control plane
+    de: KI-Control-Plane
+  summary:
+    en: >
+      Connect a provider once, then steer access, budgets and models centrally
+      for every extension on the site. Providers, keys, permissions, budgets and
+      usage analytics live in one backend module instead of in each extension.
+    de: >
+      Provider einmal anbinden, dann Zugriffe, Budgets und Modelle zentral für
+      jede Extension der Seite steuern. Provider, Schlüssel, Berechtigungen,
+      Budgets und Nutzungsauswertung liegen in einem Backend-Modul statt in
+      jeder Extension.
+  suited_for:
+    en: Organisations that want AI in TYPO3 without vendor lock-in, uncontrolled cost or shadow AI.
+    de: Organisationen, die KI in TYPO3 wollen — ohne Anbieterbindung, unkontrollierte Kosten und Schatten-KI.
+  boundary:
+    en: Centralises control. The chosen provider's model risks remain with the provider and the operator.
+    de: Zentralisiert die Kontrolle. Modellrisiken des gewählten Providers bleiben bei Provider und Betreiber.
+
+- id: nr-browser-ai
+  repo: netresearch/t3x-nr-browser-ai
+  page: https://netresearch.github.io/t3x-nr-browser-ai/
+  pages_url: https://netresearch.github.io/t3x-nr-browser-ai/
+  stack_layer: assistance-agents
+  stage_fallback: beta
+  role:
+    en: On-device assistant
+    de: On-Device-Assistent
+  summary:
+    en: >
+      Answers questions about the page the visitor is on, using the browser's
+      own model. No chat API of its own, no API key, and page content is not
+      sent to an external model for supported visitors.
+    de: >
+      Beantwortet Fragen zu der Seite, auf der die Besucherin gerade ist — mit
+      dem Modell des Browsers. Keine eigene Chat-API, kein API-Schlüssel, und
+      für unterstützte Besucher verlässt der Seiteninhalt das Gerät nicht.
+  suited_for:
+    en: Contextual product and service pages, privacy-sensitive information, bounded page documentation.
+    de: Kontextbezogene Produkt- und Serviceseiten, datenschutzsensible Informationen, klar begrenzte Seitendokumentation.
+  boundary:
+    en: Works only on supported desktop browsers with sufficient hardware. Every other visitor needs the static fallback.
+    de: Läuft nur auf unterstützten Desktop-Browsern mit ausreichender Hardware. Alle anderen Besucher brauchen den statischen Fallback.
+
+- id: nr-mcp-agent
+  repo: netresearch/t3x-nr-mcp-agent
+  page: https://netresearch.github.io/t3x-nr-mcp-agent/
+  pages_url: https://netresearch.github.io/t3x-nr-mcp-agent/
+  stack_layer: assistance-agents
+  stage_fallback: alpha
+  role:
+    en: Backend agent
+    de: Backend-Agent
+  summary:
+    en: >
+      A chat assistant inside the TYPO3 backend that can call released MCP
+      tools. Reading is the default; anything that writes needs an explicit
+      human approval and leaves an audit entry.
+    de: >
+      Ein Chat-Assistent im TYPO3-Backend, der freigegebene MCP-Werkzeuge
+      aufrufen kann. Lesen ist der Normalfall; alles Schreibende braucht eine
+      ausdrückliche menschliche Freigabe und hinterlässt einen Audit-Eintrag.
+  suited_for:
+    en: Editorial and innovation teams evaluating a controlled backend agent.
+    de: Redaktions- und Innovationsteams, die einen kontrollierten Backend-Agenten evaluieren.
+  boundary:
+    en: Alpha. For controlled evaluation, not for unattended production operation.
+    de: Alpha. Für kontrollierte Evaluierung, nicht für unbeaufsichtigten Produktivbetrieb.
