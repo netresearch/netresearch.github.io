@@ -31,11 +31,11 @@ const ordered = orderedProducts(products);
           >
             <div class="flex items-start justify-between gap-4">
               <div>
-                <p class="text-xs font-heading font-semibold uppercase tracking-wider text-nr-teal">
+                <p class="text-xs font-heading font-semibold uppercase tracking-wider text-nr-teal-ink">
                   {product.role[lang]}
                 </p>
                 <h3 class="mt-1 font-heading font-bold text-2xl text-text-primary">
-                  <a href={product.page} class="hover:text-nr-teal transition-colors">
+                  <a href={product.page} class="hover:text-nr-teal-ink transition-colors">
                     {product.name}
                   </a>
                 </h3>
@@ -65,9 +65,11 @@ const ordered = orderedProducts(products);
             </dl>
 
             {
-              product.manifest_source === 'derived' && (
-                <p class="mt-4 text-xs text-text-muted border-l-2 border-nr-orange/40 pl-3">
-                  {t.aiStack.derivedNote}
+              product.manifest_source !== 'published' && (
+                <p class="mt-4 text-xs text-text-secondary border-l-2 border-nr-orange/40 pl-3">
+                  {product.manifest_source === 'repository'
+                    ? t.aiStack.repositoryNote
+                    : t.aiStack.derivedNote}
                 </p>
               )
             }
@@ -79,7 +81,7 @@ const ordered = orderedProducts(products);
     <p class="mt-8">
       <a
         href={t.aiStack.stackLinkHref}
-        class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+        class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal-ink hover:text-nr-teal-ink/80 transition-colors"
       >
         {t.aiStack.stackLink}
         <span aria-hidden="true">&rarr;</span>

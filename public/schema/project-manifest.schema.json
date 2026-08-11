@@ -27,20 +27,36 @@
       "description": "Product name as shown to humans, e.g. 'nr-llm'."
     },
     "slug": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "pattern": "^/[a-z0-9./_-]*$",
-      "description": "Canonical path of the product page below https://netresearch.github.io, e.g. '/t3x-nr-llm/'."
+      "description": "Canonical path of the product page below https://netresearch.github.io, e.g. '/t3x-nr-llm/'. Null for a project that has no page of its own \u2014 the hub then links to its repository."
     },
     "stage": {
-      "enum": ["concept", "poc", "alpha", "beta", "stable", "maintenance"],
+      "enum": [
+        "concept",
+        "poc",
+        "alpha",
+        "beta",
+        "stable",
+        "maintenance"
+      ],
       "description": "Maturity. Drives the status badge and the wording of every claim on the page."
     },
     "latest_release": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Tag of the most recent published release, e.g. 'v0.28.0'. null when the project has never been released."
     },
     "release_date": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date",
       "description": "Publication date of latest_release (ISO 8601 date)."
     },
@@ -50,7 +66,10 @@
       "description": "Version currently on the default branch. May be ahead of latest_release; the two are different values and must be labelled differently."
     },
     "docs_version": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Version the published documentation describes. May lag both other values."
     },
     "last_verified": {
@@ -65,32 +84,44 @@
     },
     "typo3_versions": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Supported TYPO3 versions, verified against composer.json / ext_emconf.php."
     },
     "php_versions": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Supported PHP versions, verified against composer.json."
     },
     "capabilities": {
       "type": "array",
-      "items": { "$ref": "#/$defs/evidencedClaim" },
+      "items": {
+        "$ref": "#/$defs/evidencedClaim"
+      },
       "description": "Shipped functionality. Each entry carries its own evidence link."
     },
     "security_controls": {
       "type": "array",
-      "items": { "$ref": "#/$defs/evidencedClaim" },
-      "description": "Implemented security controls. Describes controls the software supports — never a compliance verdict."
+      "items": {
+        "$ref": "#/$defs/evidencedClaim"
+      },
+      "description": "Implemented security controls. Describes controls the software supports \u2014 never a compliance verdict."
     },
     "cost_controls": {
       "type": "array",
-      "items": { "$ref": "#/$defs/evidencedClaim" },
+      "items": {
+        "$ref": "#/$defs/evidencedClaim"
+      },
       "description": "Budgets, limits and analytics the software implements."
     },
     "providers": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Supported models or vendors."
     },
     "license": {
@@ -103,14 +134,20 @@
       "description": "Source of truth repository URL."
     },
     "documentation": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "uri",
       "description": "Technical documentation entry point."
     },
     "demo": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "uri",
-      "description": "A demo that actually works. null when none exists — never point at a placeholder."
+      "description": "A demo that actually works. null when none exists \u2014 never point at a placeholder."
     },
     "support": {
       "type": "string",
@@ -119,7 +156,9 @@
     },
     "evidence": {
       "type": "array",
-      "items": { "$ref": "#/$defs/evidenceLink" },
+      "items": {
+        "$ref": "#/$defs/evidenceLink"
+      },
       "description": "Links backing the page's claims: releases, code, ADRs, tests, measurements."
     },
     "ai": {
@@ -130,7 +169,10 @@
   "$defs": {
     "evidencedClaim": {
       "type": "object",
-      "required": ["id", "label"],
+      "required": [
+        "id",
+        "label"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -138,24 +180,54 @@
           "pattern": "^[a-z0-9-]+$",
           "description": "Stable anchor id, so the claim stays citable across releases."
         },
-        "label": { "type": "string", "minLength": 1 },
-        "detail": { "type": "string" },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detail": {
+          "type": "string"
+        },
         "state": {
-          "enum": ["planned", "experimental", "implemented", "measured"],
+          "enum": [
+            "planned",
+            "experimental",
+            "implemented",
+            "measured"
+          ],
           "default": "implemented",
           "description": "Keeps planned, experimental, implemented and measured apart. Anything other than 'planned' requires evidence."
         },
-        "evidence": { "type": "string", "format": "uri" }
+        "evidence": {
+          "type": "string",
+          "format": "uri"
+        }
       }
     },
     "evidenceLink": {
       "type": "object",
-      "required": ["type", "url"],
+      "required": [
+        "type",
+        "url"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "enum": ["release", "code", "adr", "test", "measurement", "docs"] },
-        "label": { "type": "string" },
-        "url": { "type": "string", "format": "uri" }
+        "type": {
+          "enum": [
+            "release",
+            "code",
+            "adr",
+            "test",
+            "measurement",
+            "docs"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
       }
     },
     "aiCapabilityCard": {
@@ -170,28 +242,67 @@
       ],
       "additionalProperties": false,
       "properties": {
-        "intended_purpose": { "type": "string", "minLength": 1 },
+        "intended_purpose": {
+          "type": "string",
+          "minLength": 1
+        },
         "excluded_uses": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 1
         },
-        "models": { "type": "array", "items": { "type": "string" } },
-        "data": { "type": "array", "items": { "type": "string" } },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "processing_location": {
           "type": "array",
-          "items": { "enum": ["browser", "own-server", "external-provider"] },
+          "items": {
+            "enum": [
+              "browser",
+              "own-server",
+              "external-provider"
+            ]
+          },
           "minItems": 1
         },
-        "human_oversight": { "type": "string", "minLength": 1 },
-        "permissions": { "type": "string" },
-        "logging": { "type": "string" },
-        "retention": { "type": "string" },
-        "cost_control": { "type": "string" },
-        "security_controls": { "type": "array", "items": { "type": "string" } },
+        "human_oversight": {
+          "type": "string",
+          "minLength": 1
+        },
+        "permissions": {
+          "type": "string"
+        },
+        "logging": {
+          "type": "string"
+        },
+        "retention": {
+          "type": "string"
+        },
+        "cost_control": {
+          "type": "string"
+        },
+        "security_controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "known_limitations": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 1
         }
       }

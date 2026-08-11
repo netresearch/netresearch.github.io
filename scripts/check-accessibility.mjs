@@ -99,6 +99,21 @@ export function checkAccessibility(html) {
   const labelFor = new Set(
     [...html.matchAll(/<label\b[^>]*\bfor\s*=\s*(?:"([^"]+)"|'([^']+)')/gi)].map((m) => m[1] ?? m[2]),
   );
+
+  // A control nested inside a <label> that has text is labelled implicitly.
+  // That is valid HTML and common for checkboxes, so a checker that only looks
+  // for `for=` reports a defect that is not there. The span is the whole
+  // element — a nested control sits after the opening tag, not inside it.
+  const implicitLabels = [...html.matchAll(/<label\b[^>]*>/gi)]
+    .map((m) => ({
+      start: m.index,
+      end: html.indexOf('</label', m.index),
+      text: innerText(html, 'label', m.index),
+    }))
+    .filter((label) => label.text && label.end !== -1);
+
+  const insideLabelledLabel = (offset) =>
+    implicitLabels.some((label) => label.start < offset && offset < label.end);
   for (const match of html.matchAll(/<(input|select|textarea)\b[^>]*>/gi)) {
     const control = attrs(match[0]);
     if (control.type === 'hidden' || control.type === 'submit' || control.type === 'button') continue;
@@ -106,7 +121,8 @@ export function checkAccessibility(html) {
       control['aria-label'] ||
       control['aria-labelledby'] ||
       (control.id && labelFor.has(control.id)) ||
-      control.title;
+      control.title ||
+      insideLabelledLabel(match.index);
     if (!labelled) {
       problems.push(`form control without a label: ${match[0].slice(0, 90)}`);
     }

@@ -11,8 +11,9 @@
     "build-manifest": "node scripts/build-manifest.mjs",
     "fetch-impact": "node scripts/fetch-impact.mjs",
     "build-og-image": "node scripts/build-og-image.mjs",
-    "verify": "node scripts/verify-site.mjs",
-    "check": "astro check --minimumSeverity error"
+    "verify": "node scripts/verify-site.mjs && node scripts/axe-audit.mjs",
+    "check": "astro check --minimumSeverity error",
+    "axe": "node scripts/axe-audit.mjs"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@types/js-yaml": "^4.0.9",
+    "axe-core": "^4.13.0",
     "puppeteer": "^25.5.0",
     "typescript": "^6.0.3"
   }

@@ -44,7 +44,7 @@ export interface Product {
   summary: Record<Lang, string>;
   suited_for: Record<Lang, string>;
   boundary: Record<Lang, string>;
-  manifest_source: 'published' | 'derived';
+  manifest_source: 'published' | 'derived' | 'repository';
 }
 
 export interface ProjectsFile {

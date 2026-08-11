@@ -34,7 +34,13 @@ jobs:
 
       - run: npm run build
 
-      - name: Verify built site
+      # `npm ci --ignore-scripts` deliberately skips puppeteer's postinstall, so
+      # the browser axe needs is fetched here instead — explicitly, and at the
+      # version puppeteer pins.
+      - name: Install the browser for the accessibility audit
+        run: npx puppeteer browsers install chrome
+
+      - name: Verify built site and run axe
         run: npm run verify
 
       - name: Type-check
