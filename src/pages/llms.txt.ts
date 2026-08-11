@@ -9,6 +9,10 @@ import { site } from '../data/site';
  * Convenience orientation for assistants. Everything here is also visible on the
  * rendered pages — this file adds no fact the HTML does not state, so the two
  * cannot drift apart into two different truths.
+ *
+ * Written as llmstxt.org expects: an H1, a blockquote summary, and H2 sections
+ * whose list items are Markdown links, `- [name](url): notes`. A bare URL is not
+ * a link, and a reader that parses the format finds no destinations in it.
  */
 export const GET: APIRoute = () => {
   const products = orderedProducts(loadProducts().products);
@@ -23,7 +27,8 @@ export const GET: APIRoute = () => {
       ]
         .filter(Boolean)
         .join(', ');
-      return `- **${product.name}** (${product.stage}${versions ? `; ${versions}` : ''}) — ${product.role.en}. ${product.summary.en.trim()} ${product.page}`;
+      const suffix = versions ? `, ${versions}` : '';
+      return `- [${product.name}](${product.page}): ${product.stage}${suffix} — ${product.role.en}. ${product.summary.en.trim()}`;
     })
     .join('\n');
 
@@ -32,7 +37,7 @@ export const GET: APIRoute = () => {
     .join('\n');
 
   const curatedLines = curated
-    .map((project) => `- ${project.repo}: ${project.problem.en.trim()} ${project.url}`)
+    .map((project) => `- [${project.repo}](${project.url}): ${project.problem.en.trim()}`)
     .join('\n');
 
   const body = `# Netresearch Open Source
@@ -41,13 +46,16 @@ export const GET: APIRoute = () => {
 > published by Netresearch DTT GmbH. This file mirrors the rendered pages; it
 > introduces no fact that is not visible on them.
 
-- Portfolio (English): ${absolute('home', 'en')}
-- Portfolio (Deutsch): ${absolute('home', 'de')}
-- Full repository catalogue: ${absolute('projects', 'en')}
-- Machine-readable product manifests: https://netresearch.github.io/projects.json
-- Manifest schema: https://netresearch.github.io/schema/project-manifest.schema.json
-- Contact: ${site.contact}
-- Page last reviewed: ${site.lastVerified}
+## Start here
+
+- [Portfolio (English)](${absolute('home', 'en')}): the AI stack, measured activity and the curated portfolio.
+- [Portfolio (Deutsch)](${absolute('home', 'de')}): same content in German.
+- [Full repository catalogue](${absolute('projects', 'en')}): every public repository, filterable.
+- [Product manifests](https://netresearch.github.io/projects.json): machine-readable status and versions for every product.
+- [Manifest schema](https://netresearch.github.io/schema/project-manifest.schema.json): the JSON Schema those manifests validate against.
+- [Contact](${site.contact}): Netresearch DTT GmbH.
+
+Page last reviewed: ${site.lastVerified}.
 
 ## How to read the version fields
 
@@ -67,8 +75,7 @@ ${productLines}
 
 ## Measured activity
 
-Figures published by the impact dashboard, generated ${impact.generated_at}.
-Source: ${impact.source}
+Figures published by the [impact dashboard](${impact.source}), generated ${impact.generated_at}.
 
 ${impactLines}
 

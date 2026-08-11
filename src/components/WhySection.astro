@@ -34,7 +34,7 @@ const cards = t.why.cards.filter(
           <li id={`why-${card.id}`} class="rounded-xl border border-border bg-surface-card p-6 card-shadow">
             <p class="font-heading font-bold text-text-primary">
               {card.kpi && (
-                <span class="text-2xl text-nr-teal tabular-nums" data-figure={card.kpi}>
+                <span class="text-2xl text-nr-teal-ink tabular-nums" data-figure={card.kpi}>
                   {formatNumber(impact.kpis[card.kpi], lang)}{' '}
                 </span>
               )}

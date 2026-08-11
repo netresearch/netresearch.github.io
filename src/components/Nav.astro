@@ -36,7 +36,7 @@ const sections = [
         sections.map((item) => (
           <a
             href={item.href}
-            class="text-sm font-heading text-text-secondary hover:text-nr-teal transition-colors min-h-[44px] flex items-center"
+            class="text-sm font-heading text-text-secondary hover:text-nr-teal-ink transition-colors min-h-[44px] flex items-center"
           >
             {item.label}
           </a>
@@ -46,7 +46,7 @@ const sections = [
         href={path('home', other)}
         hreflang={other}
         lang={other}
-        class="text-sm font-heading text-text-secondary hover:text-nr-teal transition-colors min-h-[44px] flex items-center"
+        class="text-sm font-heading text-text-secondary hover:text-nr-teal-ink transition-colors min-h-[44px] flex items-center"
       >
         {t.nav.langSwitch}
       </a>
@@ -65,7 +65,7 @@ const sections = [
       </button>
       <a
         href={contactUrl(site.utmCampaign, 'nav')}
-        class="inline-flex items-center min-h-[44px] px-4 rounded-lg bg-nr-teal text-white text-sm font-heading font-semibold hover:bg-nr-teal/90 transition-colors"
+        class="inline-flex items-center min-h-[44px] px-4 rounded-lg bg-nr-teal-solid text-white text-sm font-heading font-semibold hover:bg-nr-teal-solid/90 transition-colors"
         data-cta="business"
         data-cta-position="nav"
       >
@@ -95,7 +95,7 @@ const sections = [
     <div class="px-6 py-4 flex flex-col gap-1">
       {
         sections.map((item) => (
-          <a href={item.href} class="min-h-[48px] flex items-center font-heading text-text-secondary hover:text-nr-teal transition-colors">
+          <a href={item.href} class="min-h-[48px] flex items-center font-heading text-text-secondary hover:text-nr-teal-ink transition-colors">
             {item.label}
           </a>
         ))
@@ -104,13 +104,13 @@ const sections = [
         href={path('home', other)}
         hreflang={other}
         lang={other}
-        class="min-h-[48px] flex items-center font-heading text-text-secondary hover:text-nr-teal transition-colors"
+        class="min-h-[48px] flex items-center font-heading text-text-secondary hover:text-nr-teal-ink transition-colors"
       >
         {t.nav.langSwitch}
       </a>
       <a
         href={contactUrl(site.utmCampaign, 'nav-mobile')}
-        class="mt-2 inline-flex items-center justify-center min-h-[48px] px-4 rounded-lg bg-nr-teal text-white font-heading font-semibold hover:bg-nr-teal/90 transition-colors"
+        class="mt-2 inline-flex items-center justify-center min-h-[48px] px-4 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold hover:bg-nr-teal-solid/90 transition-colors"
         data-cta="business"
         data-cta-position="nav-mobile"
       >

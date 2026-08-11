@@ -168,10 +168,13 @@ async function deriveManifest(product) {
     if (match) mainVersion = match[1];
   }
 
+  const repository = meta.html_url ?? `https://github.com/${product.repo}`;
+
   return {
     manifest_version: 1,
     name: repoName.replace(/^t3x-/, ''),
-    slug: new URL(product.pages_url).pathname,
+    // A product without a page has no path below netresearch.github.io.
+    slug: product.pages_url ? new URL(product.pages_url).pathname : null,
     stage: product.stage_fallback,
     latest_release: latestRelease,
     release_date: releaseDate,
@@ -181,8 +184,8 @@ async function deriveManifest(product) {
     last_verified: null,
     owner: null,
     license: meta.license?.spdx_id ?? null,
-    repository: meta.html_url ?? `https://github.com/${product.repo}`,
-    documentation: null,
+    repository,
+    documentation: `${repository}#readme`,
     demo: null,
     support: 'https://www.netresearch.de/kontakt/',
     capabilities: [],
@@ -207,25 +210,34 @@ async function main() {
   let derivedCount = 0;
 
   for (const product of products) {
-    const { manifest, reason } = await fetchPublishedManifest(product.pages_url);
-
     let resolved;
     let source;
-    if (manifest && validate(manifest)) {
-      resolved = manifest;
-      source = 'published';
-    } else {
-      if (manifest) {
-        console.warn(
-          `${product.id}: published manifest failed schema validation — ` +
-            ajv.errorsText(validate.errors),
-        );
-      } else {
-        console.warn(`${product.id}: no published manifest (${reason}) — deriving`);
-      }
+
+    if (!product.pages_url) {
+      // No product page of its own. The hub is the source for this project, and
+      // the page says so — that is a different thing from a project that has a
+      // page but has not started publishing a manifest.
       resolved = await deriveManifest(product);
-      source = 'derived';
+      source = 'repository';
       derivedCount += 1;
+    } else {
+      const { manifest, reason } = await fetchPublishedManifest(product.pages_url);
+      if (manifest && validate(manifest)) {
+        resolved = manifest;
+        source = 'published';
+      } else {
+        if (manifest) {
+          console.warn(
+            `${product.id}: published manifest failed schema validation — ` +
+              ajv.errorsText(validate.errors),
+          );
+        } else {
+          console.warn(`${product.id}: has a page but publishes no manifest (${reason}) — deriving`);
+        }
+        resolved = await deriveManifest(product);
+        source = 'derived';
+        derivedCount += 1;
+      }
     }
 
     entries.push({
@@ -255,8 +267,11 @@ async function main() {
   writeFileSync(OUT_DATA, `${json}\n`);
   writeFileSync(OUT_PUBLIC, `${json}\n`);
 
+  const counts = entries.reduce((acc, e) => ({ ...acc, [e.manifest_source]: (acc[e.manifest_source] ?? 0) + 1 }), {});
   console.log(
-    `Wrote ${entries.length} products (${entries.length - derivedCount} published, ${derivedCount} derived)`,
+    `Wrote ${entries.length} products (` +
+      Object.entries(counts).map(([k, v]) => `${v} ${k}`).join(', ') +
+      ')',
   );
 }
 

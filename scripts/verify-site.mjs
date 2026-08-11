@@ -106,8 +106,11 @@ for (const product of projects.products) {
   if (product.manifest_source === 'derived') {
     warn(
       `projects.json:${product.id}`,
-      'running on derived data — the product repository does not publish project-manifest.json yet',
+      'has a product page but publishes no project-manifest.json — the page shows repository-derived data',
     );
+  }
+  if (!['published', 'derived', 'repository'].includes(product.manifest_source)) {
+    fail(`projects.json:${product.id}`, `unknown manifest_source ${product.manifest_source}`);
   }
   if (product.manifest_source === 'published' && !product.last_verified) {
     fail(`projects.json:${product.id}`, 'published manifest without last_verified');
@@ -258,10 +261,50 @@ for (const file of pages) {
   }
 }
 
+// ── Portfolio facets ─────────────────────────────────────────────────────────
+//
+// A project whose facet has no label in one language renders no filter button
+// there, so the project is reachable only through "All" — invisible, with no
+// error anywhere. That happened once; this is why it cannot happen silently.
+
+{
+  const curatedFacets = new Set(
+    [...readFileSync('src/data/curated.yaml', 'utf-8').matchAll(/^[ \t]*facet:[ \t]*(\S{1,64})/gm)].map(
+      (m) => m[1],
+    ),
+  );
+  const content = readFileSync('src/i18n/content.ts', 'utf-8');
+  const facetBlocks = [...content.matchAll(/facets:\s*\[([\s\S]*?)\]/g)];
+  if (facetBlocks.length !== 2) {
+    fail('content.ts', `expected one facet list per language, found ${facetBlocks.length}`);
+  }
+  facetBlocks.forEach((block, index) => {
+    const declared = new Set([...block[1].matchAll(/id:\s*'([^']+)'/g)].map((m) => m[1]));
+    for (const facet of curatedFacets) {
+      if (!declared.has(facet)) {
+        fail('content.ts', `facet '${facet}' is used in curated.yaml but has no label in language block ${index + 1}`);
+      }
+    }
+  });
+}
+
 // ── Machine-readable endpoints ───────────────────────────────────────────────
 
 for (const required of ['sitemap.xml', 'robots.txt', 'llms.txt', 'projects.json', 'schema/project-manifest.schema.json']) {
   if (!existsSync(join(DIST, required))) fail('dist/', `missing ${required}`);
+}
+
+// llms.txt is a Markdown format, not a plain list of URLs. A reader that parses
+// it looks for an H1 and for Markdown links; bare URLs leave it with nothing to
+// follow, which is what Lighthouse's agentic-browsing audit reported.
+if (existsSync(join(DIST, 'llms.txt'))) {
+  const llms = readFileSync(join(DIST, 'llms.txt'), 'utf-8');
+  if (!/^# \S/m.test(llms)) fail('llms.txt', 'no H1 heading');
+  if (!/^> /m.test(llms)) fail('llms.txt', 'no blockquote summary after the H1');
+  const links = llms.match(/\[[^\]\n]{1,200}\]\(https?:\/\/[^)\s]{1,500}\)/g) ?? [];
+  if (links.length < 5) {
+    fail('llms.txt', `only ${links.length} Markdown link(s) — bare URLs do not count`);
+  }
 }
 
 // ── Report ───────────────────────────────────────────────────────────────────

@@ -16,7 +16,18 @@
   --color-surface-nav: rgba(255, 255, 255, 0.8);
   --color-text-primary: #1a1d2e;
   --color-text-secondary: #4a4b52;
-  --color-text-muted: #6b7280;
+  --color-text-muted: #585961;
+  /* Brand teal is 3.38:1 on white and the accent 3.33:1 — both below AA for
+     text under 24px. These tokens carry the same hues at a passing luminance;
+     --color-nr-teal and --color-nr-orange stay the brand values for borders,
+     icons and large display type, where 3:1 is the threshold.
+
+     The values are the brand system's own: #15585E is the sanctioned dark teal
+     (8.1:1), #257880 the fill that carries white text (5.2:1), #9A2E00 the dark
+     accent (7.1:1). The other Netresearch sites use the same three. */
+  --color-nr-teal-ink: #15585E;
+  --color-nr-teal-solid: #257880;
+  --color-nr-orange-ink: #9A2E00;
   --color-border: rgba(0, 0, 0, 0.08);
   --color-border-hover: rgba(47, 153, 164, 0.3);
   --color-glass: rgba(255, 255, 255, 0.5);
@@ -39,7 +50,12 @@
   --color-surface-nav: rgba(15, 17, 23, 0.8);
   --color-text-primary: #ffffff;
   --color-text-secondary: rgba(255, 255, 255, 0.6);
-  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-text-muted: rgba(255, 255, 255, 0.66);
+  /* On the dark surfaces the brand teal reaches 4.9:1, so it needs no
+     substitute. The solid variant does: it sits behind white text either way. */
+  --color-nr-teal-ink: #2F99A4;
+  --color-nr-teal-solid: #237780;
+  --color-nr-orange-ink: #FF4D00;
   --color-border: rgba(255, 255, 255, 0.05);
   --color-border-hover: rgba(47, 153, 164, 0.3);
   --color-glass: rgba(26, 29, 46, 0.5);
@@ -55,6 +71,9 @@
 
 @theme {
   --color-nr-teal: #2F99A4;
+  --color-nr-teal-ink: var(--color-nr-teal-ink);
+  --color-nr-teal-solid: var(--color-nr-teal-solid);
+  --color-nr-orange-ink: var(--color-nr-orange-ink);
   --color-nr-orange: #FF4D00;
   --color-nr-grey: #585961;
   --color-nr-dark: #0F1117;

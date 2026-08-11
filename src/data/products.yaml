@@ -6,14 +6,18 @@
 #   this file     → the product's role in the portfolio, who it is for, how it is
 #                   linked. Editorial framing the product repo has no opinion on.
 #
-# `stage_fallback` and `main_version_fallback` are used only until the product
-# repo publishes its manifest. scripts/verify-site.mjs reports every product
-# still running on fallback data, so the gap stays visible instead of silent.
+# `pages_url` says where the product publishes its manifest. A product without
+# one has no page of its own — the hub then reads its repository directly and
+# says so, which is a different thing from a product that has a page but has not
+# started publishing a manifest yet. Both are visible; only the second is a gap.
+#
+# `stage_fallback` supplies the maturity for products the hub derives, since no
+# API can answer that question.
 
 - id: nr-vault
   repo: netresearch/t3x-nr-vault
-  page: https://netresearch.github.io/t3x-nr-vault/
-  pages_url: https://netresearch.github.io/t3x-nr-vault/
+  # No product page of its own: the hub reads the repository directly.
+  page: https://github.com/netresearch/t3x-nr-vault
   stack_layer: security-identity
   stage_fallback: beta
   role:
@@ -111,3 +115,51 @@
   boundary:
     en: Alpha. For controlled evaluation, not for unattended production operation.
     de: Alpha. Für kontrollierte Evaluierung, nicht für unbeaufsichtigten Produktivbetrieb.
+
+- id: nr-passkeys-be
+  repo: netresearch/t3x-nr-passkeys-be
+  # No product page of its own: the hub reads the repository directly.
+  page: https://github.com/netresearch/t3x-nr-passkeys-be
+  stack_layer: security-identity
+  stage_fallback: beta
+  role:
+    en: Backend identity
+    de: Backend-Identität
+  summary:
+    en: >
+      Passwordless sign-in for the TYPO3 backend using passkeys — biometrics,
+      security keys and platform authenticators instead of a password that can be
+      phished, reused or written down.
+    de: >
+      Passwortlose Anmeldung im TYPO3-Backend über Passkeys – Biometrie,
+      Sicherheitsschlüssel und Plattform-Authentifikatoren statt eines Passworts,
+      das sich abfischen, wiederverwenden oder aufschreiben lässt.
+  suited_for:
+    en: Editorial and administrative accounts, which are the ones an attacker wants.
+    de: Redaktions- und Administrationskonten – genau die, auf die es Angreifer abgesehen haben.
+  boundary:
+    en: Authenticates people. It grants no permission the backend user did not already have.
+    de: Authentifiziert Personen. Es vergibt keine Rechte, die der Backend-Nutzer nicht schon hatte.
+
+- id: nr-passkeys-fe
+  repo: netresearch/t3x-nr-passkeys-fe
+  # No product page of its own: the hub reads the repository directly.
+  page: https://github.com/netresearch/t3x-nr-passkeys-fe
+  stack_layer: security-identity
+  stage_fallback: beta
+  role:
+    en: Frontend identity
+    de: Frontend-Identität
+  summary:
+    en: >
+      Passkey-first sign-in for frontend users, so a logged-in area does not
+      depend on a password database you then have to defend.
+    de: >
+      Passkey-first-Anmeldung für Frontend-Nutzer, damit ein geschlossener Bereich
+      nicht an einer Passwortdatenbank hängt, die Sie danach verteidigen müssen.
+  suited_for:
+    en: Member areas, customer portals and anything behind a frontend login.
+    de: Mitgliederbereiche, Kundenportale und alles hinter einem Frontend-Login.
+  boundary:
+    en: Authenticates people. Authorisation and data access stay with the site's own rules.
+    de: Authentifiziert Personen. Autorisierung und Datenzugriff bleiben bei den Regeln der Seite.

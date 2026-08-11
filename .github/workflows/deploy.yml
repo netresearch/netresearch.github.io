@@ -38,6 +38,7 @@ jobs:
         npm run fetch-data
         unset GITHUB_TOKEN GH_TOKEN
         npm run build
+        ./node_modules/.bin/puppeteer browsers install chrome
         npm run verify
       expose-github-token: build
       # astro.config.mjs hardcodes `site:` and never reads PAGES_BASE_PATH /

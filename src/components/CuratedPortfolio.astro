@@ -34,7 +34,7 @@ const facets = [{ id: 'all', label: t.portfolio.allLabel }, ...t.portfolio.facet
               type="button"
               data-facet={facet.id}
               aria-pressed={index === 0 ? 'true' : 'false'}
-              class="portfolio-filter min-h-[44px] px-4 rounded-lg border border-border text-sm font-heading font-semibold text-text-secondary hover:border-nr-teal hover:text-nr-teal transition-colors aria-pressed:bg-nr-teal aria-pressed:text-white aria-pressed:border-nr-teal"
+              class="portfolio-filter min-h-[44px] px-4 rounded-lg border border-border text-sm font-heading font-semibold text-text-secondary hover:border-nr-teal hover:text-nr-teal-ink transition-colors aria-pressed:bg-nr-teal-solid aria-pressed:text-white aria-pressed:border-nr-teal"
             >
               {facet.label}
             </button>
@@ -52,7 +52,7 @@ const facets = [{ id: 'all', label: t.portfolio.allLabel }, ...t.portfolio.facet
             class="rounded-xl border border-border bg-surface-card p-5 card-shadow flex flex-col"
           >
             <h3 class="font-heading font-bold text-lg text-text-primary">
-              <a href={project.url} class="hover:text-nr-teal transition-colors" rel="noopener">
+              <a href={project.url} class="hover:text-nr-teal-ink transition-colors" rel="noopener">
                 {project.repo}
               </a>
             </h3>
@@ -85,7 +85,7 @@ const facets = [{ id: 'all', label: t.portfolio.allLabel }, ...t.portfolio.facet
     <p class="mt-8">
       <a
         href={path('projects', lang)}
-        class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+        class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal-ink hover:text-nr-teal-ink/80 transition-colors"
       >
         {t.portfolio.catalogueLink}
         <span aria-hidden="true">&rarr;</span>

@@ -53,7 +53,7 @@ const jsonLd = [
       <nav aria-label="Breadcrumb" class="text-sm text-text-secondary">
         <ol class="flex flex-wrap items-center gap-2">
           <li>
-            <a href={path('home', lang)} class="hover:text-nr-teal transition-colors">
+            <a href={path('home', lang)} class="hover:text-nr-teal-ink transition-colors">
               {t.breadcrumbHome}
             </a>
           </li>
@@ -81,7 +81,7 @@ const jsonLd = [
               {section.repos.map((repo) => (
                 <li class="rounded-xl border border-border bg-surface-card p-5 card-shadow flex flex-col">
                   <h3 class="font-heading font-bold text-text-primary">
-                    <a href={repo.url} class="hover:text-nr-teal transition-colors" rel="noopener">
+                    <a href={repo.url} class="hover:text-nr-teal-ink transition-colors" rel="noopener">
                       {repo.name}
                     </a>
                   </h3>
@@ -125,7 +125,7 @@ const jsonLd = [
               {livePages.map((page) => (
                 <li class="rounded-xl border border-border bg-surface-card p-5 card-shadow">
                   <h3 class="font-heading font-bold text-text-primary">
-                    <a href={page.url} class="hover:text-nr-teal transition-colors" rel="noopener">
+                    <a href={page.url} class="hover:text-nr-teal-ink transition-colors" rel="noopener">
                       {page.name}
                     </a>
                   </h3>
@@ -143,7 +143,7 @@ const jsonLd = [
       <p class="mt-14">
         <a
           href={path('home', lang)}
-          class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+          class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal-ink hover:text-nr-teal-ink/80 transition-colors"
         >
           <span aria-hidden="true">&larr;</span>
           {t.catalogue.backLink}

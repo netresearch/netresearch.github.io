@@ -13,7 +13,7 @@
     de: Einen LLM-Provider einmal anbinden und Zugriffe, Budgets und Modelle zentral für jede Extension steuern.
 
 - repo: t3x-nr-vault
-  facet: ai-governance
+  facet: security-identity
   problem:
     en: Keep API keys out of the database and out of git, with envelope encryption and an audit trail.
     de: API-Schlüssel aus Datenbank und Git heraushalten – mit Envelope-Verschlüsselung und Audit-Verlauf.
@@ -125,3 +125,27 @@
   problem:
     en: Book project time against Jira issues and get the reporting the invoice run needs.
     de: Projektzeiten auf Jira-Vorgänge buchen und die Auswertung bekommen, die der Rechnungslauf braucht.
+
+- repo: t3x-nr-passkeys-be
+  facet: security-identity
+  problem:
+    en: Sign in to the TYPO3 backend with a passkey instead of a password that can be phished or reused.
+    de: Am TYPO3-Backend mit einem Passkey anmelden statt mit einem Passwort, das sich abfischen oder wiederverwenden lässt.
+
+- repo: t3x-nr-passkeys-fe
+  facet: security-identity
+  problem:
+    en: Give frontend users passwordless sign-in, so a member area does not rest on a password database.
+    de: Frontend-Nutzern passwortlose Anmeldung geben, damit ein Mitgliederbereich nicht auf einer Passwortdatenbank ruht.
+
+- repo: t3x-nr-textdb
+  facet: content-editing
+  problem:
+    en: Let editors change form labels, buttons and messages in the backend instead of waiting for an XLIFF deployment.
+    de: Formularbeschriftungen, Buttons und Meldungen von der Redaktion im Backend ändern lassen, statt auf ein XLIFF-Deployment zu warten.
+
+- repo: t3x-nr-image-optimize
+  facet: content-editing
+  problem:
+    en: Ship smaller images and responsive markup without asking editors to think about formats and breakpoints.
+    de: Kleinere Bilder und responsives Markup ausliefern, ohne dass die Redaktion über Formate und Breakpoints nachdenken muss.

@@ -30,7 +30,7 @@ const links = [
     <div class="text-sm text-text-secondary">
       <p>
         &copy; {new Date().getFullYear()}
-        <a href={site.company} class="hover:text-nr-teal transition-colors" rel="noopener">
+        <a href={site.company} class="hover:text-nr-teal-ink transition-colors" rel="noopener">
           {t.footer.company}
         </a>
       </p>
@@ -48,7 +48,7 @@ const links = [
             rel="noopener"
             class:list={[
               'min-h-[44px] flex items-center transition-colors',
-              link.cta ? 'text-nr-teal hover:text-nr-teal/80 font-semibold' : 'text-text-secondary hover:text-nr-teal',
+              link.cta ? 'text-nr-teal-ink hover:text-nr-teal-ink/80 font-semibold' : 'text-text-secondary hover:text-nr-teal-ink',
             ]}
             data-cta={link.cta ? 'business' : undefined}
             data-cta-position={link.cta ? 'footer' : undefined}

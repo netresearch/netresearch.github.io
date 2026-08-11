@@ -52,6 +52,7 @@ export interface PageContent {
     boundaryLabel: string;
     reviewedLabel: string;
     derivedNote: string;
+    repositoryNote: string;
     stackLink: string;
     stackLinkHref: string;
   };
@@ -184,7 +185,9 @@ const en: PageContent = {
     boundaryLabel: 'Responsibility boundary',
     reviewedLabel: 'Page last reviewed',
     derivedNote:
-      'Derived from the repository — this project does not publish a manifest yet, so status comes from the portfolio’s fallback.',
+      'Derived from the repository — this project has a page but does not publish a manifest yet, so status comes from the portfolio’s fallback.',
+    repositoryNote:
+      'No product page of its own. Release and version come straight from the repository; the maturity is the portfolio’s assessment.',
     stackLink: 'How the layers fit together',
     stackLinkHref: 'https://netresearch.github.io/modularer-ki-stack-page/',
   },
@@ -223,6 +226,7 @@ const en: PageContent = {
     allLabel: 'All',
     facets: [
       { id: 'ai-governance', label: 'AI and governance' },
+      { id: 'security-identity', label: 'Security and identity' },
       { id: 'content-editing', label: 'Content and editing' },
       { id: 'commerce', label: 'Commerce and shipping' },
       { id: 'operations', label: 'Operations and infrastructure' },
@@ -392,7 +396,9 @@ const de: PageContent = {
     boundaryLabel: 'Verantwortungsgrenze',
     reviewedLabel: 'Seite zuletzt geprüft',
     derivedNote:
-      'Aus dem Repository abgeleitet – dieses Projekt veröffentlicht noch kein Manifest, der Reifegrad stammt daher aus dem Rückfallwert des Portfolios.',
+      'Aus dem Repository abgeleitet – dieses Projekt hat eine Seite, veröffentlicht aber noch kein Manifest, der Reifegrad stammt daher aus dem Rückfallwert des Portfolios.',
+    repositoryNote:
+      'Keine eigene Produktseite. Release und Version kommen direkt aus dem Repository; der Reifegrad ist die Einschätzung des Portfolios.',
     stackLink: 'Wie die Schichten zusammenspielen',
     stackLinkHref: 'https://netresearch.github.io/modularer-ki-stack-page/',
   },
@@ -431,6 +437,7 @@ const de: PageContent = {
     allLabel: 'Alle',
     facets: [
       { id: 'ai-governance', label: 'KI und Governance' },
+      { id: 'security-identity', label: 'Sicherheit und Identität' },
       { id: 'content-editing', label: 'Inhalt und Redaktion' },
       { id: 'commerce', label: 'Commerce und Versand' },
       { id: 'operations', label: 'Betrieb und Infrastruktur' },

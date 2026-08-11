@@ -24,7 +24,7 @@ const t = useContent(lang);
             id={`path-${item.id}`}
             class="rounded-xl border border-border bg-surface-card p-6 card-shadow flex flex-col"
           >
-            <p class="text-xs font-heading font-semibold uppercase tracking-wider text-nr-teal">
+            <p class="text-xs font-heading font-semibold uppercase tracking-wider text-nr-teal-ink">
               {item.audience}
             </p>
             <h3 class="mt-2 font-heading font-bold text-xl text-text-primary text-balance">
@@ -33,7 +33,7 @@ const t = useContent(lang);
             <p class="mt-3 text-text-secondary flex-1">{item.answer}</p>
             <a
               href={item.href}
-              class="mt-5 inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal hover:text-nr-teal/80 transition-colors"
+              class="mt-5 inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal-ink hover:text-nr-teal-ink/80 transition-colors"
             >
               {item.linkLabel}
               <span aria-hidden="true">&rarr;</span>
