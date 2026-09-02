@@ -21,15 +21,15 @@
     "@tailwindcss/vite": "^4.3.3",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "astro": "^7.2.4",
-    "js-yaml": "^5.3.0",
+    "astro": "^7.2.9",
+    "js-yaml": "^5.4.1",
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@types/js-yaml": "^4.0.9",
     "axe-core": "^4.13.0",
-    "puppeteer": "^25.8.0",
+    "puppeteer": "^25.9.0",
     "typescript": "^6.0.3"
   }
 }
