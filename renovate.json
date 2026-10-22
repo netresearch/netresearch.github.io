@@ -2,5 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>netresearch/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "description": "Hold typescript below 7: @astrojs/check (0.9.12, the newest release) declares peer typescript ^5.0.0 || ^6.0.0, so a 7.x bump makes npm ci fail with ERESOLVE. Same hold as the ignore entry in .github/dependabot.yml; drop both once `npm view @astrojs/check peerDependencies` accepts 7.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    }
   ]
 }
