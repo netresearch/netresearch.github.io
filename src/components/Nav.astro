@@ -122,6 +122,14 @@ const sections = [
   </div>
 </nav>
 
+<style>
+  #mobile-menu[data-enhanced] {
+    max-block-size: calc(100dvh - 5rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+</style>
+
 <script is:inline define:vars={{ openLabel: t.nav.menu, closeLabel: t.nav.close }}>
   (function () {
     document.querySelectorAll('#theme-toggle, [data-theme-toggle]').forEach(function (themeBtn) {
@@ -170,6 +178,7 @@ const sections = [
           menuBtn.focus();
         }
       });
+      menu.dataset.enhanced = '';
     }
   })();
 </script>

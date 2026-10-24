@@ -200,10 +200,16 @@ async function auditPage(browser, port, route, scheme) {
       scroll: document.documentElement.scrollWidth,
       body: getComputedStyle(document.body).fontFamily,
       heading: getComputedStyle(document.querySelector('h1')).fontFamily,
+      loadedFonts: [...document.fonts]
+        .filter((face) => face.status === 'loaded')
+        .map((face) => face.family.replace(/["']/g, '').trim()),
     }));
     if (state.scroll > width + 1) issues.push(`${width}px: document grows to ${state.scroll}px`);
     if (!state.body.includes('Open Sans') || !state.heading.includes('Raleway')) {
       issues.push(`${width}px: brand fonts not applied (${state.body}; ${state.heading})`);
+    }
+    for (const family of ['Open Sans', 'Raleway']) {
+      if (!state.loadedFonts.includes(family)) issues.push(`${width}px: ${family} font face not loaded`);
     }
   }
   if (issues.length) found.push({ route, scheme, violation: {
