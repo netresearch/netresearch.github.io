@@ -120,7 +120,7 @@ function sanitiseLinks(manifest, id) {
 async function fetchPublishedManifest(pagesUrl) {
   const url = new URL('project-manifest.json', pagesUrl).toString();
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(15000), cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
     if (!res.ok) return { manifest: null, reason: `HTTP ${res.status}` };
     return { manifest: await res.json(), reason: null };
   } catch (err) {
@@ -169,13 +169,24 @@ async function deriveManifest(product) {
   }
 
   const repository = meta.html_url ?? `https://github.com/${product.repo}`;
+  let stage = product.stage_fallback;
+  let stageSource = null;
+  if (product.stage_from_extension) {
+    const ref = latestRelease ?? meta.default_branch;
+    const stateFile = await gh(`repos/${product.repo}/contents/ext_emconf.php?ref=${encodeURIComponent(ref)}`);
+    const text = stateFile?.content ? Buffer.from(stateFile.content, 'base64').toString('utf-8') : '';
+    stage = text.match(/'state'\s*=>\s*'(alpha|beta|stable|maintenance)'/)?.[1];
+    if (!stage) throw new Error(`${product.id}: no declared extension state at ${ref}`);
+    stageSource = `${repository}/blob/${ref}/ext_emconf.php`;
+  }
 
   return {
     manifest_version: 1,
     name: repoName.replace(/^t3x-/, ''),
     // A product without a page has no path below netresearch.github.io.
     slug: product.pages_url ? new URL(product.pages_url).pathname : null,
-    stage: product.stage_fallback,
+    stage,
+    stage_source: stageSource,
     latest_release: latestRelease,
     release_date: releaseDate,
     main_version: mainVersion ?? (latestRelease ?? '').replace(/^v/, '') ?? null,
@@ -212,6 +223,7 @@ async function main() {
   for (const product of products) {
     let resolved;
     let source;
+    let fallbackReason = null;
 
     if (!product.pages_url) {
       // No product page of its own. The hub is the source for this project, and
@@ -226,6 +238,7 @@ async function main() {
         resolved = manifest;
         source = 'published';
       } else {
+        fallbackReason = manifest ? `Schema validation: ${ajv.errorsText(validate.errors)}` : reason;
         if (manifest) {
           console.warn(
             `${product.id}: published manifest failed schema validation — ` +
@@ -252,6 +265,11 @@ async function main() {
       suited_for: product.suited_for,
       boundary: product.boundary,
       manifest_source: source,
+      source_url: source === 'published'
+        ? new URL('project-manifest.json', product.pages_url).toString()
+        : `https://api.github.com/repos/${product.repo}`,
+      fetched_at: new Date().toISOString(),
+      source_issue: fallbackReason,
     });
   }
 

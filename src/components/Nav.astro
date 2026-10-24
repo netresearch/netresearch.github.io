@@ -15,6 +15,7 @@ const t = useContent(lang);
 const other: Lang = lang === 'en' ? 'de' : 'en';
 
 const sections = [
+  { href: path('home', lang), label: t.breadcrumbHome },
   { href: `${path('home', lang)}#ai-stack`, label: t.nav.aiStack },
   { href: `${path('home', lang)}#impact`, label: t.nav.impact },
   { href: path('projects', lang), label: t.nav.projects },
@@ -27,8 +28,8 @@ const sections = [
 >
   <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-20 gap-4">
     <!-- Brand rule: the logo appears exactly once, here, at 40px. -->
-    <a href={path('home', lang)} class="flex items-center shrink-0" aria-label="Netresearch">
-      <img src="/img/netresearch.svg" alt="Netresearch" class="h-10 w-auto" width="160" height="40" loading="eager" />
+    <a href={site.company} class="flex items-center shrink-0" aria-label="Netresearch DTT GmbH">
+      <img src="/img/netresearch.svg" alt="Netresearch DTT GmbH" class="h-12 w-12" width="48" height="48" loading="eager" />
     </a>
 
     <div class="hidden lg:flex items-center gap-6">
@@ -43,7 +44,7 @@ const sections = [
         ))
       }
       <a
-        href={path('home', other)}
+        href={path(route, other)}
         hreflang={other}
         lang={other}
         class="text-sm font-heading text-text-secondary hover:text-nr-teal-ink transition-colors min-h-[44px] flex items-center"
@@ -65,7 +66,7 @@ const sections = [
       </button>
       <a
         href={contactUrl(site.utmCampaign, 'nav')}
-        class="inline-flex items-center min-h-[44px] px-4 rounded-lg bg-nr-teal-solid text-white text-sm font-heading font-semibold hover:bg-nr-teal-solid/90 transition-colors"
+        class="inline-flex items-center min-h-[44px] px-4 rounded-lg bg-nr-teal-solid text-white text-sm font-heading font-semibold hover:bg-nr-teal-solid transition-colors"
         data-cta="business"
         data-cta-position="nav"
       >
@@ -101,16 +102,17 @@ const sections = [
         ))
       }
       <a
-        href={path('home', other)}
+        href={path(route, other)}
         hreflang={other}
         lang={other}
         class="min-h-[48px] flex items-center font-heading text-text-secondary hover:text-nr-teal-ink transition-colors"
       >
         {t.nav.langSwitch}
       </a>
+      <button type="button" data-theme-toggle class="min-h-[48px] text-left font-heading text-text-secondary" aria-label={t.nav.theme}>{t.nav.theme}</button>
       <a
         href={contactUrl(site.utmCampaign, 'nav-mobile')}
-        class="mt-2 inline-flex items-center justify-center min-h-[48px] px-4 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold hover:bg-nr-teal-solid/90 transition-colors"
+        class="mt-2 inline-flex items-center justify-center min-h-[48px] px-4 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold hover:bg-nr-teal-solid transition-colors"
         data-cta="business"
         data-cta-position="nav-mobile"
       >
@@ -122,20 +124,28 @@ const sections = [
 
 <script is:inline define:vars={{ openLabel: t.nav.menu, closeLabel: t.nav.close }}>
   (function () {
-    var themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) {
+    document.querySelectorAll('#theme-toggle, [data-theme-toggle]').forEach(function (themeBtn) {
       themeBtn.addEventListener('click', function () {
         document.documentElement.classList.add('theme-transition');
         document.documentElement.classList.toggle('dark');
-        localStorage.setItem(
-          'theme',
-          document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-        );
+        var theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('nr-theme', theme); } catch (_) {}
+        document.querySelectorAll('#theme-toggle, [data-theme-toggle]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(theme === 'dark')); });
         setTimeout(function () {
           document.documentElement.classList.remove('theme-transition');
         }, 350);
       });
-    }
+      themeBtn.setAttribute('aria-pressed', String(document.documentElement.classList.contains('dark')));
+    });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (event) {
+      var stored;
+      try { stored = localStorage.getItem('nr-theme'); if (stored === null) stored = localStorage.getItem('theme'); } catch (_) {}
+      if (stored === 'light' || stored === 'dark') return;
+      document.documentElement.classList.toggle('dark', event.matches);
+      document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
+      document.querySelectorAll('#theme-toggle, [data-theme-toggle]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(event.matches)); });
+    });
 
     var menuBtn = document.getElementById('menu-toggle');
     var menu = document.getElementById('mobile-menu');
@@ -144,6 +154,21 @@ const sections = [
         var open = menu.classList.toggle('hidden') === false;
         menuBtn.setAttribute('aria-expanded', String(open));
         menuBtn.setAttribute('aria-label', open ? closeLabel : openLabel);
+      });
+      menu.addEventListener('click', function (event) {
+        if (event.target.closest('a')) {
+          menu.classList.add('hidden');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          menuBtn.setAttribute('aria-label', openLabel);
+        }
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !menu.classList.contains('hidden')) {
+          menu.classList.add('hidden');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          menuBtn.setAttribute('aria-label', openLabel);
+          menuBtn.focus();
+        }
       });
     }
   })();

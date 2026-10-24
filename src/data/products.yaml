@@ -33,11 +33,11 @@
       KI-Stacks liegt hier als Vault-Kennung, nie im Klartext in der Datenbank
       oder in einer Konfigurationsdatei.
   suited_for:
-    en: Teams that must keep provider credentials out of the database and out of git.
-    de: Teams, die Provider-Zugangsdaten aus Datenbank und Git heraushalten müssen.
+    en: Teams that need encrypted provider credentials in the database, with the master key outside it and no plaintext keys in git.
+    de: Teams, die Provider-Zugangsdaten verschlüsselt in der Datenbank speichern, den Master-Key außerhalb halten und Klartextschlüssel aus Git heraushalten müssen.
   boundary:
-    en: Stores and releases secrets. Makes no AI decision and sees no prompt.
-    de: Speichert und gibt Secrets frei. Trifft keine KI-Entscheidung und sieht keinen Prompt.
+    en: Stores encrypted secrets and releases them to authorised callers. Makes no AI decision and stores no business knowledge base.
+    de: Speichert verschlüsselte Secrets und gibt sie an berechtigte Aufrufer frei. Trifft keine KI-Entscheidung und speichert keine fachliche Wissensbasis.
 
 - id: nr-llm
   repo: netresearch/t3x-nr-llm
@@ -163,3 +163,57 @@
   boundary:
     en: Authenticates people. Authorisation and data access stay with the site's own rules.
     de: Authentifiziert Personen. Autorisierung und Datenzugriff bleiben bei den Regeln der Seite.
+
+- id: cowriter
+  repo: netresearch/t3x-cowriter
+  page: https://github.com/netresearch/t3x-cowriter
+  stack_layer: content
+  stage_from_extension: true
+  role:
+    en: Editorial assistance
+    de: Redaktionelle Assistenz
+  summary:
+    en: Draft and revise content inside CKEditor through nr-llm. Requires a compatible TYPO3 and nr-llm installation.
+    de: Entwürfe und Überarbeitungen direkt in CKEditor über nr-llm. Benötigt eine kompatible TYPO3- und nr-llm-Installation.
+  suited_for:
+    en: Editorial teams using TYPO3 13.4 or 14.3 and PHP 8.2 or newer.
+    de: Redaktionsteams mit TYPO3 13.4 oder 14.3 und PHP ab 8.2.
+  boundary:
+    en: Produces suggestions; factual review and publication remain the editor's responsibility.
+    de: Liefert Vorschläge; Faktenprüfung und Veröffentlichung bleiben Aufgabe der Redaktion.
+
+- id: nr-repurpose
+  repo: netresearch/t3x-nr-repurpose
+  page: https://github.com/netresearch/t3x-nr-repurpose
+  stack_layer: content
+  stage_from_extension: true
+  role:
+    en: Content repurposing
+    de: Content-Aufbereitung
+  summary:
+    en: Turn source material into editorial drafts through nr-llm. Requires TYPO3 14.3 and PHP 8.3 or newer.
+    de: Bereitet Ausgangsmaterial über nr-llm für redaktionelle Entwürfe auf. Benötigt TYPO3 14.3 und PHP ab 8.3.
+  suited_for:
+    en: Teams evaluating controlled content reuse on TYPO3 14.3.
+    de: Teams, die kontrollierte Inhaltswiederverwendung auf TYPO3 14.3 evaluieren.
+  boundary:
+    en: Alpha. Generated drafts need editorial review; external channel publishing is a separate integration.
+    de: Alpha. Erzeugte Entwürfe brauchen redaktionelle Prüfung; externe Kanalausspielung ist eine eigene Integration.
+
+- id: nr-landingpage
+  repo: netresearch/nr-landingpage
+  page: https://github.com/netresearch/nr-landingpage
+  stack_layer: content
+  stage_from_extension: true
+  role:
+    en: Landing-page drafts
+    de: Landingpage-Entwürfe
+  summary:
+    en: Create landing-page drafts in TYPO3 with nr-llm. Requires TYPO3 13.4 or 14.3 and PHP 8.2 or newer.
+    de: Erstellt Landingpage-Entwürfe in TYPO3 mit nr-llm. Benötigt TYPO3 13.4 oder 14.3 und PHP ab 8.2.
+  suited_for:
+    en: Marketing and editorial teams evaluating assisted page creation.
+    de: Marketing- und Redaktionsteams, die assistierte Seitenerstellung evaluieren.
+  boundary:
+    en: Beta. Layout, claims and publication require human review.
+    de: Beta. Gestaltung, Aussagen und Veröffentlichung brauchen eine menschliche Prüfung.

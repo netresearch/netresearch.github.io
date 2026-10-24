@@ -56,17 +56,23 @@ const graph = jsonLd.length
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <noscript><style>
+      #menu-toggle, #theme-toggle, [data-theme-toggle] { display:none; }
+      @media(max-width:1023px) { nav.fixed { position:static; } #mobile-menu { display:block; } }
+    </style></noscript>
 
     {graph && <script type="application/ld+json" set:html={JSON.stringify(graph)} />}
 
     <!-- Blocking theme script — prevents a flash of the wrong theme. -->
     <script is:inline>
       (function () {
-        var stored = localStorage.getItem('theme');
+        var stored;
+        try { stored = localStorage.getItem('nr-theme'); if (stored === null) stored = localStorage.getItem('theme'); } catch (_) {}
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (stored === 'dark' || (!stored && prefersDark)) {
+        if (stored === 'dark' || (stored !== 'light' && prefersDark)) {
           document.documentElement.classList.add('dark');
         }
+        document.documentElement.dataset.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
       })();
     </script>
   </head>

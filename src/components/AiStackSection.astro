@@ -1,7 +1,7 @@
 ---
 import type { Lang } from '../i18n';
 import { useContent } from '../i18n/content';
-import { orderedProducts, type Product } from '../data/load-manifest';
+import { orderedProducts, productPage, type Product } from '../data/load-manifest';
 import StatusBadge from './StatusBadge.astro';
 import VersionFacts from './VersionFacts.astro';
 
@@ -27,7 +27,7 @@ const ordered = orderedProducts(products);
         ordered.map((product) => (
           <li
             id={`product-${product.id}`}
-            class="rounded-xl border border-border bg-surface-card p-6 card-shadow flex flex-col"
+            class="rounded-2xl border border-border bg-surface-card p-6 card-shadow flex flex-col"
           >
             <div class="flex items-start justify-between gap-4">
               <div>
@@ -35,7 +35,7 @@ const ordered = orderedProducts(products);
                   {product.role[lang]}
                 </p>
                 <h3 class="mt-1 font-heading font-bold text-2xl text-text-primary">
-                  <a href={product.page} class="hover:text-nr-teal-ink transition-colors">
+                  <a href={productPage(product, lang)} class="hover:text-nr-teal-ink transition-colors">
                     {product.name}
                   </a>
                 </h3>
@@ -66,13 +66,18 @@ const ordered = orderedProducts(products);
 
             {
               product.manifest_source !== 'published' && (
-                <p class="mt-4 text-xs text-text-secondary border-l-2 border-nr-orange/40 pl-3">
-                  {product.manifest_source === 'repository'
+                <p class="mt-4 text-xs text-text-secondary">
+                  {product.stage_source
+                    ? (lang === 'de' ? 'Keine eigene Produktseite. Versionen stammen aus dem Repository; der deklarierte Extension-Reifegrad ist unten belegt.' : 'No separate product page. Versions come from the repository; the declared extension maturity is linked below.')
+                    : product.manifest_source === 'repository'
                     ? t.aiStack.repositoryNote
                     : t.aiStack.derivedNote}
                 </p>
               )
             }
+            {product.source_issue && <p class="mt-3 text-sm text-text-secondary">
+              {lang === 'de' ? 'Produktmanifest nicht nutzbar; Repository-Daten verwendet:' : 'Product manifest unavailable; using repository data:'} {product.source_issue}
+            </p>}
           </li>
         ))
       }
@@ -81,7 +86,7 @@ const ordered = orderedProducts(products);
     <p class="mt-8">
       <a
         href={t.aiStack.stackLinkHref}
-        class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal-ink hover:text-nr-teal-ink/80 transition-colors"
+        class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal-ink hover:text-nr-teal-ink transition-colors"
       >
         {t.aiStack.stackLink}
         <span aria-hidden="true">&rarr;</span>
