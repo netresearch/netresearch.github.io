@@ -24,7 +24,7 @@ jobs:
       contents: read
     with:
       setup-node: true
-      node-version: '22'
+      node-version: '24'
       # Dependency install stays in the token-free phase on purpose: this is
       # where third-party npm lifecycle scripts would run — so they do not run
       # at all.
