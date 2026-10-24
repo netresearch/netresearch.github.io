@@ -7,69 +7,68 @@
 @import "@fontsource/open-sans/400.css";
 @import "@fontsource/open-sans/600.css";
 
-/* ── Light mode (default) ─────────────────────────────── */
+/* Canonical brand tokens; text roles use the documented AAA variants. */
 :root {
-  --color-surface: #f8f9fa;
-  --color-surface-alt: #f0f1f3;
-  --color-surface-card: #ffffff;
-  --color-surface-hover: #f5f5f6;
-  --color-surface-nav: rgba(255, 255, 255, 0.8);
-  --color-text-primary: #1a1d2e;
-  --color-text-secondary: #4a4b52;
-  --color-text-muted: #585961;
-  /* Brand teal is 3.38:1 on white and the accent 3.33:1 — both below AA for
-     text under 24px. These tokens carry the same hues at a passing luminance;
-     --color-nr-teal and --color-nr-orange stay the brand values for borders,
-     icons and large display type, where 3:1 is the threshold.
-
-     The values are the brand system's own: #15585E is the sanctioned dark teal
-     (8.1:1), #257880 the fill that carries white text (5.2:1), #9A2E00 the dark
-     accent (7.1:1). The other Netresearch sites use the same three. */
-  --color-nr-teal-ink: #15585E;
-  --color-nr-teal-solid: #257880;
-  --color-nr-orange-ink: #9A2E00;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-hover: rgba(47, 153, 164, 0.3);
-  --color-glass: rgba(255, 255, 255, 0.5);
-  --color-card-shadow: rgba(0, 0, 0, 0.06);
-  --color-selection-fg: #ffffff;
-  --color-scrollbar-track: #f0f1f3;
-  --color-scrollbar-thumb: rgba(0, 0, 0, 0.12);
-  --color-scrollbar-thumb-hover: rgba(0, 0, 0, 0.2);
-  --color-hero-from: #f8f9fa;
-  --color-hero-via: #f0f1f3;
-  --color-hero-to: #f8f9fa;
+  color-scheme: light;
+  --nr-primary: #2F99A4;
+  --nr-accent: #FF4D00;
+  --nr-text: #585961;
+  --nr-primary-text: #15585E;
+  --nr-primary-fill: #15585E;
+  --nr-primary-deep: #0A5057;
+  --nr-accent-text: #9A2E00;
+  --nr-border-strong: #8A8B93;
+  --nr-focus: #15585E;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F5F5F5;
+  --color-surface-card: #FFFFFF;
+  --color-surface-hover: #F5F5F5;
+  --color-surface-nav: #FFFFFF;
+  --color-text-primary: #4D4F57;
+  --color-text-secondary: #4D4F57;
+  --color-text-muted: #4D4F57;
+  --color-nr-teal-ink: var(--nr-primary-text);
+  --color-nr-teal-solid: var(--nr-primary-fill);
+  --color-nr-orange-ink: var(--nr-accent-text);
+  --color-border: #E5E5E5;
+  --color-border-hover: #8A8B93;
+  --color-glass: #F5F5F5;
+  --color-card-shadow: rgba(0,0,0,.06);
+  --color-selection-fg: #0A5057;
+  --color-scrollbar-track: #F5F5F5;
+  --color-scrollbar-thumb: #8A8B93;
+  --color-scrollbar-thumb-hover: #585961;
+  --color-hero-from: #15585E;
+  --color-hero-via: #0A5057;
+  --color-hero-to: #06383D;
 }
-
-/* ── Dark mode ────────────────────────────────────────── */
 .dark {
-  --color-surface: #0F1117;
-  --color-surface-alt: #161922;
-  --color-surface-card: #1a1d2e;
-  --color-surface-hover: #1f2337;
-  --color-surface-nav: rgba(15, 17, 23, 0.8);
-  --color-text-primary: #ffffff;
-  --color-text-secondary: rgba(255, 255, 255, 0.6);
-  --color-text-muted: rgba(255, 255, 255, 0.66);
-  /* On the dark surfaces the brand teal reaches 4.9:1, so it needs no
-     substitute. The solid variant does: it sits behind white text either way. */
-  --color-nr-teal-ink: #2F99A4;
-  --color-nr-teal-solid: #237780;
-  --color-nr-orange-ink: #FF4D00;
-  --color-border: rgba(255, 255, 255, 0.05);
-  --color-border-hover: rgba(47, 153, 164, 0.3);
-  --color-glass: rgba(26, 29, 46, 0.5);
+  color-scheme: dark;
+  --nr-primary-text: #7FD6E0;
+  --nr-primary-fill: #15585E;
+  --nr-primary-deep: #A4E5EC;
+  --nr-accent-text: #FFB394;
+  --nr-border-strong: #6B7680;
+  --nr-focus: #7FD6E0;
+  --color-surface: #14181B;
+  --color-surface-alt: #1A2024;
+  --color-surface-card: #1E2429;
+  --color-surface-hover: #252D33;
+  --color-surface-nav: #14181B;
+  --color-text-primary: #E8EDEF;
+  --color-text-secondary: #CDD3D7;
+  --color-text-muted: #CDD3D7;
+  --color-border: #2A3238;
+  --color-border-hover: #6B7680;
+  --color-glass: #1E2429;
   --color-card-shadow: transparent;
-  --color-selection-fg: #ffffff;
-  --color-scrollbar-track: #0F1117;
-  --color-scrollbar-thumb: rgba(255, 255, 255, 0.1);
-  --color-scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
-  --color-hero-from: #0F1117;
-  --color-hero-via: #161922;
-  --color-hero-to: #0F1117;
+  --color-selection-fg: #FFFFFF;
+  --color-scrollbar-track: #14181B;
+  --color-scrollbar-thumb: #6B7680;
+  --color-scrollbar-thumb-hover: #CDD3D7;
 }
 
-@theme {
+@theme inline {
   --color-nr-teal: #2F99A4;
   --color-nr-teal-ink: var(--color-nr-teal-ink);
   --color-nr-teal-solid: var(--color-nr-teal-solid);
@@ -91,8 +90,8 @@
   --color-border-hover: var(--color-border-hover);
   --color-glass: var(--color-glass);
   --color-card-shadow: var(--color-card-shadow);
-  --font-family-heading: 'Raleway', sans-serif;
-  --font-family-body: 'Open Sans', sans-serif;
+  --font-heading: 'Raleway', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
 }
 
 html {
@@ -135,7 +134,7 @@ html.theme-transition *::after {
 }
 
 :focus-visible {
-  outline: 2px solid #2F99A4;
+  outline: 3px solid var(--nr-focus);
   outline-offset: 2px;
 }
 
@@ -147,3 +146,21 @@ html.theme-transition *::after {
   box-shadow: 0 4px 12px var(--color-card-shadow), 0 2px 4px var(--color-card-shadow);
 }
 
+
+body { overflow-wrap: anywhere; }
+main *, .grid > *, .flex > * { min-width: 0; }
+.text-xs, .text-\[0\.6875rem\] { font-size: .875rem; }
+button, input, select, textarea { font-family: 'Open Sans', sans-serif; }
+button, input, select, textarea, [data-cta] { border-radius: 10px; }
+input, select, textarea { border: 1px solid var(--nr-border-strong); min-height:48px; }
+.portfolio-hero { --color-text-primary: #FFFFFF; --color-text-secondary: #FFFFFF; --nr-focus: #FFFFFF; }
+.portfolio-hero [data-cta="technical"] { border-color: #FFFFFF; color: #FFFFFF; background: #0A5057; }
+.portfolio-hero [data-cta="technical"]:hover { background: #06383D; }
+/* Sub-4% outlines preserve 7:1 normal-text contrast across the hero gradient. */
+.brand-motif { position:absolute; right:8%; top:30%; width:200px; height:200px; border:1px solid #ffffff0A; border-radius:24px; transform:rotate(12deg); }
+.brand-motif::after { content:''; position:absolute; inset:28px; border:1px solid #ffffff0A; border-radius:16px; }
+footer { background:#303239; --color-text-primary:#FFFFFF; --color-text-secondary:#FFFFFF; --color-text-muted:#FFFFFF; --color-nr-teal-ink:#A4E5EC; --nr-focus:#FFFFFF; }
+footer p a { text-decoration:underline; text-underline-offset:3px; }
+@media(max-width:640px) { .brand-motif { right:-90px; top:36%; } }
+
+[data-cta="technical"] { border-color:var(--nr-border-strong); }

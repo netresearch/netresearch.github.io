@@ -120,12 +120,22 @@ function sanitiseLinks(manifest, id) {
 async function fetchPublishedManifest(pagesUrl) {
   const url = new URL('project-manifest.json', pagesUrl).toString();
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(15000), cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
     if (!res.ok) return { manifest: null, reason: `HTTP ${res.status}` };
     return { manifest: await res.json(), reason: null };
   } catch (err) {
     return { manifest: null, reason: err.message };
   }
+}
+
+/** Read a declared extension state only when the portfolio opts into it. */
+async function extensionStage(product, repository, ref) {
+  if (!product.stage_from_extension) return { stage: product.stage_fallback, stage_source: null };
+  const stateFile = await gh(`repos/${product.repo}/contents/ext_emconf.php?ref=${encodeURIComponent(ref)}`);
+  const text = stateFile?.content ? Buffer.from(stateFile.content, 'base64').toString('utf-8') : '';
+  const stage = text.match(/'state'\s*=>\s*'(alpha|beta|stable|maintenance)'/)?.[1];
+  if (!stage) throw new Error(`${product.id}: no declared extension state at ${ref}`);
+  return { stage, stage_source: `${repository}/blob/${ref}/ext_emconf.php` };
 }
 
 /**
@@ -169,13 +179,14 @@ async function deriveManifest(product) {
   }
 
   const repository = meta.html_url ?? `https://github.com/${product.repo}`;
+  const state = await extensionStage(product, repository, latestRelease ?? meta.default_branch);
 
   return {
     manifest_version: 1,
     name: repoName.replace(/^t3x-/, ''),
     // A product without a page has no path below netresearch.github.io.
     slug: product.pages_url ? new URL(product.pages_url).pathname : null,
-    stage: product.stage_fallback,
+    ...state,
     latest_release: latestRelease,
     release_date: releaseDate,
     main_version: mainVersion ?? (latestRelease ?? '').replace(/^v/, '') ?? null,
@@ -204,41 +215,26 @@ async function deriveManifest(product) {
   };
 }
 
+/** Keep source selection and its visible failure reason together. */
+async function resolveManifest(product) {
+  if (!product.pages_url) {
+    return { resolved: await deriveManifest(product), source: 'repository', fallbackReason: null };
+  }
+  const { manifest, reason } = await fetchPublishedManifest(product.pages_url);
+  if (manifest && validate(manifest)) {
+    return { resolved: manifest, source: 'published', fallbackReason: null };
+  }
+  const fallbackReason = manifest ? `Schema validation: ${ajv.errorsText(validate.errors)}` : reason;
+  console.warn(`${product.id}: published manifest unavailable (${fallbackReason}) — deriving`);
+  return { resolved: await deriveManifest(product), source: 'derived', fallbackReason };
+}
+
 async function main() {
   const products = loadYaml(readFileSync(PRODUCTS, 'utf-8'));
   const entries = [];
-  let derivedCount = 0;
 
   for (const product of products) {
-    let resolved;
-    let source;
-
-    if (!product.pages_url) {
-      // No product page of its own. The hub is the source for this project, and
-      // the page says so — that is a different thing from a project that has a
-      // page but has not started publishing a manifest.
-      resolved = await deriveManifest(product);
-      source = 'repository';
-      derivedCount += 1;
-    } else {
-      const { manifest, reason } = await fetchPublishedManifest(product.pages_url);
-      if (manifest && validate(manifest)) {
-        resolved = manifest;
-        source = 'published';
-      } else {
-        if (manifest) {
-          console.warn(
-            `${product.id}: published manifest failed schema validation — ` +
-              ajv.errorsText(validate.errors),
-          );
-        } else {
-          console.warn(`${product.id}: has a page but publishes no manifest (${reason}) — deriving`);
-        }
-        resolved = await deriveManifest(product);
-        source = 'derived';
-        derivedCount += 1;
-      }
-    }
+    const { resolved, source, fallbackReason } = await resolveManifest(product);
 
     entries.push({
       ...sanitiseLinks(resolved, product.id),
@@ -252,6 +248,11 @@ async function main() {
       suited_for: product.suited_for,
       boundary: product.boundary,
       manifest_source: source,
+      source_url: source === 'published'
+        ? new URL('project-manifest.json', product.pages_url).toString()
+        : `https://api.github.com/repos/${product.repo}`,
+      fetched_at: new Date().toISOString(),
+      source_issue: fallbackReason,
     });
   }
 

@@ -65,7 +65,7 @@ generated from its own release data. The canonical schema lives here:
 <https://netresearch.github.io/projects.json>, which the other sites consume.
 
 A product that does not publish a manifest yet is *derived* from the GitHub API
-plus the `stage_fallback` in `src/data/products.yaml`, marked
+plus the `stage_fallback` in `src/data/products.yaml` (or the release tag’s declared extension state for content tools), marked
 `manifest_source: "derived"`, and reported as a warning by `npm run verify`. The
 product page also says so, rather than presenting derived data as reviewed truth.
 
@@ -109,6 +109,6 @@ a new page cannot exist without being registered.
 
 ## Deployment
 
-Built and deployed to GitHub Pages on every push to `master`, daily at 06:00 UTC,
+Built and deployed to GitHub Pages on every push to `main`, daily at 06:00 UTC,
 and via workflow dispatch. Deployment runs `npm run verify` first — a build that
 fails the gate is not published.

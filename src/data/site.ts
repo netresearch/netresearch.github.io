@@ -7,7 +7,7 @@
  * fails the build once it is older than MAX_AGE_DAYS.
  */
 export const site = {
-  lastVerified: '2026-08-10',
+  lastVerified: '2026-10-24',
   owner: 'Netresearch DTT GmbH — Open Source Team',
   /** Campaign name used in every UTM-tagged contact link on this site. */
   utmCampaign: 'portfolio',

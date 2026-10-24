@@ -46,7 +46,7 @@ const BASE = baseSegments ? `/${baseSegments}/` : '/';
 // WCAG 2.1 AA, which is what the pages claim. 'best-practice' is deliberately
 // not included: it flags stylistic preferences, and a gate that fails on those
 // gets disabled instead of fixed.
-const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -165,6 +165,41 @@ function report({ route, scheme, violation }) {
   }
 }
 
+/** Incomplete nodes are undecided and need an identifiable manual check. */
+function reportIncomplete(route, scheme, result) {
+  for (const node of result.nodes) {
+    console.log(JSON.stringify({
+      status: 'manual-review-required', route, scheme, rule: result.id,
+      target: node.target, failureSummary: node.failureSummary ?? null,
+      messages: [...(node.any ?? []), ...(node.all ?? []), ...(node.none ?? [])]
+        .map((check) => check.message).filter(Boolean),
+    }));
+  }
+}
+
+/** A viewport change and its measurements are one sequential browser step. */
+async function responsiveIssues(page, width) {
+  const issues = [];
+  await page.setViewport({ width, height: 844 });
+  const state = await page.evaluate(() => ({
+    width: innerWidth,
+    scroll: document.documentElement.scrollWidth,
+    body: getComputedStyle(document.body).fontFamily,
+    heading: getComputedStyle(document.querySelector('h1')).fontFamily,
+    loadedFonts: [...document.fonts]
+      .filter((face) => face.status === 'loaded')
+      .map((face) => face.family.replace(/["']/g, '').trim()),
+  }));
+  if (state.scroll > width + 1) issues.push(`${width}px: document grows to ${state.scroll}px`);
+  if (!state.body.includes('Open Sans') || !state.heading.includes('Raleway')) {
+    issues.push(`${width}px: brand fonts not applied (${state.body}; ${state.heading})`);
+  }
+  for (const family of ['Open Sans', 'Raleway']) {
+    if (!state.loadedFonts.includes(family)) issues.push(`${width}px: ${family} font face not loaded`);
+  }
+  return issues;
+}
+
 /** Audits one page and returns the failures found on it. */
 async function auditPage(browser, port, route, scheme) {
   const page = await browser.newPage();
@@ -181,14 +216,32 @@ async function auditPage(browser, port, route, scheme) {
   await page.setViewport({ width: 1280, height: 900 });
   await page.goto(`http://127.0.0.1:${port}${BASE}${route.slice(1)}`, { waitUntil: 'networkidle0' });
   await page.addScriptTag({ path: axePath });
+  await page.evaluate(() => document.fonts.ready);
 
   const results = await page.evaluate(
     async (tags) => await window.axe.run(document, { runOnly: { type: 'tag', values: tags } }),
     TAGS,
   );
-  await page.close();
-
   const found = results.violations.map((violation) => ({ route, scheme, violation }));
+  const enhanced = await page.evaluate(async () => window.axe.run(document, {
+    runOnly: { type: 'rule', values: ['color-contrast-enhanced'] },
+  }));
+  found.push(...enhanced.violations.map((violation) => ({ route, scheme, violation })));
+  // The same tab is resized, so these two steps must not run concurrently.
+  const issues = [
+    ...(await responsiveIssues(page, 390)),
+    ...(await responsiveIssues(page, 320)),
+  ];
+  if (issues.length) found.push({ route, scheme, violation: {
+    id: 'responsive-brand-regression', impact: 'serious',
+    help: 'The built page must reflow and apply its loaded brand fonts',
+    helpUrl: 'https://www.w3.org/WAI/WCAG22/Understanding/reflow.html',
+    nodes: issues.map((target) => ({ target: [target], failureSummary: '' })),
+  } });
+  for (const result of [...results.incomplete, ...enhanced.incomplete]) {
+    reportIncomplete(route, scheme, result);
+  }
+  await page.close();
   if (broken.length) {
     found.unshift({
       route,
@@ -246,7 +299,7 @@ async function main() {
   }
 
   console.log(
-    `axe: no WCAG 2.1 AA violations in ${checked} page renders (${sampled.length} route shapes × ${SCHEMES.length} colour schemes, sampled from ${routes.length} pages) served from ${BASE}`,
+    `axe: no automated WCAG 2.2 AA / enhanced-contrast violations or responsive brand regressions in ${checked} page renders (${sampled.length} route shapes × ${SCHEMES.length} colour schemes, sampled from ${routes.length} pages) served from ${BASE}; incomplete checks require manual review`,
   );
 }
 

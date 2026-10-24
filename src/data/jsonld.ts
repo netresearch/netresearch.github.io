@@ -2,7 +2,7 @@ import type { Lang } from '../i18n';
 import { absolute, languages, site as siteUrl } from '../i18n';
 import { useContent } from '../i18n/content';
 import { site } from './site';
-import type { Product } from './load-manifest';
+import { productPage, type Product } from './load-manifest';
 import type { ImpactSnapshot } from './load-impact';
 
 /**
@@ -65,10 +65,10 @@ export function productList(products: Product[], lang: Lang): Record<string, unk
       item: {
         '@type': 'SoftwareApplication',
         name: product.name,
-        url: product.page,
+        url: productPage(product, lang),
         applicationCategory: 'DeveloperApplication',
         description: product.summary[lang],
-        ...(product.main_version ? { softwareVersion: product.main_version } : {}),
+        ...(product.latest_release ? { softwareVersion: product.latest_release } : {}),
         ...(product.license ? { license: product.license } : {}),
         codeRepository: product.repository,
         publisher: { '@id': `${siteUrl}/#organization` },

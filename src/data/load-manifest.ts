@@ -45,6 +45,19 @@ export interface Product {
   suited_for: Record<Lang, string>;
   boundary: Record<Lang, string>;
   manifest_source: 'published' | 'derived' | 'repository';
+  source_url: string;
+  fetched_at: string;
+  stage_source?: string | null;
+  source_issue?: string | null;
+}
+
+/** Keep a visitor's chosen language when entering a product from the hub. */
+export function productPage(product: Product, lang: Lang): string {
+  if (product.id === 'nr-llm') return `${product.page}${lang}/`;
+  if (['nr-browser-ai', 'nr-mcp-agent'].includes(product.id)) {
+    return lang === 'de' ? `${product.page}de/` : product.page;
+  }
+  return product.page;
 }
 
 export interface ProjectsFile {

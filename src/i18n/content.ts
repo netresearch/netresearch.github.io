@@ -124,7 +124,7 @@ const en: PageContent = {
     menu: 'Open menu',
     close: 'Close menu',
     langSwitch: 'Deutsch',
-    theme: 'Toggle dark mode',
+    theme: 'Colour scheme',
   },
   hero: {
     headline: 'Open-source infrastructure for TYPO3, AI and digital business processes.',
@@ -143,7 +143,7 @@ const en: PageContent = {
         answer:
           'The modular AI stack separates secrets, control plane, assistance and channels, so each layer can be replaced on its own.',
         linkLabel: 'Modular AI stack',
-        href: 'https://netresearch.github.io/modularer-ki-stack-page/',
+        href: 'https://netresearch.github.io/modularer-ki-stack-page/en/',
       },
       {
         id: 'developers',
@@ -152,7 +152,7 @@ const en: PageContent = {
         answer:
           'nr-llm centralises providers, keys, caching, streaming, tool calling and error handling behind one injectable service.',
         linkLabel: 'nr-llm for developers',
-        href: 'https://netresearch.github.io/t3x-nr-llm/',
+        href: 'https://netresearch.github.io/t3x-nr-llm/en/',
       },
       {
         id: 'security',
@@ -177,7 +177,7 @@ const en: PageContent = {
   aiStack: {
     heading: 'The AI stack',
     intro:
-      'Four components, each usable on its own. Status, release and main-branch version come from each project’s own manifest, not from this page.',
+      'Modules for security, AI and editorial work, with their individual requirements. Status, release and main-branch version come from each project’s own manifest, not from this page.',
     stageLabel: 'Status',
     releaseLabel: 'Latest release',
     mainLabel: 'Main branch',
@@ -189,7 +189,7 @@ const en: PageContent = {
     repositoryNote:
       'No product page of its own. Release and version come straight from the repository; the maturity is the portfolio’s assessment.',
     stackLink: 'How the layers fit together',
-    stackLinkHref: 'https://netresearch.github.io/modularer-ki-stack-page/',
+    stackLinkHref: 'https://netresearch.github.io/modularer-ki-stack-page/en/',
   },
   impact: {
     heading: 'Measured activity',
@@ -335,7 +335,7 @@ const de: PageContent = {
     menu: 'Menü öffnen',
     close: 'Menü schließen',
     langSwitch: 'English',
-    theme: 'Dunkles Design umschalten',
+    theme: 'Farbschema',
   },
   hero: {
     headline: 'Open-Source-Infrastruktur für TYPO3, KI und digitale Geschäftsprozesse.',
@@ -363,7 +363,7 @@ const de: PageContent = {
         answer:
           'nr-llm bündelt Provider, Schlüssel, Caching, Streaming, Tool-Aufrufe und Fehlerbehandlung hinter einem injizierbaren Service.',
         linkLabel: 'nr-llm für Entwicklung',
-        href: 'https://netresearch.github.io/t3x-nr-llm/',
+        href: 'https://netresearch.github.io/t3x-nr-llm/de/',
       },
       {
         id: 'security',
@@ -381,14 +381,14 @@ const de: PageContent = {
         answer:
           'Ein Backend-Agent, der standardmäßig liest und vor jedem Schreibvorgang auf eine menschliche Freigabe wartet – dazu ein On-Device-Assistent für Fragen zur aufgerufenen Seite.',
         linkLabel: 'Backend-Agent',
-        href: 'https://netresearch.github.io/t3x-nr-mcp-agent/',
+        href: 'https://netresearch.github.io/t3x-nr-mcp-agent/de/',
       },
     ],
   },
   aiStack: {
     heading: 'Der KI-Stack',
     intro:
-      'Vier Bausteine, jeder einzeln einsetzbar. Reifegrad, Release und Version des Hauptzweigs stammen aus dem Manifest des jeweiligen Projekts, nicht aus dieser Seite.',
+      'Module für Sicherheit, KI und redaktionelle Arbeit mit ihren jeweiligen Voraussetzungen. Reifegrad, Release und Version des Hauptzweigs stammen aus dem Manifest des jeweiligen Projekts, nicht aus dieser Seite.',
     stageLabel: 'Reifegrad',
     releaseLabel: 'Letzter Release',
     mainLabel: 'Hauptzweig',
