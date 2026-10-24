@@ -29,6 +29,7 @@ const graph = jsonLd.length
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -57,7 +58,7 @@ const graph = jsonLd.length
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <link rel="sitemap" href="/sitemap.xml" />
     <noscript><style>
-      #menu-toggle, #theme-toggle, [data-theme-toggle] { display:none; }
+      #menu-toggle, [data-theme-control] { display:none; }
       @media(max-width:1023px) { nav.fixed { position:static; } #mobile-menu { display:block; } }
     </style></noscript>
 

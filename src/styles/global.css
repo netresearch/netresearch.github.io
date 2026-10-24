@@ -9,6 +9,7 @@
 
 /* Canonical brand tokens; text roles use the documented AAA variants. */
 :root {
+  color-scheme: light;
   --nr-primary: #2F99A4;
   --nr-accent: #FF4D00;
   --nr-text: #585961;
@@ -42,6 +43,7 @@
   --color-hero-to: #06383D;
 }
 .dark {
+  color-scheme: dark;
   --nr-primary-text: #7FD6E0;
   --nr-primary-fill: #15585E;
   --nr-primary-deep: #A4E5EC;

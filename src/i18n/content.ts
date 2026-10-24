@@ -124,7 +124,7 @@ const en: PageContent = {
     menu: 'Open menu',
     close: 'Close menu',
     langSwitch: 'Deutsch',
-    theme: 'Toggle dark mode',
+    theme: 'Colour scheme',
   },
   hero: {
     headline: 'Open-source infrastructure for TYPO3, AI and digital business processes.',
@@ -335,7 +335,7 @@ const de: PageContent = {
     menu: 'Menü öffnen',
     close: 'Menü schließen',
     langSwitch: 'English',
-    theme: 'Dunkles Design umschalten',
+    theme: 'Farbschema',
   },
   hero: {
     headline: 'Open-Source-Infrastruktur für TYPO3, KI und digitale Geschäftsprozesse.',

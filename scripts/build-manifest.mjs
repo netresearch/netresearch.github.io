@@ -128,6 +128,16 @@ async function fetchPublishedManifest(pagesUrl) {
   }
 }
 
+/** Read a declared extension state only when the portfolio opts into it. */
+async function extensionStage(product, repository, ref) {
+  if (!product.stage_from_extension) return { stage: product.stage_fallback, stage_source: null };
+  const stateFile = await gh(`repos/${product.repo}/contents/ext_emconf.php?ref=${encodeURIComponent(ref)}`);
+  const text = stateFile?.content ? Buffer.from(stateFile.content, 'base64').toString('utf-8') : '';
+  const stage = text.match(/'state'\s*=>\s*'(alpha|beta|stable|maintenance)'/)?.[1];
+  if (!stage) throw new Error(`${product.id}: no declared extension state at ${ref}`);
+  return { stage, stage_source: `${repository}/blob/${ref}/ext_emconf.php` };
+}
+
 /**
  * Build a manifest from GitHub for a product that does not publish one yet.
  * Only fields GitHub can actually answer are derived; everything editorial
@@ -169,24 +179,14 @@ async function deriveManifest(product) {
   }
 
   const repository = meta.html_url ?? `https://github.com/${product.repo}`;
-  let stage = product.stage_fallback;
-  let stageSource = null;
-  if (product.stage_from_extension) {
-    const ref = latestRelease ?? meta.default_branch;
-    const stateFile = await gh(`repos/${product.repo}/contents/ext_emconf.php?ref=${encodeURIComponent(ref)}`);
-    const text = stateFile?.content ? Buffer.from(stateFile.content, 'base64').toString('utf-8') : '';
-    stage = text.match(/'state'\s*=>\s*'(alpha|beta|stable|maintenance)'/)?.[1];
-    if (!stage) throw new Error(`${product.id}: no declared extension state at ${ref}`);
-    stageSource = `${repository}/blob/${ref}/ext_emconf.php`;
-  }
+  const state = await extensionStage(product, repository, latestRelease ?? meta.default_branch);
 
   return {
     manifest_version: 1,
     name: repoName.replace(/^t3x-/, ''),
     // A product without a page has no path below netresearch.github.io.
     slug: product.pages_url ? new URL(product.pages_url).pathname : null,
-    stage,
-    stage_source: stageSource,
+    ...state,
     latest_release: latestRelease,
     release_date: releaseDate,
     main_version: mainVersion ?? (latestRelease ?? '').replace(/^v/, '') ?? null,
@@ -215,43 +215,26 @@ async function deriveManifest(product) {
   };
 }
 
+/** Keep source selection and its visible failure reason together. */
+async function resolveManifest(product) {
+  if (!product.pages_url) {
+    return { resolved: await deriveManifest(product), source: 'repository', fallbackReason: null };
+  }
+  const { manifest, reason } = await fetchPublishedManifest(product.pages_url);
+  if (manifest && validate(manifest)) {
+    return { resolved: manifest, source: 'published', fallbackReason: null };
+  }
+  const fallbackReason = manifest ? `Schema validation: ${ajv.errorsText(validate.errors)}` : reason;
+  console.warn(`${product.id}: published manifest unavailable (${fallbackReason}) — deriving`);
+  return { resolved: await deriveManifest(product), source: 'derived', fallbackReason };
+}
+
 async function main() {
   const products = loadYaml(readFileSync(PRODUCTS, 'utf-8'));
   const entries = [];
-  let derivedCount = 0;
 
   for (const product of products) {
-    let resolved;
-    let source;
-    let fallbackReason = null;
-
-    if (!product.pages_url) {
-      // No product page of its own. The hub is the source for this project, and
-      // the page says so — that is a different thing from a project that has a
-      // page but has not started publishing a manifest.
-      resolved = await deriveManifest(product);
-      source = 'repository';
-      derivedCount += 1;
-    } else {
-      const { manifest, reason } = await fetchPublishedManifest(product.pages_url);
-      if (manifest && validate(manifest)) {
-        resolved = manifest;
-        source = 'published';
-      } else {
-        fallbackReason = manifest ? `Schema validation: ${ajv.errorsText(validate.errors)}` : reason;
-        if (manifest) {
-          console.warn(
-            `${product.id}: published manifest failed schema validation — ` +
-              ajv.errorsText(validate.errors),
-          );
-        } else {
-          console.warn(`${product.id}: has a page but publishes no manifest (${reason}) — deriving`);
-        }
-        resolved = await deriveManifest(product);
-        source = 'derived';
-        derivedCount += 1;
-      }
-    }
+    const { resolved, source, fallbackReason } = await resolveManifest(product);
 
     entries.push({
       ...sanitiseLinks(resolved, product.id),

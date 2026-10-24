@@ -165,6 +165,29 @@ function report({ route, scheme, violation }) {
   }
 }
 
+/** A viewport change and its measurements are one sequential browser step. */
+async function responsiveIssues(page, width) {
+  const issues = [];
+  await page.setViewport({ width, height: 844 });
+  const state = await page.evaluate(() => ({
+    width: innerWidth,
+    scroll: document.documentElement.scrollWidth,
+    body: getComputedStyle(document.body).fontFamily,
+    heading: getComputedStyle(document.querySelector('h1')).fontFamily,
+    loadedFonts: [...document.fonts]
+      .filter((face) => face.status === 'loaded')
+      .map((face) => face.family.replace(/["']/g, '').trim()),
+  }));
+  if (state.scroll > width + 1) issues.push(`${width}px: document grows to ${state.scroll}px`);
+  if (!state.body.includes('Open Sans') || !state.heading.includes('Raleway')) {
+    issues.push(`${width}px: brand fonts not applied (${state.body}; ${state.heading})`);
+  }
+  for (const family of ['Open Sans', 'Raleway']) {
+    if (!state.loadedFonts.includes(family)) issues.push(`${width}px: ${family} font face not loaded`);
+  }
+  return issues;
+}
+
 /** Audits one page and returns the failures found on it. */
 async function auditPage(browser, port, route, scheme) {
   const page = await browser.newPage();
@@ -192,26 +215,11 @@ async function auditPage(browser, port, route, scheme) {
     runOnly: { type: 'rule', values: ['color-contrast-enhanced'] },
   }));
   found.push(...enhanced.violations.map((violation) => ({ route, scheme, violation })));
-  const issues = [];
-  for (const width of [390, 320]) {
-    await page.setViewport({ width, height: 844 });
-    const state = await page.evaluate(() => ({
-      width: innerWidth,
-      scroll: document.documentElement.scrollWidth,
-      body: getComputedStyle(document.body).fontFamily,
-      heading: getComputedStyle(document.querySelector('h1')).fontFamily,
-      loadedFonts: [...document.fonts]
-        .filter((face) => face.status === 'loaded')
-        .map((face) => face.family.replace(/["']/g, '').trim()),
-    }));
-    if (state.scroll > width + 1) issues.push(`${width}px: document grows to ${state.scroll}px`);
-    if (!state.body.includes('Open Sans') || !state.heading.includes('Raleway')) {
-      issues.push(`${width}px: brand fonts not applied (${state.body}; ${state.heading})`);
-    }
-    for (const family of ['Open Sans', 'Raleway']) {
-      if (!state.loadedFonts.includes(family)) issues.push(`${width}px: ${family} font face not loaded`);
-    }
-  }
+  // The same tab is resized, so these two steps must not run concurrently.
+  const issues = [
+    ...(await responsiveIssues(page, 390)),
+    ...(await responsiveIssues(page, 320)),
+  ];
   if (issues.length) found.push({ route, scheme, violation: {
     id: 'responsive-brand-regression', impact: 'serious',
     help: 'The built page must reflow and apply its loaded brand fonts',

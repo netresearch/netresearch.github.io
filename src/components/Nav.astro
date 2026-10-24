@@ -51,19 +51,16 @@ const sections = [
       >
         {t.nav.langSwitch}
       </a>
-      <button
+      <select
         id="theme-toggle"
-        type="button"
-        class="text-text-secondary hover:text-text-primary transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-surface-card"
+        data-theme-control
         aria-label={t.nav.theme}
+        class="text-sm text-text-primary bg-surface min-h-[48px] px-2"
       >
-        <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
+        <option value="system">System</option>
+        <option value="light">{lang === 'de' ? 'Hell' : 'Light'}</option>
+        <option value="dark">{lang === 'de' ? 'Dunkel' : 'Dark'}</option>
+      </select>
       <a
         href={contactUrl(site.utmCampaign, 'nav')}
         class="inline-flex items-center min-h-[44px] px-4 rounded-lg bg-nr-teal-solid text-white text-sm font-heading font-semibold hover:bg-nr-teal-solid transition-colors"
@@ -109,7 +106,11 @@ const sections = [
       >
         {t.nav.langSwitch}
       </a>
-      <button type="button" data-theme-toggle class="min-h-[48px] text-left font-heading text-text-secondary" aria-label={t.nav.theme}>{t.nav.theme}</button>
+      <select data-theme-control class="min-h-[48px] bg-surface text-text-primary" aria-label={t.nav.theme}>
+        <option value="system">System</option>
+        <option value="light">{lang === 'de' ? 'Hell' : 'Light'}</option>
+        <option value="dark">{lang === 'de' ? 'Dunkel' : 'Dark'}</option>
+      </select>
       <a
         href={contactUrl(site.utmCampaign, 'nav-mobile')}
         class="mt-2 inline-flex items-center justify-center min-h-[48px] px-4 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold hover:bg-nr-teal-solid transition-colors"
@@ -132,28 +133,31 @@ const sections = [
 
 <script is:inline define:vars={{ openLabel: t.nav.menu, closeLabel: t.nav.close }}>
   (function () {
-    document.querySelectorAll('#theme-toggle, [data-theme-toggle]').forEach(function (themeBtn) {
-      themeBtn.addEventListener('click', function () {
+    var darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    var preference = 'system';
+    try {
+      var stored = localStorage.getItem('nr-theme');
+      if (stored === null) stored = localStorage.getItem('theme');
+      if (['system', 'light', 'dark'].includes(stored)) preference = stored;
+    } catch (_) {}
+    var controls = document.querySelectorAll('[data-theme-control]');
+    function applyTheme() {
+      var dark = preference === 'dark' || (preference === 'system' && darkScheme.matches);
+      document.documentElement.classList.toggle('dark', dark);
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      controls.forEach(function (control) { control.value = preference; });
+    }
+    controls.forEach(function (control) {
+      control.addEventListener('change', function () {
+        preference = control.value;
+        try { localStorage.setItem('nr-theme', preference); } catch (_) {}
         document.documentElement.classList.add('theme-transition');
-        document.documentElement.classList.toggle('dark');
-        var theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-        document.documentElement.dataset.theme = theme;
-        try { localStorage.setItem('nr-theme', theme); } catch (_) {}
-        document.querySelectorAll('#theme-toggle, [data-theme-toggle]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(theme === 'dark')); });
-        setTimeout(function () {
-          document.documentElement.classList.remove('theme-transition');
-        }, 350);
+        applyTheme();
+        setTimeout(function () { document.documentElement.classList.remove('theme-transition'); }, 350);
       });
-      themeBtn.setAttribute('aria-pressed', String(document.documentElement.classList.contains('dark')));
     });
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (event) {
-      var stored;
-      try { stored = localStorage.getItem('nr-theme'); if (stored === null) stored = localStorage.getItem('theme'); } catch (_) {}
-      if (stored === 'light' || stored === 'dark') return;
-      document.documentElement.classList.toggle('dark', event.matches);
-      document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
-      document.querySelectorAll('#theme-toggle, [data-theme-toggle]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(event.matches)); });
-    });
+    darkScheme.addEventListener('change', applyTheme);
+    applyTheme();
 
     var menuBtn = document.getElementById('menu-toggle');
     var menu = document.getElementById('mobile-menu');
