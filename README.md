@@ -11,6 +11,8 @@ the organisation's project manifests.
 
 ## Development
 
+Use Node.js 24 LTS, matching the verification and deployment workflows.
+
 ```bash
 npm install
 npm run fetch-data   # repository metadata + product manifests + impact snapshot
