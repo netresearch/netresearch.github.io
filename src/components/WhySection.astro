@@ -31,7 +31,7 @@ const cards = t.why.cards.filter(
     <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {
         cards.map((card) => (
-          <li id={`why-${card.id}`} class="rounded-xl border border-border bg-surface-card p-6 card-shadow">
+          <li id={`why-${card.id}`} class="rounded-2xl border border-border bg-surface-card p-6 card-shadow">
             <p class="font-heading font-bold text-text-primary">
               {card.kpi && (
                 <span class="text-2xl text-nr-teal-ink tabular-nums" data-figure={card.kpi}>

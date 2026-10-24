@@ -61,3 +61,12 @@ const facts = [
     ))
   }
 </dl>
+<p class="mt-3 text-sm text-text-muted">
+  {lang === 'de' ? 'Quelle abgerufen:' : 'Source fetched:'}
+  <a href={product.source_url} class="underline" rel="noopener">
+    <time datetime={product.fetched_at}>{formatDate(product.fetched_at, lang)}</time>
+  </a>
+</p>
+{product.stage_source && <p class="mt-2 text-sm text-text-muted">
+  <a href={product.stage_source} class="underline">{lang === 'de' ? 'Reifegrad laut Extension-Deklaration' : 'Maturity declared by the extension'}</a>
+</p>}

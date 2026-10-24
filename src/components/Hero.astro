@@ -12,14 +12,13 @@ const { lang } = Astro.props as Props;
 const t = useContent(lang);
 ---
 
-<section class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
+<section class="portfolio-hero relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
   <div
     class="absolute inset-0 bg-gradient-to-br from-[var(--color-hero-from)] via-[var(--color-hero-via)] to-[var(--color-hero-to)]"
     aria-hidden="true"
   >
   </div>
-  <div class="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-nr-teal-solid/8 rounded-full blur-[120px]" aria-hidden="true"></div>
-  <div class="absolute bottom-0 -right-1/4 w-[400px] h-[400px] bg-nr-orange/6 rounded-full blur-[100px]" aria-hidden="true"></div>
+  <div class="brand-motif" aria-hidden="true"></div>
 
   <div class="relative z-10 max-w-4xl mx-auto px-6">
     <h1 class="font-heading font-black text-4xl md:text-5xl lg:text-6xl tracking-tight text-text-primary text-balance">
