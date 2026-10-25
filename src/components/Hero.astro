@@ -12,23 +12,18 @@ const { lang } = Astro.props as Props;
 const t = useContent(lang);
 ---
 
-<section class="portfolio-hero relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
-  <div
-    class="absolute inset-0 bg-gradient-to-br from-[var(--color-hero-from)] via-[var(--color-hero-via)] to-[var(--color-hero-to)]"
-    aria-hidden="true"
-  >
-  </div>
-  <div class="brand-motif" aria-hidden="true"></div>
-
-  <div class="relative z-10 max-w-4xl mx-auto px-6">
-    <h1 class="font-heading font-black text-4xl md:text-5xl lg:text-6xl tracking-tight text-text-primary text-balance">
+<section class="nr-hero" data-nr-hero>
+  <div class="nr-hero-inner">
+    <div class="nr-hero-content">
+    <p class="nr-hero-eyebrow">Netresearch · Open Source</p>
+    <h1 class="nr-hero-title">
       {t.hero.headline}
     </h1>
-    <p class="mt-6 text-lg md:text-xl text-text-secondary max-w-3xl">
+    <p class="nr-hero-lead">
       {t.hero.sub}
     </p>
-    <div class="mt-10">
       <CtaPair
+        class="nr-hero-actions"
         lang={lang}
         campaign={site.utmCampaign}
         position="hero"

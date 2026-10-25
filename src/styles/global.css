@@ -175,14 +175,7 @@ main *, .grid > *, .flex > * { min-width: 0; }
 button, input, select, textarea { font-family: 'Open Sans', sans-serif; }
 button, input, select, textarea, [data-cta] { border-radius: 10px; }
 input, select, textarea { border: 1px solid var(--nr-border-strong); min-height:48px; }
-.portfolio-hero { --color-text-primary: #FFFFFF; --color-text-secondary: #FFFFFF; --nr-focus: #FFFFFF; }
-.portfolio-hero [data-cta="technical"] { border-color: #FFFFFF; color: #FFFFFF; background: #0A5057; }
-.portfolio-hero [data-cta="technical"]:hover { background: #06383D; }
-/* Sub-4% outlines preserve 7:1 normal-text contrast across the hero gradient. */
-.brand-motif { position:absolute; right:8%; top:30%; width:200px; height:200px; border:1px solid #ffffff0A; border-radius:24px; transform:rotate(12deg); }
-.brand-motif::after { content:''; position:absolute; inset:28px; border:1px solid #ffffff0A; border-radius:16px; }
 footer { background:#303239; --color-text-primary:#FFFFFF; --color-text-secondary:#FFFFFF; --color-text-muted:#FFFFFF; --color-nr-teal-ink:#A4E5EC; --nr-focus:#FFFFFF; }
 footer p a { text-decoration:underline; text-underline-offset:3px; }
-@media(max-width:640px) { .brand-motif { right:-90px; top:36%; } }
 
 [data-cta="technical"] { border-color:var(--nr-border-strong); }
