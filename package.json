@@ -13,7 +13,9 @@
     "build-og-image": "node scripts/build-og-image.mjs",
     "verify": "node scripts/verify-site.mjs && node scripts/axe-audit.mjs",
     "check": "astro check --minimumSeverity error",
-    "axe": "node scripts/axe-audit.mjs"
+    "axe": "node scripts/axe-audit.mjs",
+    "prebuild": "node scripts/sync-site-shell.mjs",
+    "predev": "node scripts/sync-site-shell.mjs"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",

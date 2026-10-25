@@ -3,186 +3,35 @@ import type { Lang, RouteKey } from '../i18n';
 import { contactUrl, path } from '../i18n';
 import { useContent } from '../i18n/content';
 import { site } from '../data/site';
+import { renderSiteHeader, renderPageNavigation } from '../../shared/site-shell/render-site-shell.mjs';
+import headerTemplate from '../../shared/site-shell/site-shell.html?raw';
+import pageNavigationTemplate from '../../shared/site-shell/page-navigation.html?raw';
 
 interface Props {
   lang: Lang;
-  /** Which page this nav sits on, so the language switch lands on its counterpart. */
+  /** Keep language switches on the corresponding page. */
   route: RouteKey;
 }
 
 const { lang, route } = Astro.props as Props;
 const t = useContent(lang);
-const other: Lang = lang === 'en' ? 'de' : 'en';
-
-const sections = [
-  { href: path('home', lang), label: t.breadcrumbHome },
-  { href: `${path('home', lang)}#ai-stack`, label: t.nav.aiStack },
-  { href: `${path('home', lang)}#impact`, label: t.nav.impact },
-  { href: path('projects', lang), label: t.nav.projects },
-];
+const header = renderSiteHeader({
+  lang,
+  assetBase: '/assets/site-shell',
+  languageUrls: { de: path(route, 'de'), en: path(route, 'en') },
+  active: route,
+  contactHref: contactUrl(site.utmCampaign, 'nav'),
+}, headerTemplate);
+const localNavigation = route === 'home' ? renderPageNavigation({
+  lang,
+  title: 'Open Source',
+  links: [
+    { href: '#ai-stack', label: t.nav.aiStack },
+    { href: '#impact', label: t.nav.impact },
+    { href: '#portfolio', label: t.nav.projects },
+  ],
+}, pageNavigationTemplate) : '';
 ---
 
-<nav
-  class="fixed top-0 left-0 right-0 z-50 bg-surface-nav backdrop-blur-xl border-b border-border"
-  aria-label={t.nav.label}
->
-  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-20 gap-4">
-    <!-- Brand rule: the logo appears exactly once, here, at 40px. -->
-    <a href={site.company} class="flex items-center shrink-0" aria-label="Netresearch DTT GmbH">
-      <img src="/img/netresearch.svg" alt="Netresearch DTT GmbH" class="h-12 w-12" width="48" height="48" loading="eager" />
-    </a>
-
-    <div class="hidden lg:flex items-center gap-6">
-      {
-        sections.map((item) => (
-          <a
-            href={item.href}
-            class="text-sm font-heading text-text-secondary hover:text-nr-teal-ink transition-colors min-h-[44px] flex items-center"
-          >
-            {item.label}
-          </a>
-        ))
-      }
-      <a
-        href={path(route, other)}
-        hreflang={other}
-        lang={other}
-        class="text-sm font-heading text-text-secondary hover:text-nr-teal-ink transition-colors min-h-[44px] flex items-center"
-      >
-        {t.nav.langSwitch}
-      </a>
-      <select
-        id="theme-toggle"
-        data-theme-control
-        aria-label={t.nav.theme}
-        class="text-sm text-text-primary bg-surface min-h-[48px] px-2"
-      >
-        <option value="system">System</option>
-        <option value="light">{lang === 'de' ? 'Hell' : 'Light'}</option>
-        <option value="dark">{lang === 'de' ? 'Dunkel' : 'Dark'}</option>
-      </select>
-      <a
-        href={contactUrl(site.utmCampaign, 'nav')}
-        class="inline-flex items-center min-h-[44px] px-4 rounded-lg bg-nr-teal-solid text-white text-sm font-heading font-semibold hover:bg-nr-teal-solid transition-colors"
-        data-cta="business"
-        data-cta-position="nav"
-      >
-        {t.nav.contact}
-      </a>
-    </div>
-
-    <button
-      id="menu-toggle"
-      type="button"
-      class="lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-card transition-colors"
-      aria-label={t.nav.menu}
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-    >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-  </div>
-
-  <!--
-    Mobile menu. Rendered in the initial HTML and hidden with `hidden`, so the
-    same links exist for every visitor and for crawlers, not only after a click.
-  -->
-  <div id="mobile-menu" class="hidden lg:hidden border-t border-border bg-surface">
-    <div class="px-6 py-4 flex flex-col gap-1">
-      {
-        sections.map((item) => (
-          <a href={item.href} class="min-h-[48px] flex items-center font-heading text-text-secondary hover:text-nr-teal-ink transition-colors">
-            {item.label}
-          </a>
-        ))
-      }
-      <a
-        href={path(route, other)}
-        hreflang={other}
-        lang={other}
-        class="min-h-[48px] flex items-center font-heading text-text-secondary hover:text-nr-teal-ink transition-colors"
-      >
-        {t.nav.langSwitch}
-      </a>
-      <select data-theme-control class="min-h-[48px] bg-surface text-text-primary" aria-label={t.nav.theme}>
-        <option value="system">System</option>
-        <option value="light">{lang === 'de' ? 'Hell' : 'Light'}</option>
-        <option value="dark">{lang === 'de' ? 'Dunkel' : 'Dark'}</option>
-      </select>
-      <a
-        href={contactUrl(site.utmCampaign, 'nav-mobile')}
-        class="mt-2 inline-flex items-center justify-center min-h-[48px] px-4 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold hover:bg-nr-teal-solid transition-colors"
-        data-cta="business"
-        data-cta-position="nav-mobile"
-      >
-        {t.nav.contact}
-      </a>
-    </div>
-  </div>
-</nav>
-
-<style>
-  #mobile-menu[data-enhanced] {
-    max-block-size: calc(100dvh - 5rem);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-</style>
-
-<script is:inline define:vars={{ openLabel: t.nav.menu, closeLabel: t.nav.close }}>
-  (function () {
-    var darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    var preference = 'system';
-    try {
-      var stored = localStorage.getItem('nr-theme');
-      if (stored === null) stored = localStorage.getItem('theme');
-      if (['system', 'light', 'dark'].includes(stored)) preference = stored;
-    } catch (_) {}
-    var controls = document.querySelectorAll('[data-theme-control]');
-    function applyTheme() {
-      var dark = preference === 'dark' || (preference === 'system' && darkScheme.matches);
-      document.documentElement.classList.toggle('dark', dark);
-      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-      controls.forEach(function (control) { control.value = preference; });
-    }
-    controls.forEach(function (control) {
-      control.addEventListener('change', function () {
-        preference = control.value;
-        try { localStorage.setItem('nr-theme', preference); } catch (_) {}
-        document.documentElement.classList.add('theme-transition');
-        applyTheme();
-        setTimeout(function () { document.documentElement.classList.remove('theme-transition'); }, 350);
-      });
-    });
-    darkScheme.addEventListener('change', applyTheme);
-    applyTheme();
-
-    var menuBtn = document.getElementById('menu-toggle');
-    var menu = document.getElementById('mobile-menu');
-    if (menuBtn && menu) {
-      menuBtn.addEventListener('click', function () {
-        var open = menu.classList.toggle('hidden') === false;
-        menuBtn.setAttribute('aria-expanded', String(open));
-        menuBtn.setAttribute('aria-label', open ? closeLabel : openLabel);
-      });
-      menu.addEventListener('click', function (event) {
-        if (event.target.closest('a')) {
-          menu.classList.add('hidden');
-          menuBtn.setAttribute('aria-expanded', 'false');
-          menuBtn.setAttribute('aria-label', openLabel);
-        }
-      });
-      document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && !menu.classList.contains('hidden')) {
-          menu.classList.add('hidden');
-          menuBtn.setAttribute('aria-expanded', 'false');
-          menuBtn.setAttribute('aria-label', openLabel);
-          menuBtn.focus();
-        }
-      });
-      menu.dataset.enhanced = '';
-    }
-  })();
-</script>
+<Fragment set:html={header} />
+<Fragment set:html={localNavigation} />
