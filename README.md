@@ -67,7 +67,7 @@ generated from its own release data. The canonical schema lives here:
 <https://netresearch.github.io/projects.json>, which the other sites consume.
 
 A product that does not publish a manifest yet is *derived* from the GitHub API
-plus the `stage_fallback` in `src/data/products.yaml` (or the release tag’s declared extension state for content tools), marked
+plus the `stage_fallback` in `src/data/products.yaml` (or the release tag’s declared extension state, where a product sets `stage_from_extension`), marked
 `manifest_source: "derived"`, and reported as a warning by `npm run verify`. The
 product page also says so, rather than presenting derived data as reviewed truth.
 
