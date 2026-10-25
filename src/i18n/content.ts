@@ -338,7 +338,7 @@ const de: PageContent = {
     theme: 'Farbschema',
   },
   hero: {
-    headline: 'Open-Source-Infrastruktur für TYPO3, KI und digitale Geschäftsprozesse.',
+    headline: 'Open-Source-Infrastruktur für TYPO3, KI und digitale Geschäfts\u00adprozesse.',
     sub: 'Von sicherer KI-Integration und Agenten bis zu bewährten TYPO3- und Commerce-Komponenten – offen entwickelt, nachvollziehbar betrieben und messbar genutzt.',
     primaryCta: 'KI-Stack entdecken',
     secondaryCta: 'Architektur besprechen',
