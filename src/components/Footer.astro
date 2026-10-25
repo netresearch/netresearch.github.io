@@ -18,9 +18,9 @@ const t = useContent(lang);
  * page's age is visible without reading the source.
  */
 const links = [
-  { href: contactUrl(site.utmCampaign, 'footer'), label: t.footer.contact, cta: true },
-  { href: site.imprint, label: t.footer.imprint, lang: 'de' },
-  { href: site.privacy, label: t.footer.privacy, lang: 'de' },
+  { href: contactUrl(lang, site.utmCampaign, 'footer'), label: t.footer.contact, cta: true },
+  { href: lang === 'de' ? site.imprint : 'https://www.netresearch.de/en/imprint/', label: t.footer.imprint },
+  { href: lang === 'de' ? site.privacy : 'https://www.netresearch.de/en/privacy-policy/', label: t.footer.privacy },
   { href: site.github, label: t.footer.github },
 ];
 ---
@@ -44,7 +44,6 @@ const links = [
         links.map((link) => (
           <a
             href={link.href}
-            lang={link.lang}
             rel="noopener"
             class:list={[
               'min-h-[44px] flex items-center transition-colors',

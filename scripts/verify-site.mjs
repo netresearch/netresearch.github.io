@@ -159,6 +159,20 @@ for (const file of pages) {
   const name = relative(DIST, file);
   const html = readFileSync(file, 'utf-8');
   const text = visibleText(html);
+  const lang = html.match(/<html\b[^>]*\blang=["'](en|de)["']/i)?.[1];
+  const isNotFound = name === '404.html';
+
+  if (isNotFound) {
+    if (!/<meta[^>]*name=["']robots["'][^>]*content=["'][^"']*\bnoindex\b/.test(html)) fail(name, 'error document must be noindex');
+    if (headValue(html, 'canonical')) fail(name, 'error document must not canonicalise to a regular page');
+    if (/<link[^>]*rel=["']alternate["'][^>]*hreflang=/.test(html)) fail(name, 'error document must not declare home pages as language alternates');
+    if (/<meta[^>]+http-equiv=["']refresh["']/i.test(html)) fail(name, 'error document must offer recovery without redirecting');
+    const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';
+    for (const home of ['/', '/de/']) {
+      if (!main.includes(`href="${home}"`)) fail(name, `error document is missing a home recovery link: ${home}`);
+    }
+    if (!/<section[^>]*\blang="de"/.test(main)) fail(name, 'German recovery copy must declare its language');
+  }
 
   // Redirect stubs are meta-refresh only and carry no content of their own.
   if (/<meta[^>]+http-equiv=["']refresh["']/i.test(html)) continue;
@@ -176,8 +190,8 @@ for (const file of pages) {
   if (!/<title>[^<]+<\/title>/.test(html)) fail(name, 'no title');
   if (!headValue(html, 'description')) fail(name, 'no meta description');
   const canonical = headValue(html, 'canonical');
-  if (!canonical) fail(name, 'no canonical URL');
-  if (!/hreflang=["']x-default["']/.test(html)) fail(name, 'no x-default hreflang');
+  if (!isNotFound && !canonical) fail(name, 'no canonical URL');
+  if (!isNotFound && !/hreflang=["']x-default["']/.test(html)) fail(name, 'no x-default hreflang');
   const ogImage = headValue(html, 'ogImage');
   if (!ogImage) {
     fail(name, 'no og:image');
@@ -190,7 +204,7 @@ for (const file of pages) {
 
   // Structured data must parse, and must not be empty boilerplate.
   const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
-  if (blocks.length === 0) fail(name, 'no JSON-LD');
+  if (!isNotFound && blocks.length === 0) fail(name, 'no JSON-LD');
   for (const [, raw] of blocks) {
     try {
       const parsed = JSON.parse(raw);
@@ -205,11 +219,47 @@ for (const file of pages) {
   }
 
   // Every page offers a business action, and it is tagged.
-  const businessCtas = [...html.matchAll(/href="([^"]*netresearch\.de\/kontakt\/[^"]*)"/g)];
+  const businessCtas = [...html.matchAll(/href="(https:\/\/www\.netresearch\.de\/(?:kontakt|en\/contact)\/[^"]*)"/g)];
   if (businessCtas.length === 0) fail(name, 'no business CTA to the contact form');
   for (const [, href] of businessCtas) {
+    const contactPath = lang === 'de' ? '/kontakt/' : '/en/contact/';
+    if (new URL(href).pathname !== contactPath) fail(name, `contact link changes the selected language: ${href}`);
     for (const param of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content']) {
       if (!href.includes(`${param}=`)) fail(name, `contact link without ${param}: ${href}`);
+    }
+  }
+
+  // Published language pairs keep the selected language across site boundaries.
+  for (const legalPath of lang === 'de' ? ['/impressum/', '/datenschutz/'] : ['/en/imprint/', '/en/privacy-policy/']) {
+    if (!html.includes(`href="https://www.netresearch.de${legalPath}"`)) fail(name, `missing localised legal link: ${legalPath}`);
+  }
+
+  if (name === 'index.html' || name === 'de/index.html') {
+    const impactPath = lang === 'de' ? '/maint/de/' : '/maint/';
+    const impactSection = html.match(/<section\b[^>]*\bid="impact"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
+    if (!impactSection.includes(`href="https://netresearch.github.io${impactPath}"`)) fail(name, 'impact source link does not preserve the selected language');
+  }
+
+  const publishedSites = html.match(/<section\b[^>]*\bid="published-sites"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  if (publishedSites) {
+    const languagePaths = {
+      '/modularer-ki-stack-page/': { en: 'en/', de: '' },
+      '/maint/': { en: '', de: 'de/' },
+      '/t3x-nr-browser-ai/': { en: '', de: 'de/' },
+      '/t3x-nr-mcp-agent/': { en: '', de: 'de/' },
+      '/t3x-nr-llm/': { en: 'en/', de: 'de/' },
+      '/claude-code-marketplace/': { en: 'en/', de: 'de/' },
+    };
+    for (const [, href] of publishedSites.matchAll(/href="(https:\/\/netresearch\.github\.io\/[^"]*)"/g)) {
+      const actualPath = new URL(href).pathname;
+      for (const [basePath, suffix] of Object.entries(languagePaths)) {
+        if (!actualPath.startsWith(basePath)) continue;
+        const detailPath = actualPath.slice(basePath.length);
+        const wrongLanguage = suffix[lang]
+          ? !detailPath.startsWith(suffix[lang])
+          : /^(?:en|de)\//.test(detailPath);
+        if (wrongLanguage) fail(name, `published site link changes the selected language: ${href}`);
+      }
     }
   }
 
@@ -298,7 +348,7 @@ for (const file of pages) {
 
 // ── Machine-readable endpoints ───────────────────────────────────────────────
 
-for (const required of ['sitemap.xml', 'robots.txt', 'llms.txt', 'projects.json', 'schema/project-manifest.schema.json']) {
+for (const required of ['404.html', 'sitemap.xml', 'robots.txt', 'llms.txt', 'projects.json', 'schema/project-manifest.schema.json']) {
   if (!existsSync(join(DIST, required))) fail('dist/', `missing ${required}`);
 }
 

@@ -2,6 +2,7 @@
 import type { Lang } from '../i18n';
 import { useContent } from '../i18n/content';
 import { formatDate, formatNumber, type ImpactSnapshot } from '../data/load-impact';
+import { publishedPageUrl } from '../data/load-pages';
 
 interface Props {
   lang: Lang;
@@ -71,7 +72,7 @@ const HEADLINE = [
       </ul>
       <p class="mt-4">
         <a
-          href={impact.dashboard}
+          href={publishedPageUrl(impact.dashboard, lang)}
           class="inline-flex items-center gap-2 min-h-[44px] font-heading font-semibold text-nr-teal-ink hover:text-nr-teal-ink transition-colors"
         >
           {t.impact.sourceLabel}

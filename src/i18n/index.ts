@@ -45,12 +45,13 @@ export function alternates(key: RouteKey): { hreflang: string; href: string }[] 
  * the same contact form, tagged so the campaign report can tell page and
  * position apart.
  */
-export function contactUrl(campaign: string, content: string): string {
+export function contactUrl(lang: Lang, campaign: string, content: string): string {
   const params = new URLSearchParams({
     utm_source: 'github-pages',
     utm_medium: 'referral',
     utm_campaign: campaign,
     utm_content: content,
   });
-  return `https://www.netresearch.de/kontakt/?${params.toString()}`;
+  const contactPath = lang === 'de' ? '/kontakt/' : '/en/contact/';
+  return `https://www.netresearch.de${contactPath}?${params.toString()}`;
 }

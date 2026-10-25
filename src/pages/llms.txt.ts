@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { absolute } from '../i18n';
+import { absolute, contactUrl } from '../i18n';
 import { loadProducts, orderedProducts } from '../data/load-manifest';
 import { loadImpact } from '../data/load-impact';
 import { loadCurated } from '../data/load-curated';
@@ -50,10 +50,10 @@ export const GET: APIRoute = () => {
 
 - [Portfolio (English)](${absolute('home', 'en')}): the AI stack, measured activity and the curated portfolio.
 - [Portfolio (Deutsch)](${absolute('home', 'de')}): same content in German.
-- [Full repository catalogue](${absolute('projects', 'en')}): every public repository, filterable.
+- [Full repository catalogue](${absolute('projects', 'en')}): every public repository and published project sites.
 - [Product manifests](https://netresearch.github.io/projects.json): machine-readable status and versions for every product.
 - [Manifest schema](https://netresearch.github.io/schema/project-manifest.schema.json): the JSON Schema those manifests validate against.
-- [Contact](${site.contact}): Netresearch DTT GmbH.
+- [Contact](${contactUrl('en', site.utmCampaign, 'llms')}): Netresearch DTT GmbH.
 
 Page last reviewed: ${site.lastVerified}.
 

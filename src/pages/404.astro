@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import { contactUrl } from '../i18n';
+import { site } from '../data/site';
+import { renderSiteHeader } from '../../shared/site-shell/render-site-shell.mjs';
+import headerTemplate from '../../shared/site-shell/site-shell.html?raw';
+
+const header = renderSiteHeader({
+  lang: 'en',
+  assetBase: '/assets/site-shell',
+  languageUrls: { en: '/404.html#english', de: '/404.html#deutsch' },
+  contactHref: contactUrl('en', site.utmCampaign, 'not-found'),
+}, headerTemplate);
+---
+
+<Layout
+  lang="en"
+  route="home"
+  title="Page not found · Seite nicht gefunden — Netresearch Open Source"
+  description="This page could not be found. Return to the Netresearch open-source portfolio in English or German."
+  notFound
+>
+  <Fragment set:html={header} />
+  <main id="main-content" tabindex="-1" class="max-w-3xl mx-auto px-6 py-16 md:py-24">
+    <p class="font-heading font-semibold text-nr-teal-ink">404</p>
+    <h1 id="english" tabindex="-1" class="mt-3 font-heading font-black text-4xl text-text-primary">
+      Page not found
+    </h1>
+    <p class="mt-5 text-lg text-text-secondary">
+      This address does not lead to a published page. Find the project you need in our open-source portfolio.
+    </p>
+    <p class="mt-6">
+      <a href="/" class="inline-flex items-center min-h-[48px] px-5 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold">
+        Open the portfolio in English
+      </a>
+    </p>
+    <section id="deutsch" lang="de" tabindex="-1" class="mt-12 pt-10 border-t border-border" aria-labelledby="not-found-de">
+      <h2 id="not-found-de" class="font-heading font-bold text-2xl text-text-primary">Seite nicht gefunden</h2>
+      <p class="mt-5 text-lg text-text-secondary">
+        Unter dieser Adresse ist keine Seite veröffentlicht. Im Open-Source-Portfolio finden Sie unsere Projekte und die zugehörigen Informationen.
+      </p>
+      <p class="mt-6">
+        <a href="/de/" class="inline-flex items-center min-h-[48px] px-5 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold">
+          Zum deutschen Portfolio
+        </a>
+      </p>
+    </section>
+  </main>
+  <Footer lang="en" />
+</Layout>
