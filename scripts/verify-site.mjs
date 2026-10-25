@@ -64,10 +64,9 @@ function decodedAttribute(value = '') {
 
 /** Inspect business actions themselves, including header actions without data-cta. */
 function businessAnchors(html) {
-  const markup = html
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, '');
-  return [...markup.matchAll(/<a\b(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi)]
+  const inert = [...html.matchAll(/<!--[\s\S]*?-->|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi)];
+  return [...html.matchAll(/<a\b(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi)]
+    .filter((anchor) => !inert.some((span) => anchor.index >= span.index && anchor.index < span.index + span[0].length))
     .map(([tag]) => attrs(tag))
     .filter((anchor) => decodedAttribute(anchor['data-cta']) === 'business'
       || decodedAttribute(anchor.class).split(/\s+/).some((name) => name === 'nr-shell-contact' || name === 'nr-shell-menu-contact'));
