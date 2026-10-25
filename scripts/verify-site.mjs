@@ -12,7 +12,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkAccessibility } from './check-accessibility.mjs';
+import { attrs, checkAccessibility } from './check-accessibility.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -48,6 +48,29 @@ function visibleText(html) {
     .replace(/<(\w+)[^>]*\sdata-figure=[^>]*>[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ');
+}
+
+/** Decode the HTML attribute escapes emitted by our templates, once. */
+function decodedAttribute(value = '') {
+  const named = { amp: '&', AMP: '&', quot: '"', QUOT: '"', apos: "'", lt: '<', LT: '<', gt: '>', GT: '>' };
+  return value.replace(/&(#(?:[xX][\dA-Fa-f]+|\d+)|amp|AMP|quot|QUOT|apos|lt|LT|gt|GT);/g, (_, entity) => {
+    if (entity in named) return named[entity];
+    const hexadecimal = entity[1] === 'x' || entity[1] === 'X';
+    const code = Number.parseInt(entity.slice(hexadecimal ? 2 : 1), hexadecimal ? 16 : 10);
+    return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff)
+      ? String.fromCodePoint(code) : '\ufffd';
+  });
+}
+
+/** Inspect business actions themselves, including header actions without data-cta. */
+function businessAnchors(html) {
+  const markup = html
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, '');
+  return [...markup.matchAll(/<a\b(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi)]
+    .map(([tag]) => attrs(tag))
+    .filter((anchor) => decodedAttribute(anchor['data-cta']) === 'business'
+      || decodedAttribute(anchor.class).split(/\s+/).some((name) => name === 'nr-shell-contact' || name === 'nr-shell-menu-contact'));
 }
 
 /**
@@ -219,13 +242,24 @@ for (const file of pages) {
   }
 
   // Every page offers a business action, and it is tagged.
-  const businessCtas = [...html.matchAll(/href="(https:\/\/www\.netresearch\.de\/(?:kontakt|en\/contact)\/[^"]*)"/g)];
+  const businessCtas = businessAnchors(html);
   if (businessCtas.length === 0) fail(name, 'no business CTA to the contact form');
-  for (const [, href] of businessCtas) {
+  for (const anchor of businessCtas) {
+    const href = decodedAttribute(anchor.href);
+    let target;
+    try {
+      target = new URL(href);
+    } catch {
+      fail(name, 'business CTA requires a valid absolute contact URL');
+      continue;
+    }
+    if (target.protocol !== 'https:' || target.origin !== 'https://www.netresearch.de') {
+      fail(name, `business CTA points outside the official HTTPS contact origin: ${href}`);
+    }
     const contactPath = lang === 'de' ? '/kontakt/' : '/en/contact/';
-    if (new URL(href).pathname !== contactPath) fail(name, `contact link changes the selected language: ${href}`);
+    if (target.pathname !== contactPath) fail(name, `contact link changes the selected language: ${href}`);
     for (const param of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content']) {
-      if (!href.includes(`${param}=`)) fail(name, `contact link without ${param}: ${href}`);
+      if (!target.searchParams.get(param)?.trim()) fail(name, `contact link without ${param}: ${href}`);
     }
   }
 

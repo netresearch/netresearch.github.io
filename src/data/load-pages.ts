@@ -21,7 +21,7 @@ export function publishedPageUrl(url: string, lang: Lang): string {
   }
   // The marketplace enforces an EN/DE pair for every published skill detail.
   // Keep its slug and any query/fragment; do not infer routes for other sites.
-  const skillDetail = url.match(/^(https:\/\/netresearch\.github\.io\/claude-code-marketplace\/)(?:en|de)(\/skills\/[a-z0-9-]+\/(?:[?#].*)?)$/);
+  const skillDetail = /^(https:\/\/netresearch\.github\.io\/claude-code-marketplace\/)(?:en|de)(\/skills\/[a-z0-9-]+\/(?:[?#].*)?)$/.exec(url);
   return skillDetail ? `${skillDetail[1]}${lang}${skillDetail[2]}` : url;
 }
 
