@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
 import Nav from './Nav.astro';
 import Footer from './Footer.astro';
 import { loadProjects } from '../data/load-projects';
-import { loadPages } from '../data/load-pages';
+import { loadPages, publishedPageUrl } from '../data/load-pages';
 import { breadcrumbs, collectionPage, organization, website } from '../data/jsonld';
 
 interface Props {
@@ -27,7 +27,7 @@ const sections = data.categories
   .filter((section) => section.repos.length > 0);
 
 const total = sections.reduce((sum, section) => sum + section.repos.length, 0);
-const livePages = loadPages();
+const livePages = loadPages().map((page) => ({ ...page, url: publishedPageUrl(page.url, lang) }));
 
 const jsonLd = [
   organization(),

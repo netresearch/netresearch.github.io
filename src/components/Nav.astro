@@ -20,7 +20,7 @@ const header = renderSiteHeader({
   assetBase: '/assets/site-shell',
   languageUrls: { de: path(route, 'de'), en: path(route, 'en') },
   active: route,
-  contactHref: contactUrl(site.utmCampaign, 'nav'),
+  contactHref: contactUrl(lang, site.utmCampaign, 'nav'),
 }, headerTemplate);
 const localNavigation = route === 'home' ? renderPageNavigation({
   lang,

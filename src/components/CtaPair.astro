@@ -1,7 +1,8 @@
 ---
-import { contactUrl } from '../i18n';
+import { contactUrl, type Lang } from '../i18n';
 
 interface Props {
+  lang: Lang;
   /** Business action: always the contact form, always UTM-tagged. */
   businessLabel: string;
   /** Where on the page this pair sits — becomes utm_content. */
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const {
+  lang,
   businessLabel,
   position,
   campaign,
@@ -30,7 +32,7 @@ const {
   ]}
 >
   <a
-    href={contactUrl(campaign, position)}
+    href={contactUrl(lang, campaign, position)}
     class="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-lg bg-nr-teal-solid text-white font-heading font-semibold hover:bg-nr-teal-solid transition-colors"
     data-cta="business"
     data-cta-position={position}

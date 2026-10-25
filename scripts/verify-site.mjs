@@ -12,7 +12,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkAccessibility } from './check-accessibility.mjs';
+import { attrs, checkAccessibility } from './check-accessibility.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -48,6 +48,28 @@ function visibleText(html) {
     .replace(/<(\w+)[^>]*\sdata-figure=[^>]*>[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ');
+}
+
+/** Decode the HTML attribute escapes emitted by our templates, once. */
+function decodedAttribute(value = '') {
+  const named = { amp: '&', AMP: '&', quot: '"', QUOT: '"', apos: "'", lt: '<', LT: '<', gt: '>', GT: '>' };
+  return value.replace(/&(#(?:[xX][\dA-Fa-f]+|\d+)|amp|AMP|quot|QUOT|apos|lt|LT|gt|GT);/g, (_, entity) => {
+    if (entity in named) return named[entity];
+    const hexadecimal = entity[1] === 'x' || entity[1] === 'X';
+    const code = Number.parseInt(entity.slice(hexadecimal ? 2 : 1), hexadecimal ? 16 : 10);
+    return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff)
+      ? String.fromCodePoint(code) : '\ufffd';
+  });
+}
+
+/** Inspect business actions themselves, including header actions without data-cta. */
+function businessAnchors(html) {
+  const inert = [...html.matchAll(/<!--[\s\S]*?-->|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi)];
+  return [...html.matchAll(/<a\b(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi)]
+    .filter((anchor) => !inert.some((span) => anchor.index >= span.index && anchor.index < span.index + span[0].length))
+    .map(([tag]) => attrs(tag))
+    .filter((anchor) => decodedAttribute(anchor['data-cta']) === 'business'
+      || decodedAttribute(anchor.class).split(/\s+/).some((name) => name === 'nr-shell-contact' || name === 'nr-shell-menu-contact'));
 }
 
 /**
@@ -159,6 +181,20 @@ for (const file of pages) {
   const name = relative(DIST, file);
   const html = readFileSync(file, 'utf-8');
   const text = visibleText(html);
+  const lang = html.match(/<html\b[^>]*\blang=["'](en|de)["']/i)?.[1];
+  const isNotFound = name === '404.html';
+
+  if (isNotFound) {
+    if (!/<meta[^>]*name=["']robots["'][^>]*content=["'][^"']*\bnoindex\b/.test(html)) fail(name, 'error document must be noindex');
+    if (headValue(html, 'canonical')) fail(name, 'error document must not canonicalise to a regular page');
+    if (/<link[^>]*rel=["']alternate["'][^>]*hreflang=/.test(html)) fail(name, 'error document must not declare home pages as language alternates');
+    if (/<meta[^>]+http-equiv=["']refresh["']/i.test(html)) fail(name, 'error document must offer recovery without redirecting');
+    const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';
+    for (const home of ['/', '/de/']) {
+      if (!main.includes(`href="${home}"`)) fail(name, `error document is missing a home recovery link: ${home}`);
+    }
+    if (!/<section[^>]*\blang="de"/.test(main)) fail(name, 'German recovery copy must declare its language');
+  }
 
   // Redirect stubs are meta-refresh only and carry no content of their own.
   if (/<meta[^>]+http-equiv=["']refresh["']/i.test(html)) continue;
@@ -176,8 +212,8 @@ for (const file of pages) {
   if (!/<title>[^<]+<\/title>/.test(html)) fail(name, 'no title');
   if (!headValue(html, 'description')) fail(name, 'no meta description');
   const canonical = headValue(html, 'canonical');
-  if (!canonical) fail(name, 'no canonical URL');
-  if (!/hreflang=["']x-default["']/.test(html)) fail(name, 'no x-default hreflang');
+  if (!isNotFound && !canonical) fail(name, 'no canonical URL');
+  if (!isNotFound && !/hreflang=["']x-default["']/.test(html)) fail(name, 'no x-default hreflang');
   const ogImage = headValue(html, 'ogImage');
   if (!ogImage) {
     fail(name, 'no og:image');
@@ -190,7 +226,7 @@ for (const file of pages) {
 
   // Structured data must parse, and must not be empty boilerplate.
   const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
-  if (blocks.length === 0) fail(name, 'no JSON-LD');
+  if (!isNotFound && blocks.length === 0) fail(name, 'no JSON-LD');
   for (const [, raw] of blocks) {
     try {
       const parsed = JSON.parse(raw);
@@ -205,11 +241,58 @@ for (const file of pages) {
   }
 
   // Every page offers a business action, and it is tagged.
-  const businessCtas = [...html.matchAll(/href="([^"]*netresearch\.de\/kontakt\/[^"]*)"/g)];
+  const businessCtas = businessAnchors(html);
   if (businessCtas.length === 0) fail(name, 'no business CTA to the contact form');
-  for (const [, href] of businessCtas) {
+  for (const anchor of businessCtas) {
+    const href = decodedAttribute(anchor.href);
+    let target;
+    try {
+      target = new URL(href);
+    } catch {
+      fail(name, 'business CTA requires a valid absolute contact URL');
+      continue;
+    }
+    if (target.protocol !== 'https:' || target.origin !== 'https://www.netresearch.de') {
+      fail(name, `business CTA points outside the official HTTPS contact origin: ${href}`);
+    }
+    const contactPath = lang === 'de' ? '/kontakt/' : '/en/contact/';
+    if (target.pathname !== contactPath) fail(name, `contact link changes the selected language: ${href}`);
     for (const param of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content']) {
-      if (!href.includes(`${param}=`)) fail(name, `contact link without ${param}: ${href}`);
+      if (!target.searchParams.get(param)?.trim()) fail(name, `contact link without ${param}: ${href}`);
+    }
+  }
+
+  // Published language pairs keep the selected language across site boundaries.
+  for (const legalPath of lang === 'de' ? ['/impressum/', '/datenschutz/'] : ['/en/imprint/', '/en/privacy-policy/']) {
+    if (!html.includes(`href="https://www.netresearch.de${legalPath}"`)) fail(name, `missing localised legal link: ${legalPath}`);
+  }
+
+  if (name === 'index.html' || name === 'de/index.html') {
+    const impactPath = lang === 'de' ? '/maint/de/' : '/maint/';
+    const impactSection = html.match(/<section\b[^>]*\bid="impact"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
+    if (!impactSection.includes(`href="https://netresearch.github.io${impactPath}"`)) fail(name, 'impact source link does not preserve the selected language');
+  }
+
+  const publishedSites = html.match(/<section\b[^>]*\bid="published-sites"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  if (publishedSites) {
+    const languagePaths = {
+      '/modularer-ki-stack-page/': { en: 'en/', de: '' },
+      '/maint/': { en: '', de: 'de/' },
+      '/t3x-nr-browser-ai/': { en: '', de: 'de/' },
+      '/t3x-nr-mcp-agent/': { en: '', de: 'de/' },
+      '/t3x-nr-llm/': { en: 'en/', de: 'de/' },
+      '/claude-code-marketplace/': { en: 'en/', de: 'de/' },
+    };
+    for (const [, href] of publishedSites.matchAll(/href="(https:\/\/netresearch\.github\.io\/[^"]*)"/g)) {
+      const actualPath = new URL(href).pathname;
+      for (const [basePath, suffix] of Object.entries(languagePaths)) {
+        if (!actualPath.startsWith(basePath)) continue;
+        const detailPath = actualPath.slice(basePath.length);
+        const wrongLanguage = suffix[lang]
+          ? !detailPath.startsWith(suffix[lang])
+          : /^(?:en|de)\//.test(detailPath);
+        if (wrongLanguage) fail(name, `published site link changes the selected language: ${href}`);
+      }
     }
   }
 
@@ -298,7 +381,7 @@ for (const file of pages) {
 
 // ── Machine-readable endpoints ───────────────────────────────────────────────
 
-for (const required of ['sitemap.xml', 'robots.txt', 'llms.txt', 'projects.json', 'schema/project-manifest.schema.json']) {
+for (const required of ['404.html', 'sitemap.xml', 'robots.txt', 'llms.txt', 'projects.json', 'schema/project-manifest.schema.json']) {
   if (!existsSync(join(DIST, required))) fail('dist/', `missing ${required}`);
 }
 

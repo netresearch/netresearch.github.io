@@ -156,8 +156,35 @@ async function checkLocalMenu(page, issues) {
   if (link) await checkLocalAnchor(page, pageMenu, link, issues);
 }
 
+async function checkGlobalDestinations(page, issues) {
+  const state = await page.evaluate(() => ({
+    lang: document.documentElement.lang.split('-')[0],
+    menus: [...document.querySelectorAll('[data-nr-shell] nav')]
+      .filter((nav) => !nav.classList.contains('nr-shell-locales'))
+      .map((nav) => [...nav.querySelectorAll('.nr-shell-link')].map((link) => link.href)),
+  }));
+  const expected = state.lang === 'de' ? [
+    'https://netresearch.github.io/de/',
+    'https://netresearch.github.io/de/projekte/',
+    'https://netresearch.github.io/modularer-ki-stack-page/',
+    'https://netresearch.github.io/claude-code-marketplace/de/',
+    'https://netresearch.github.io/maint/de/',
+  ] : [
+    'https://netresearch.github.io/',
+    'https://netresearch.github.io/projects/',
+    'https://netresearch.github.io/modularer-ki-stack-page/en/',
+    'https://netresearch.github.io/claude-code-marketplace/en/',
+    'https://netresearch.github.io/maint/',
+  ];
+  if (!['de', 'en'].includes(state.lang) || state.menus.length !== 2
+      || state.menus.some((links) => links.join() !== expected.join())) {
+    issues.push('Desktop and mobile global navigation must expose all five destinations in the page language');
+  }
+}
+
 export async function checkSiteShell(page) {
   const issues = [];
+  await checkGlobalDestinations(page, issues);
   await checkSkipLink(page, issues);
   await checkViewports(page, issues);
   await sequential(['dark', 'light', 'system'], (preference) => checkPreference(page, preference, issues));
