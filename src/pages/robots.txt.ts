@@ -19,6 +19,12 @@ User-agent: OAI-SearchBot
 Allow: /
 
 Sitemap: https://netresearch.github.io/sitemap.xml
+Sitemap: https://netresearch.github.io/modularer-ki-stack-page/sitemap.xml
+Sitemap: https://netresearch.github.io/maint/sitemap.xml
+Sitemap: https://netresearch.github.io/t3x-nr-browser-ai/sitemap.xml
+Sitemap: https://netresearch.github.io/t3x-nr-mcp-agent/sitemap.xml
+Sitemap: https://netresearch.github.io/t3x-nr-llm/sitemap.xml
+Sitemap: https://netresearch.github.io/claude-code-marketplace/sitemap.xml
 
 # Machine-readable orientation for assistants. Convenience endpoints, not a
 # ranking mechanism and not a standard.
