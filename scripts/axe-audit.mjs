@@ -21,6 +21,7 @@ import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, extname, relative, sep } from 'node:path';
 import { createRequire } from 'node:module';
 import puppeteer from 'puppeteer';
+import { checkSiteShell, checkSiteShellWithoutJavaScript } from './check-site-shell.mjs';
 
 const require = createRequire(import.meta.url);
 const axePath = require.resolve('axe-core/axe.min.js');
@@ -231,6 +232,8 @@ async function auditPage(browser, port, route, scheme) {
   const issues = [
     ...(await responsiveIssues(page, 390)),
     ...(await responsiveIssues(page, 320)),
+    ...(await checkSiteShell(page)),
+    ...(await checkSiteShellWithoutJavaScript(browser, page.url(), scheme)),
   ];
   if (issues.length) found.push({ route, scheme, violation: {
     id: 'responsive-brand-regression', impact: 'serious',

@@ -97,6 +97,32 @@ repository emit a manifest that validates against the schema.
   positive `tabindex`, or a duplicate `id`
 - a missing `sitemap.xml`, `robots.txt`, `llms.txt`, `projects.json` or schema
 
+## Shared standalone header
+
+`shared/site-shell/` is the canonical source for the header used by this hub,
+the AI stack, the impact dashboard and the Browser AI, MCP Agent and LLM
+standalone pages. Keep the vendored copies in those repositories identical when
+changing its markup, styles or behaviour. Hosted TYPO3 manuals use their own
+platform navigation.
+
+The build and development commands copy the public header assets automatically.
+`Nav.astro` supplies only the current locale, corresponding language routes,
+active section and contact URL. Product links belong in a separate page toolbar.
+The header keeps the same geometry and global navigation on all six sites.
+
+The theme picker stores `system`, `light` or `dark` in `nr-theme`; an explicit
+System choice takes precedence over legacy settings. The early bootstrap and
+deferred controls share one state, including changes to the system scheme.
+Language links and the native mobile menu work without JavaScript.
+
+The same templates also render the local page navigation: desktop links and a
+compact native disclosure on mobile. Optional page tools, such as search, stay
+outside the global bar.
+
+The browser verification checks the shipped header at 320, 390, 1023, 1024 and
+1440 pixels, theme persistence, keyboard disclosure controls and navigation with
+JavaScript disabled, alongside the accessibility audit in both schemes.
+
 ## Content
 
 - `src/i18n/content.ts` — all page copy, English and German

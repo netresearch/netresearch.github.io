@@ -4,6 +4,7 @@ import type { Lang, RouteKey } from '../i18n';
 import { absolute, alternates, languages } from '../i18n';
 import { useContent } from '../i18n/content';
 import { ogImage, site } from '../data/site';
+import themeBootstrap from '../../shared/site-shell/theme-bootstrap.js?raw';
 
 interface Props {
   lang: Lang;
@@ -57,30 +58,16 @@ const graph = jsonLd.length
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <link rel="sitemap" href="/sitemap.xml" />
-    <noscript><style>
-      #menu-toggle, [data-theme-control] { display:none; }
-      @media(max-width:1023px) { nav.fixed { position:static; } #mobile-menu { display:block; } }
-    </style></noscript>
-
     {graph && <script type="application/ld+json" set:html={JSON.stringify(graph)} />}
 
-    <!-- Blocking theme script — prevents a flash of the wrong theme. -->
-    <script is:inline>
-      (function () {
-        var stored;
-        try { stored = localStorage.getItem('nr-theme'); if (stored === null) stored = localStorage.getItem('theme'); } catch (_) {}
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (stored === 'dark' || (stored !== 'light' && prefersDark)) {
-          document.documentElement.classList.add('dark');
-        }
-        document.documentElement.dataset.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-      })();
-    </script>
+    <script is:inline set:html={themeBootstrap} />
+    <link rel="stylesheet" href="/assets/site-shell/site-shell.css" />
+    <script is:inline src="/assets/site-shell/site-shell.js" defer></script>
   </head>
   <body class="bg-surface text-text-primary font-body antialiased overflow-x-hidden">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-nr-teal-solid focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1100] focus:bg-nr-teal-solid focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium"
     >
       {t.skipToContent}
     </a>

@@ -214,12 +214,20 @@ for (const file of pages) {
   }
 
   // Brand: the logo appears exactly once, and not below 32px.
-  const logos = [...html.matchAll(/<img[^>]+netresearch\.svg[^>]*>/g)];
+  const logos = [...html.matchAll(/<img[^>]+netresearch(?:-symbol-only)?\.svg[^>]*>/g)];
   if (logos.length !== 1) fail(name, `the logo appears ${logos.length} times, expected exactly once`);
   for (const [tag] of logos) {
     const height = tag.match(/height=["'](\d+)["']/);
     if (height && Number(height[1]) < 32) fail(name, `logo rendered at ${height[1]}px, below the 32px minimum`);
   }
+  if (!/<header\b[^>]*\bdata-nr-shell\b/.test(html)) fail(name, 'shared standalone header missing');
+  if (!/<a[^>]+href="https:\/\/www\.netresearch\.de\/"[^>]*>\s*<img[^>]+netresearch-symbol-only\.svg/.test(html)) {
+    fail(name, 'header symbol must link to the company website');
+  }
+  if (!html.includes('/assets/site-shell/site-shell.css') || !html.includes('/assets/site-shell/site-shell.js')) {
+    fail(name, 'shared standalone header assets missing');
+  }
+  if (/<select[^>]+data-theme-control/.test(html)) fail(name, 'legacy theme select still rendered');
 
   // Accessibility and semantics decidable from the markup alone.
   for (const problem of checkAccessibility(html)) fail(name, problem);

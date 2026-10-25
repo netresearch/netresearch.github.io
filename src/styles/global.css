@@ -68,6 +68,36 @@
   --color-scrollbar-thumb-hover: #CDD3D7;
 }
 
+/* Keep the system palette consistent when JavaScript is unavailable. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --nr-primary-text: #7FD6E0;
+    --nr-primary-fill: #15585E;
+    --nr-primary-deep: #A4E5EC;
+    --nr-accent-text: #FFB394;
+    --nr-border-strong: #6B7680;
+    --nr-focus: #7FD6E0;
+    --color-surface: #14181B;
+    --color-surface-alt: #1A2024;
+    --color-surface-card: #1E2429;
+    --color-surface-hover: #252D33;
+    --color-surface-nav: #14181B;
+    --color-text-primary: #E8EDEF;
+    --color-text-secondary: #CDD3D7;
+    --color-text-muted: #CDD3D7;
+    --color-border: #2A3238;
+    --color-border-hover: #6B7680;
+    --color-glass: #1E2429;
+    --color-card-shadow: transparent;
+    --color-selection-fg: #FFFFFF;
+    --color-scrollbar-track: #14181B;
+    --color-scrollbar-thumb: #6B7680;
+    --color-scrollbar-thumb-hover: #CDD3D7;
+  }
+}
+
+
 @theme inline {
   --color-nr-teal: #2F99A4;
   --color-nr-teal-ink: var(--color-nr-teal-ink);
@@ -105,14 +135,6 @@ html {
   }
 }
 
-/* Smooth transitions for theme switching */
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
-  transition-delay: 0s !important;
-}
 
 ::selection {
   background-color: rgba(47, 153, 164, 0.3);
